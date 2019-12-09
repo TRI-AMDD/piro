@@ -3,12 +3,14 @@ import scipy
 import numpy as np
 import plotly.express as px
 import pandas as pd
+import os
+import json
 from copy import deepcopy
 from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from rxn.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from rxn.utils import get_v, epitaxy, similarity, update_gases
-from rxn import MP_API_KEY
+from rxn import MP_API_KEY, RXN_FILES
 
 
 # TODO: for elements and gases (references) - don't allow multiple entries
@@ -179,7 +181,8 @@ class SynthesisRoutes:
                 self.reactions[label] = {'precursors': deepcopy(precursors),
                                          'coeffs': coeffs,
                                          'precursor_formulas': np.array([p.structure.composition.reduced_formula
-                                                                         for p in precursors])
+                                                                         for p in precursors]),
+                                         'precursor_ids': [p.entry_id for p in precursors]
                                          }
         return self.reactions
 
@@ -326,7 +329,7 @@ class SynthesisRoutes:
         return len(_competing)
 
     def recommend_routes(self, temperature=298, pressure=None, allow_gas_release=False,
-                         max_component_precursors=0):
+                         max_component_precursors=0, show_fraction_known_precursors=True):
         if not pressure:
             pressure = self.pressure
         if not (
@@ -341,9 +344,10 @@ class SynthesisRoutes:
                 self.get_nucleation_barrier(rxn_label)
                 self.get_rxn_summary(rxn_label)
                 self.get_competing_phases(rxn_label)
+            self.check_if_known_precursors()
 
-        self.plot_data = pd.DataFrame.from_dict(self.reactions, orient='index')[['n_competing', "barrier", "summary"]]
-
+        self.plot_data = pd.DataFrame.from_dict(self.reactions, orient='index')[['n_competing', "barrier", "summary",
+                                                                                 "exp_precursors"]]
         if max_component_precursors:
             allowed_precursor_ids = [i.entry_id for i in self.precursor_library
                                      if len(set(i.composition.as_dict().keys()).difference(self.add_element))
@@ -354,7 +358,10 @@ class SynthesisRoutes:
                     display_reactions.append(r)
             self.plot_data = self.plot_data.loc[display_reactions]
 
-        fig = px.scatter(self.plot_data, x="n_competing", y="barrier", hover_data=["summary"])
+        color = "exp_precursors" if show_fraction_known_precursors else None
+
+        fig = px.scatter(self.plot_data, x="n_competing", y="barrier", hover_data=["summary"],
+                             color=color)
 
         fig.update_layout(
             yaxis={'title': 'Barrier (a.u.)'},
@@ -371,3 +378,13 @@ class SynthesisRoutes:
     def get_rxn_containing(self, formula):
         return sorted([(self.reactions[i]['barrier'], self.reactions[i]['summary'], self.reactions[i]['n_competing'])
                 for i in self.reactions if formula in self.reactions[i]['summary']])
+
+    def check_if_known_precursors(self):
+        with open(os.path.join(RXN_FILES,"experimental_precursors_KononovaSciData.json"), 'r') as f:
+            exp_precursors = set(json.load(f))
+
+        for i in self.reactions:
+            ids = [self.reactions[i]['precursor_ids'][j] for j in range(len(self.reactions[i]['precursor_ids']))
+                   if self.reactions[i]['precursor_formulas'][j] not in GASES]
+            frac = len(set(ids).intersection(exp_precursors)) / len(ids)
+            self.reactions[i]['exp_precursors'] = str(np.round(frac,decimals=4))
