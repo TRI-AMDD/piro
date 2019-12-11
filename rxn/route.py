@@ -362,7 +362,6 @@ class SynthesisRoutes:
 
         fig = px.scatter(self.plot_data, x="n_competing", y="barrier", hover_data=["summary"],
                              color=color)
-
         fig.update_layout(
             yaxis={'title': 'Barrier (a.u.)'},
             xaxis={'title': 'N competing phases'},
@@ -388,3 +387,24 @@ class SynthesisRoutes:
                    if self.reactions[i]['precursor_formulas'][j] not in GASES]
             frac = len(set(ids).intersection(exp_precursors)) / len(ids)
             self.reactions[i]['exp_precursors'] = str(np.round(frac,decimals=4))
+
+    def get_pareto_front(self):
+        """
+        Returns: list of reaction labels on the pareto front
+        """
+        x = self.plot_data.sort_values(by=['n_competing', 'barrier'])[['n_competing', 'barrier']]
+        y = x.groupby(by=['n_competing'], as_index=False).min()
+        rows = list(y.iterrows())
+        front = []
+        barrier_front = []
+        for row in rows:
+            n_competing = row[1]['n_competing']
+            barrier = row[1]['barrier']
+            if rows.index(row) == 0:
+                front.append(x.index[(x['barrier'] == barrier) & (x['n_competing'] == n_competing)][0])
+                barrier_front.append(barrier)
+                continue
+            if barrier < barrier_front[-1]:
+                front.append(x.index[(x['barrier'] == barrier) & (x['n_competing'] == n_competing)][0])
+                barrier_front.append(barrier)
+        return front
