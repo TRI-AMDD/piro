@@ -374,9 +374,19 @@ class SynthesisRoutes:
         else:
             return [p.composition.reduced_formula for p in self.precursor_library]
 
-    def get_rxn_containing(self, formula):
+    def get_rxn_containing(self, formulas):
+        """
+        Find reactions that contain all formulas given.
+        Args:
+            formulas: list of formulas. string okay if one formula.
+        Returns:
+            reaction details
+        """
+        if isinstance(formulas, str):
+            formulas = list(formulas)
         return sorted([(self.reactions[i]['barrier'], self.reactions[i]['summary'], self.reactions[i]['n_competing'])
-                for i in self.reactions if formula in self.reactions[i]['summary']])
+                for i in self.reactions if all([formula in self.reactions[i]['summary'] for formula in formulas])
+                       ])
 
     def check_if_known_precursors(self):
         with open(os.path.join(RXN_FILES,"experimental_precursors_KononovaSciData.json"), 'r') as f:
