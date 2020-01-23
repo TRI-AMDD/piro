@@ -329,7 +329,8 @@ class SynthesisRoutes:
         return len(_competing)
 
     def recommend_routes(self, temperature=298, pressure=None, allow_gas_release=False,
-                         max_component_precursors=0, show_fraction_known_precursors=True):
+                         max_component_precursors=0, show_fraction_known_precursors=True,
+                         show_known_precursors_only=False):
         if not pressure:
             pressure = self.pressure
         if not (
@@ -359,6 +360,9 @@ class SynthesisRoutes:
             self.plot_data = self.plot_data.loc[display_reactions]
 
         color = "exp_precursors" if show_fraction_known_precursors else None
+
+        if show_known_precursors_only:
+            self.plot_data = self.plot_data[ self.plot_data["exp_precursors"].astype(float) == 1.0 ]
 
         fig = px.scatter(self.plot_data, x="n_competing", y="barrier", hover_data=["summary"],
                              color=color)
