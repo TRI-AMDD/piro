@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import pickle
 import numpy as np
+import json
 from copy import deepcopy
 
 from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
@@ -22,10 +23,33 @@ def get_v(c, elts):
     return np.array([c.as_dict()[el] for el in elts])
 
 
+def through_cache(_parents, target, type='epitaxy'):
+    with open(os.path.join(RXN_FILES, '_'+type+'_cache.json'), 'r') as f:
+        db = json.load(f)
+    ordered_pairs = ['_'.join(sorted([target.entry_id, i.entry_id])) for i in _parents]
+    indices_compt = [i for i in range(len(ordered_pairs)) if ordered_pairs[i] not in db]
+
+    if type == 'epitaxy' and indices_compt:
+        _res = epitaxy(np.array(_parents)[indices_compt].tolist(), target)
+    elif type == 'similarity' and indices_compt:
+        _res = similarity(np.array(_parents)[indices_compt].tolist(), target)
+    else:
+        _res = []
+    results = []
+    for i in ordered_pairs:
+        if i in db:
+            results.append(db[i])
+        else:
+            results.append(_res[indices_compt.index(ordered_pairs.index(i))] )
+            db[i] = _res[indices_compt.index(ordered_pairs.index(i))]
+
+    with open(os.path.join(RXN_FILES, '_'+type+'_cache.json'), 'w') as f:
+        json.dump(db,f)
+    return results
+
 def epitaxy(_parents, target):
     def _func(s, target):
         sa = SubstrateAnalyzer(film_max_miller=2, substrate_max_miller=2)
-        min_areas = []
         gen = list(sa.calculate(s, target))
         if gen:
             return min([e['match_area'] for e in gen])
@@ -82,10 +106,12 @@ def update_gases(entries, T, P=1, copy=False):
     for e in _entries:
         if e.composition.reduced_formula in ST:
             if isinstance(P, dict):
-                P = P.get(e.composition.reduced_formula, 1.0)
+                pp = P.get(e.composition.reduced_formula, 1.0)
+            else:
+                pp = P
             e.data['formation_energy_per_atom'] = H.get(e.composition.reduced_formula,0.0)\
                                                   -ST[e.composition.reduced_formula][T]\
-                                                  +8.6173324e-5*T*np.log(P)
+                                                  +8.6173324e-5*T*np.log(pp)
     return _entries
 
 
