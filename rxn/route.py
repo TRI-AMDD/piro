@@ -165,7 +165,9 @@ class SynthesisRoutes:
                 continue
 
             try:
+                # coeffs = np.linalg.solve(np.vstack(c).T, target_c)
                 coeffs = np.linalg.solve(np.vstack(c).T, target_c)
+                effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
             except:
                 # need better handling here.
                 continue
@@ -186,6 +188,11 @@ class SynthesisRoutes:
                 if np.abs(coeffs[i]) < 0.00001:
                     precursors.pop(i)
                     coeffs = np.delete(coeffs, i)
+
+            if effective_rank<len(coeffs):
+                # Removes under-determined reactions.
+                print(effective_rank, precursor_formulas, [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
+                continue
 
             label = '_'.join(sorted([e.entry_id for e in precursors]))
             if label in self.reactions:
@@ -308,6 +315,10 @@ class SynthesisRoutes:
             elts_precs = set()
             for s in [set(p.structure.composition.as_dict().keys()) for p in precursors]:
                 elts_precs = elts_precs.union(s)
+            if not set(entry.composition.as_dict().keys()).issubset(elts_precs):
+                print(entry.composition)
+                continue
+
             elts_precs = sorted(list(elts_precs))
 
             target_c = get_v(competing_target_entry.structure.composition.fractional_composition, elts_precs)
@@ -341,6 +352,14 @@ class SynthesisRoutes:
                     _precursors.pop(i)
                     coeffs = np.delete(coeffs, i)
 
+            try:
+                effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
+                if effective_rank < len(coeffs):
+                    print(precursor_formulas, coeffs)
+                    # Removes under-determined reactions.
+                    continue
+            except:
+                continue
             energies = np.array([e.data['formation_energy_per_atom'] for e in _precursors])
             rx_e = competing_target_entry.data['formation_energy_per_atom'] - np.sum(coeffs * energies)
             if rx_e < 0.0:
