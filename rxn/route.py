@@ -316,7 +316,7 @@ class SynthesisRoutes:
             for s in [set(p.structure.composition.as_dict().keys()) for p in precursors]:
                 elts_precs = elts_precs.union(s)
             if not set(entry.composition.as_dict().keys()).issubset(elts_precs):
-                print(entry.composition)
+                # print(entry.composition)
                 continue
 
             elts_precs = sorted(list(elts_precs))
@@ -355,7 +355,7 @@ class SynthesisRoutes:
             try:
                 effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
                 if effective_rank < len(coeffs):
-                    print(precursor_formulas, coeffs)
+                    # print(precursor_formulas, coeffs)
                     # Removes under-determined reactions.
                     continue
             except:
