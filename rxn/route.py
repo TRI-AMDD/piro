@@ -373,7 +373,7 @@ class SynthesisRoutes:
     def recommend_routes(self, temperature=298, pressure=None, allow_gas_release=False,
                          max_component_precursors=0, show_fraction_known_precursors=True,
                          show_known_precursors_only=False, confine_competing_to_icsd=True,
-                         display_peroxides=True):
+                         display_peroxides=True, display_superoxides=True):
         if not pressure:
             pressure = self.pressure
         if not (
@@ -406,10 +406,19 @@ class SynthesisRoutes:
             self.plot_data = self.plot_data.loc[display_reactions]
 
         if not display_peroxides:
-            peroxides = {'Li2O2', 'K2O2', 'BaO2', 'Rb2O2', 'Cs2O2', 'Na2O2'}
+            peroxides = {'Li2O2', 'K2O2', 'BaO2', 'Rb2O2', 'Cs2O2', 'Na2O2', 'SrO2',
+                         'CaO2','MgO2', 'ZnO2', 'CdO2', 'HgO2'}
             allowed_rows = []
             for i in range(len(self.plot_data)):
                 if not peroxides.intersection(set(self.plot_data["precursor_formulas"][i].tolist())):
+                    allowed_rows.append((i))
+            self.plot_data = self.plot_data.iloc[allowed_rows]
+
+        if not display_superoxides:
+            superoxides = {'LiO2', 'NaO2', 'KO2', 'RbO2', 'CsO2'}
+            allowed_rows = []
+            for i in range(len(self.plot_data)):
+                if not superoxides.intersection(set(self.plot_data["precursor_formulas"][i].tolist())):
                     allowed_rows.append((i))
             self.plot_data = self.plot_data.iloc[allowed_rows]
 
