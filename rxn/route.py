@@ -487,3 +487,18 @@ class SynthesisRoutes:
                 front.append(x.index[(x['barrier'] == barrier) & (x['n_competing'] == n_competing)][0])
                 barrier_front.append(barrier)
         return front
+
+    def topsis(self):
+        """
+        Returns a ranked list of reactions based on TOPSIS method for multiobjective optimization.
+        Returns:
+        """
+        x = self.plot_data[['n_competing','barrier']]
+        xsum = np.sqrt((x ** 2).sum())
+        mu = x / xsum
+        positive_ideal = mu.min()
+        negative_ideal = mu.max()
+        d_pos_ideal = np.sqrt(((mu - positive_ideal) ** 2).sum(axis=1))
+        d_neg_ideal = np.sqrt(((mu - negative_ideal) ** 2).sum(axis=1))
+        self.plot_data['topsis_score'] = d_neg_ideal / (d_pos_ideal + d_neg_ideal)
+        return self.plot_data.sort_values(by='topsis_score', ascending=False)
