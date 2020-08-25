@@ -20,7 +20,7 @@ from rxn import MP_API_KEY, RXN_FILES
 class SynthesisRoutes:
     def __init__(self, target_entry_id, confine_to_icsd=True, confine_to_stables=True, hull_distance=np.inf,
                  simple_precursors=False, explicit_includes=None, allow_gas_release=False,
-                 add_element=None, temperature=298, pressure=1, use_cache=True,
+                 add_element=None, temperature=298, pressure=1, use_cache=True, exclude_compositions=None,
                  entries=None, epitaxies=None, similarities=None, sigma=None, transport_constant=None):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
@@ -36,6 +36,7 @@ class SynthesisRoutes:
             explicit_includes (list): list of mp-ids to explicitly include. For example, confine_to_stables may exclude
                 certain common precursors in some systems, if they are not on the convex-hull - this allows such
                 potential precursors to be added to the library.
+            exclude_compositions (list): list of compositions to avoid in precursor library.
             allow_gas_release (bool): Many reactions require the release of gases like CO2, O2, etc. depending on the
                 precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
             add_element (str): Add an element to the chemical space of libraries that doesn't exist in the target
@@ -71,6 +72,7 @@ class SynthesisRoutes:
         self.hull_distance = hull_distance
         self.use_cache = use_cache
         self.confine_competing_to_icsd = False
+        self.exclude_compositions = exclude_compositions
 
         self._sigma = sigma if sigma else 2 * 6.242 * 0.01
         self._transport_constant = transport_constant if transport_constant else 10.0
@@ -98,6 +100,7 @@ class SynthesisRoutes:
                                                 property_data=['icsd_ids', 'formation_energy_per_atom'])
         for entry in self.entries:
             entry.structure.entry_id = entry.entry_id
+        print('Total # of entries found in this chemistry: ', len(self.entries))
 
     @property
     def target_entry(self):
@@ -125,11 +128,21 @@ class SynthesisRoutes:
         if self.explicit_includes:
             print("explicitly including: ", self.explicit_includes)
             for entry_id in self.explicit_includes:
-                entry = [e for e in self.entries if e.entry_id == entry_id][0]
+                try:
+                    entry = [e for e in self.entries if e.entry_id == entry_id][0]
+                except:
+                    print("Could not find {} in entry list".format(entry_id))
+                    continue
                 if entry not in precursor_library:
                     precursor_library.append(entry)
 
+        if self.exclude_compositions:
+            precursor_library = [i for i in precursor_library if i.composition.reduced_formula
+                                 not in self.exclude_compositions]
+
         self.precursor_library = precursor_library
+
+        print('Total # of precusors materials obeying the provided filters: ',len(precursor_library))
         return self.precursor_library
 
     def get_similarities(self):
@@ -204,6 +217,7 @@ class SynthesisRoutes:
                                                                          for p in precursors]),
                                          'precursor_ids': [p.entry_id for p in precursors]
                                          }
+        print("Total # of balanced reactions obtained: ", len(self.reactions))
         return self.reactions
 
     def get_reaction_energy(self, rxn_label, verbose=False):
@@ -373,7 +387,7 @@ class SynthesisRoutes:
     def recommend_routes(self, temperature=298, pressure=None, allow_gas_release=False,
                          max_component_precursors=0, show_fraction_known_precursors=True,
                          show_known_precursors_only=False, confine_competing_to_icsd=True,
-                         display_peroxides=True, display_superoxides=True):
+                         display_peroxides=True, display_superoxides=True, w=None, h=None):
         if not pressure:
             pressure = self.pressure
         if not (
@@ -427,7 +441,7 @@ class SynthesisRoutes:
         if show_known_precursors_only:
             self.plot_data = self.plot_data[ self.plot_data["exp_precursors"].astype(float) == 1.0 ]
         fig = px.scatter(self.plot_data, x="n_competing", y="barrier", hover_data=["summary"],
-                             color=color)
+                             color=color, width=w, height=h)
         for i in fig.data:
             i.marker.size = 12
         fig.update_layout(
@@ -494,11 +508,15 @@ class SynthesisRoutes:
         Returns:
         """
         x = self.plot_data[['n_competing','barrier']]
+        x = x[x['barrier'] < np.inf]
         xsum = np.sqrt((x ** 2).sum())
         mu = x / xsum
         positive_ideal = mu.min()
         negative_ideal = mu.max()
         d_pos_ideal = np.sqrt(((mu - positive_ideal) ** 2).sum(axis=1))
         d_neg_ideal = np.sqrt(((mu - negative_ideal) ** 2).sum(axis=1))
-        self.plot_data['topsis_score'] = d_neg_ideal / (d_pos_ideal + d_neg_ideal)
-        return self.plot_data.sort_values(by='topsis_score', ascending=False)
+        x['topsis_score'] = d_neg_ideal / (d_pos_ideal + d_neg_ideal)
+        x = x.sort_values(by='topsis_score', ascending=False)
+        result = self.plot_data.loc[x.index]
+        result['topsis_score'] = x['topsis_score']
+        return result
