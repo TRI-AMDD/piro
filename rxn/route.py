@@ -6,7 +6,7 @@ import pandas as pd
 import os
 import json
 from copy import deepcopy
-from pymatgen import MPRexkster
+from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from rxn.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from rxn.utils import get_v, epitaxy, similarity, update_gases, through_cache
