@@ -6,7 +6,7 @@ import pandas as pd
 import os
 import json
 from copy import deepcopy
-from pymatgen import MPRester
+from pymatgen import MPRexkster
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from rxn.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from rxn.utils import get_v, epitaxy, similarity, update_gases, through_cache
@@ -21,7 +21,8 @@ class SynthesisRoutes:
     def __init__(self, target_entry_id, confine_to_icsd=True, confine_to_stables=True, hull_distance=np.inf,
                  simple_precursors=False, explicit_includes=None, allow_gas_release=False,
                  add_element=None, temperature=298, pressure=1, use_cache=True, exclude_compositions=None,
-                 entries=None, epitaxies=None, similarities=None, sigma=None, transport_constant=None):
+                 entries=None, epitaxies=None, similarities=None, sigma=None, transport_constant=None,
+                 custom_target_entry=None):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
             and high-throughput DFT data.
@@ -57,6 +58,7 @@ class SynthesisRoutes:
             sigma (float): surface energy constant (eV/Ang^2) to be used in predictions. Defaults to equivalent
                 2.0 J/m^2.
             transport_constant (float): diffusion barrier coefficient (max barrier). Defaults to 10.0.
+            custom_target_entry (MP entry): custom computed entry object pymatgen
         """
 
         self.target_entry_id = target_entry_id
@@ -73,6 +75,7 @@ class SynthesisRoutes:
         self.use_cache = use_cache
         self.confine_competing_to_icsd = False
         self.exclude_compositions = exclude_compositions
+        self.custom_target_entry = custom_target_entry
 
         self._sigma = sigma if sigma else 2 * 6.242 * 0.01
         self._transport_constant = transport_constant if transport_constant else 10.0
@@ -81,7 +84,10 @@ class SynthesisRoutes:
         self.reactions = {}
         if not entries:
             a = MPRester(MP_API_KEY)
-            _e = a.get_entry_by_material_id(self.target_entry_id)
+            if not custom_target_entry:
+                _e = a.get_entry_by_material_id(self.target_entry_id)
+            else:
+                _e = custom_target_entry
             self.elts = list(_e.composition.as_dict().keys())
             if add_element:
                 self.elts.append(add_element)
@@ -100,11 +106,16 @@ class SynthesisRoutes:
                                                 property_data=['icsd_ids', 'formation_energy_per_atom'])
         for entry in self.entries:
             entry.structure.entry_id = entry.entry_id
+
+
         print('Total # of entries found in this chemistry: ', len(self.entries))
 
     @property
     def target_entry(self):
-        return [e for e in self.entries if e.entry_id == self.target_entry_id][0]
+        if self.custom_target_entry:
+            return self.custom_target_entry
+        else:
+            return [e for e in self.entries if e.entry_id == self.target_entry_id][0]
 
     def get_precursor_library(self):
         phased = PhaseDiagram(self.entries)
