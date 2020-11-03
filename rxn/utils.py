@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 import json
 from copy import deepcopy
-
+from pymatgen import Composition
 from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
 from matminer.featurizers.base import MultipleFeaturizer
 from matminer.featurizers.composition import ElementProperty, Stoichiometry, ValenceOrbital, IonProperty
@@ -12,6 +12,7 @@ from matminer.featurizers.structure import (SiteStatsFingerprint, StructuralHete
                                             ChemicalOrdering, StructureComposition, MaximumPackingEfficiency)
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import pairwise_distances
+from sklearn.linear_model import LinearRegression
 
 from joblib import Parallel, delayed
 
@@ -129,6 +130,26 @@ def recompute_flatd(source='camd/shared-data/oqmd1.2_icsd_featurized_clean_v2.pi
         pickle.dump(scaler, f)
     with open('./files/quantiles.pickle', 'wb') as f:
         pickle.dump(quantiles, f)
+
+
+def oqmd_to_mp_compatible_energy(composition, energy, mp=None,oqmd=None):
+    """
+    Helper method to get an ad hoc adjustment to an OQMD formation energy (eV/atom)
+    given two dictionaries with compositions as keys and formation energies as
+    values for a set of matching structures across both databases.
+    A linear (per-atom) adjustment is found.
+    """
+    c = Composition(composition).fractional_composition.as_dict()
+    elems = sorted(c.keys())
+    x, y = [], []
+    for i in mp:
+        c1 = Composition(i).fractional_composition.as_dict()
+        x.append( [c1[el] for el in elems])
+        y.append(mp[i]-oqmd[i])
+    reg = LinearRegression()
+    reg.fit(x, y)
+    return energy+reg.predict([[c[el] for el in elems]])[0]
+
 
 if __name__ == "__main__":
     recompute_flatd()
