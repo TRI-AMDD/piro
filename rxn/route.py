@@ -234,9 +234,16 @@ class SynthesisRoutes:
     def get_reaction_energy(self, rxn_label, verbose=False):
         precursors = update_gases(self.reactions[rxn_label]['precursors'], T=self.temperature, P=self.pressure,
                                   copy=True)
+        # Free energy per atom
         energies = np.array([e.data['formation_energy_per_atom'] for e in precursors])
         self.reactions[rxn_label]['energy'] = self.target_entry.data['formation_energy_per_atom'] \
                                               - np.sum(self.reactions[rxn_label]['coeffs'] * energies)
+        # Enthalpy energy per atom
+        enthalpies = np.array([e.data['enthalpy'] if 'enthalpy' in e.data
+                               else e.data['formation_energy_per_atom'] for e in precursors])
+        self.reactions[rxn_label]['enthalpy'] = self.target_entry.data['formation_energy_per_atom'] \
+                                              - np.sum(self.reactions[rxn_label]['coeffs'] * enthalpies)
+
         self.reactions[rxn_label]['temperature'] = self.temperature
 
         if verbose:
@@ -419,6 +426,7 @@ class SynthesisRoutes:
             self.check_if_known_precursors()
 
         self.plot_data = pd.DataFrame.from_dict(self.reactions, orient='index')[['n_competing', "barrier", "summary",
+                                                                                 "energy", "enthalpy",
                                                                                  "exp_precursors", "precursor_formulas"]]
         if max_component_precursors:
             allowed_precursor_ids = [i.entry_id for i in self.precursor_library
