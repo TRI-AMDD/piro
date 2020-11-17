@@ -405,7 +405,8 @@ class SynthesisRoutes:
     def recommend_routes(self, temperature=298, pressure=None, allow_gas_release=False,
                          max_component_precursors=0, show_fraction_known_precursors=True,
                          show_known_precursors_only=False, confine_competing_to_icsd=True,
-                         display_peroxides=True, display_superoxides=True, w=None, h=None):
+                         display_peroxides=True, display_superoxides=True, w=None, h=None,
+                         xrange=None, yrange=None, custom_text=''):
         if not pressure:
             pressure = self.pressure
         if not (
@@ -460,14 +461,24 @@ class SynthesisRoutes:
         if show_known_precursors_only:
             self.plot_data = self.plot_data[ self.plot_data["exp_precursors"].astype(float) == 1.0 ]
         fig = px.scatter(self.plot_data, x="n_competing", y="barrier", hover_data=["summary"],
-                             color=color, width=w, height=h)
+                             color=color, width=w, height=h, template='simple_white')
         for i in fig.data:
-            i.marker.size = 12
+            i.marker.size = 10
         fig.update_layout(
-            yaxis={'title': 'Barrier (a.u.)'},
-            xaxis={'title': 'Competing products metric (a.u.)'},
-            title="Synthesis target: " + self.target_entry.structure.composition.reduced_formula)
-        fig.show()
+            yaxis={'title': 'Nucleation barrier (a.u.)', 'ticks': 'inside', 'mirror': True, 'showline': True},
+            xaxis={'title': 'Number of competing phases', 'ticks': 'inside', 'mirror': True, 'showline': True},
+            font={'size': 13},
+            title="Target: " + self.target_entry.structure.composition.reduced_formula + custom_text,
+            title_font_size=15,
+            title_x=0.5)
+        fig.update_traces(
+            marker=dict(size=12,line=dict(width=2, color='DarkSlateGrey'),opacity=0.7),  selector=dict(mode='markers')
+        )
+        if xrange:
+            fig.update_xaxes(range=xrange)
+        if yrange:
+            fig.update_yaxes(range=yrange)
+        return fig
 
     def get_precursor_formulas(self, include_ids=True):
         if include_ids:
