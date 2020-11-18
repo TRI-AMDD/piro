@@ -8,6 +8,7 @@ import json
 from copy import deepcopy
 from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
+from pymatgen.util.string import latexify
 from rxn.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from rxn.utils import get_v, epitaxy, similarity, update_gases, through_cache
 from rxn import MP_API_KEY, RXN_FILES
@@ -406,7 +407,7 @@ class SynthesisRoutes:
                          max_component_precursors=0, show_fraction_known_precursors=True,
                          show_known_precursors_only=False, confine_competing_to_icsd=True,
                          display_peroxides=True, display_superoxides=True, w=None, h=None,
-                         xrange=None, yrange=None, custom_text=''):
+                         xrange=None, yrange=None, add_pareto=False, custom_text=''):
         if not pressure:
             pressure = self.pressure
         if not (
@@ -468,16 +469,36 @@ class SynthesisRoutes:
             yaxis={'title': 'Nucleation barrier (a.u.)', 'ticks': 'inside', 'mirror': True, 'showline': True},
             xaxis={'title': 'Number of competing phases', 'ticks': 'inside', 'mirror': True, 'showline': True},
             font={'size': 13},
-            title="Target: " + self.target_entry.structure.composition.reduced_formula + custom_text,
+            title=r"Target: " + self.target_entry.structure.composition.reduced_formula + custom_text,
             title_font_size=15,
             title_x=0.5)
         fig.update_traces(
-            marker=dict(size=12,line=dict(width=2, color='DarkSlateGrey'),opacity=0.7),  selector=dict(mode='markers')
+            marker=dict(size=12, line=dict(width=2, color='DarkSlateGrey'), opacity=0.8),  selector=dict(mode='markers')
         )
         if xrange:
             fig.update_xaxes(range=xrange)
         if yrange:
             fig.update_yaxes(range=yrange)
+
+        if add_pareto:
+            import plotly.graph_objects as go
+            _pareto_data = self.topsis().loc[self.get_pareto_front()]
+            _x = _pareto_data['n_competing']
+            _y = _pareto_data['barrier']
+            fig.add_trace(go.Scatter(
+                x=_x,
+                y=_y,
+                line=dict(color='firebrick', width=2)
+                # connectgaps=True
+            ))
+            fig.add_trace(go.Scatter(
+                x=[_x[0], _x[0], None, _x[-1], self.topsis()['n_competing'].max()],
+                y=[_y[0], self.topsis()['barrier'].max(), None, _y[-1],_y[-1]],
+                line=dict(color='firebrick', width=2, dash='dash'),
+                connectgaps=False
+            ))
+
+            fig.update_layout(showlegend=False)
         return fig
 
     def get_precursor_formulas(self, include_ids=True):
@@ -532,7 +553,7 @@ class SynthesisRoutes:
                 barrier_front.append(barrier)
         return front
 
-    def topsis(self):
+    def topsis(self, latex=False):
         """
         Returns a ranked list of reactions based on TOPSIS method for multiobjective optimization.
         Returns:
@@ -549,4 +570,7 @@ class SynthesisRoutes:
         x = x.sort_values(by='topsis_score', ascending=False)
         result = self.plot_data.loc[x.index]
         result['topsis_score'] = x['topsis_score']
+
+        if latex:
+            result['summary'] = result['summary'].apply(latexify)
         return result
