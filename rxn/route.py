@@ -536,7 +536,8 @@ class SynthesisRoutes:
         """
         Returns: list of reaction labels on the pareto front
         """
-        x = self.plot_data.sort_values(by=['n_competing', 'barrier'])[['n_competing', 'barrier']]
+        x = self.plot_data[self.plot_data['barrier'] < np.inf].sort_values(by=['n_competing',
+                                                                               'barrier'])[['n_competing', 'barrier']]
         y = x.groupby(by=['n_competing'], as_index=False).min()
         rows = list(y.iterrows())
         front = []

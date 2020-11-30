@@ -99,7 +99,7 @@ def similarity(_parents, target):
     x_target = x_target.reindex(sorted(x_target.columns), axis=1)
     x_parent = x_parent.reindex(sorted(x_parent.columns), axis=1)
 
-    with open(os.path.join(RXN_FILES, "scaler.pickle"), "rb") as f:
+    with open(os.path.join(RXN_FILES, "scaler2.pickle"), "rb") as f:
         scaler = pickle.load(f)
     with open(os.path.join(RXN_FILES, "quantiles.pickle"), "rb") as f:
         quantiles = pickle.load(f)
@@ -162,9 +162,9 @@ def recompute_flatd(source="camd/shared-data/oqmd1.2_icsd_featurized_clean_v2.pi
     sample_X = scaler.fit_transform(sample_X)
     flatD = pairwise_distances(sample_X).flatten()
     quantiles = np.quantile(flatD, np.linspace(0, 1, 101))
-    with open("./files/scaler.pickle", "wb") as f:
+    with open("./files/scaler2.pickle", "wb") as f:
         pickle.dump(scaler, f)
-    with open("./files/quantiles.pickle", "wb") as f:
+    with open("./files/quantiles2.pickle", "wb") as f:
         pickle.dump(quantiles, f)
 
 
