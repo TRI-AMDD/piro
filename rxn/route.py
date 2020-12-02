@@ -8,6 +8,7 @@ import json
 from copy import deepcopy
 from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
+from pymatgen.util.string import latexify
 from rxn.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from rxn.utils import get_v, epitaxy, similarity, update_gases, through_cache
 from rxn import MP_API_KEY, RXN_FILES
@@ -20,8 +21,9 @@ from rxn import MP_API_KEY, RXN_FILES
 class SynthesisRoutes:
     def __init__(self, target_entry_id, confine_to_icsd=True, confine_to_stables=True, hull_distance=np.inf,
                  simple_precursors=False, explicit_includes=None, allow_gas_release=False,
-                 add_element=None, temperature=298, pressure=1, use_cache=True,
-                 entries=None, epitaxies=None, similarities=None, sigma=None, transport_constant=None):
+                 add_element=None, temperature=298, pressure=1, use_cache=True, exclude_compositions=None,
+                 entries=None, epitaxies=None, similarities=None, sigma=None, transport_constant=None,
+                 custom_target_entry=None):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
             and high-throughput DFT data.
@@ -36,6 +38,7 @@ class SynthesisRoutes:
             explicit_includes (list): list of mp-ids to explicitly include. For example, confine_to_stables may exclude
                 certain common precursors in some systems, if they are not on the convex-hull - this allows such
                 potential precursors to be added to the library.
+            exclude_compositions (list): list of compositions to avoid in precursor library.
             allow_gas_release (bool): Many reactions require the release of gases like CO2, O2, etc. depending on the
                 precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
             add_element (str): Add an element to the chemical space of libraries that doesn't exist in the target
@@ -56,6 +59,7 @@ class SynthesisRoutes:
             sigma (float): surface energy constant (eV/Ang^2) to be used in predictions. Defaults to equivalent
                 2.0 J/m^2.
             transport_constant (float): diffusion barrier coefficient (max barrier). Defaults to 10.0.
+            custom_target_entry (MP entry): custom computed entry object pymatgen
         """
 
         self.target_entry_id = target_entry_id
@@ -71,6 +75,8 @@ class SynthesisRoutes:
         self.hull_distance = hull_distance
         self.use_cache = use_cache
         self.confine_competing_to_icsd = False
+        self.exclude_compositions = exclude_compositions
+        self.custom_target_entry = custom_target_entry
 
         self._sigma = sigma if sigma else 2 * 6.242 * 0.01
         self._transport_constant = transport_constant if transport_constant else 10.0
@@ -79,7 +85,10 @@ class SynthesisRoutes:
         self.reactions = {}
         if not entries:
             a = MPRester(MP_API_KEY)
-            _e = a.get_entry_by_material_id(self.target_entry_id)
+            if not custom_target_entry:
+                _e = a.get_entry_by_material_id(self.target_entry_id)
+            else:
+                _e = custom_target_entry
             self.elts = list(_e.composition.as_dict().keys())
             if add_element:
                 self.elts.append(add_element)
@@ -99,9 +108,15 @@ class SynthesisRoutes:
         for entry in self.entries:
             entry.structure.entry_id = entry.entry_id
 
+
+        print('Total # of entries found in this chemistry: ', len(self.entries))
+
     @property
     def target_entry(self):
-        return [e for e in self.entries if e.entry_id == self.target_entry_id][0]
+        if self.custom_target_entry:
+            return self.custom_target_entry
+        else:
+            return [e for e in self.entries if e.entry_id == self.target_entry_id][0]
 
     def get_precursor_library(self):
         phased = PhaseDiagram(self.entries)
@@ -125,11 +140,21 @@ class SynthesisRoutes:
         if self.explicit_includes:
             print("explicitly including: ", self.explicit_includes)
             for entry_id in self.explicit_includes:
-                entry = [e for e in self.entries if e.entry_id == entry_id][0]
+                try:
+                    entry = [e for e in self.entries if e.entry_id == entry_id][0]
+                except:
+                    print("Could not find {} in entry list".format(entry_id))
+                    continue
                 if entry not in precursor_library:
                     precursor_library.append(entry)
 
+        if self.exclude_compositions:
+            precursor_library = [i for i in precursor_library if i.composition.reduced_formula
+                                 not in self.exclude_compositions]
+
         self.precursor_library = precursor_library
+
+        print('Total # of precusors materials obeying the provided filters: ',len(precursor_library))
         return self.precursor_library
 
     def get_similarities(self):
@@ -204,14 +229,22 @@ class SynthesisRoutes:
                                                                          for p in precursors]),
                                          'precursor_ids': [p.entry_id for p in precursors]
                                          }
+        print("Total # of balanced reactions obtained: ", len(self.reactions))
         return self.reactions
 
     def get_reaction_energy(self, rxn_label, verbose=False):
         precursors = update_gases(self.reactions[rxn_label]['precursors'], T=self.temperature, P=self.pressure,
                                   copy=True)
+        # Free energy per atom
         energies = np.array([e.data['formation_energy_per_atom'] for e in precursors])
         self.reactions[rxn_label]['energy'] = self.target_entry.data['formation_energy_per_atom'] \
                                               - np.sum(self.reactions[rxn_label]['coeffs'] * energies)
+        # Enthalpy energy per atom
+        enthalpies = np.array([e.data['enthalpy'] if 'enthalpy' in e.data
+                               else e.data['formation_energy_per_atom'] for e in precursors])
+        self.reactions[rxn_label]['enthalpy'] = self.target_entry.data['formation_energy_per_atom'] \
+                                              - np.sum(self.reactions[rxn_label]['coeffs'] * enthalpies)
+
         self.reactions[rxn_label]['temperature'] = self.temperature
 
         if verbose:
@@ -373,7 +406,8 @@ class SynthesisRoutes:
     def recommend_routes(self, temperature=298, pressure=None, allow_gas_release=False,
                          max_component_precursors=0, show_fraction_known_precursors=True,
                          show_known_precursors_only=False, confine_competing_to_icsd=True,
-                         display_peroxides=True, display_superoxides=True):
+                         display_peroxides=True, display_superoxides=True, w=None, h=None,
+                         xrange=None, yrange=None, add_pareto=False, custom_text=''):
         if not pressure:
             pressure = self.pressure
         if not (
@@ -394,6 +428,7 @@ class SynthesisRoutes:
             self.check_if_known_precursors()
 
         self.plot_data = pd.DataFrame.from_dict(self.reactions, orient='index')[['n_competing', "barrier", "summary",
+                                                                                 "energy", "enthalpy",
                                                                                  "exp_precursors", "precursor_formulas"]]
         if max_component_precursors:
             allowed_precursor_ids = [i.entry_id for i in self.precursor_library
@@ -427,14 +462,44 @@ class SynthesisRoutes:
         if show_known_precursors_only:
             self.plot_data = self.plot_data[ self.plot_data["exp_precursors"].astype(float) == 1.0 ]
         fig = px.scatter(self.plot_data, x="n_competing", y="barrier", hover_data=["summary"],
-                             color=color)
+                             color=color, width=w, height=h, template='simple_white')
         for i in fig.data:
-            i.marker.size = 12
+            i.marker.size = 10
         fig.update_layout(
-            yaxis={'title': 'Barrier (a.u.)'},
-            xaxis={'title': 'Competing products metric (a.u.)'},
-            title="Synthesis target: " + self.target_entry.structure.composition.reduced_formula)
-        fig.show()
+            yaxis={'title': 'Nucleation barrier (a.u.)', 'ticks': 'inside', 'mirror': True, 'showline': True},
+            xaxis={'title': 'Number of competing phases', 'ticks': 'inside', 'mirror': True, 'showline': True},
+            font={'size': 13},
+            title=r"Target: " + self.target_entry.structure.composition.reduced_formula + custom_text,
+            title_font_size=15,
+            title_x=0.5)
+        fig.update_traces(
+            marker=dict(size=12, line=dict(width=2, color='DarkSlateGrey'), opacity=0.8),  selector=dict(mode='markers')
+        )
+        if xrange:
+            fig.update_xaxes(range=xrange)
+        if yrange:
+            fig.update_yaxes(range=yrange)
+
+        if add_pareto:
+            import plotly.graph_objects as go
+            _pareto_data = self.topsis().loc[self.get_pareto_front()]
+            _x = _pareto_data['n_competing']
+            _y = _pareto_data['barrier']
+            fig.add_trace(go.Scatter(
+                x=_x,
+                y=_y,
+                line=dict(color='firebrick', width=2)
+                # connectgaps=True
+            ))
+            fig.add_trace(go.Scatter(
+                x=[_x[0], _x[0], None, _x[-1], self.topsis()['n_competing'].max()],
+                y=[_y[0], self.topsis()['barrier'].max(), None, _y[-1],_y[-1]],
+                line=dict(color='firebrick', width=2, dash='dash'),
+                connectgaps=False
+            ))
+
+            fig.update_layout(showlegend=False)
+        return fig
 
     def get_precursor_formulas(self, include_ids=True):
         if include_ids:
@@ -471,7 +536,8 @@ class SynthesisRoutes:
         """
         Returns: list of reaction labels on the pareto front
         """
-        x = self.plot_data.sort_values(by=['n_competing', 'barrier'])[['n_competing', 'barrier']]
+        x = self.plot_data[self.plot_data['barrier'] < np.inf].sort_values(by=['n_competing',
+                                                                               'barrier'])[['n_competing', 'barrier']]
         y = x.groupby(by=['n_competing'], as_index=False).min()
         rows = list(y.iterrows())
         front = []
@@ -487,3 +553,25 @@ class SynthesisRoutes:
                 front.append(x.index[(x['barrier'] == barrier) & (x['n_competing'] == n_competing)][0])
                 barrier_front.append(barrier)
         return front
+
+    def topsis(self, latex=False):
+        """
+        Returns a ranked list of reactions based on TOPSIS method for multiobjective optimization.
+        Returns:
+        """
+        x = self.plot_data[['n_competing','barrier']]
+        x = x[x['barrier'] < np.inf]
+        xsum = np.sqrt((x ** 2).sum())
+        mu = x / xsum
+        positive_ideal = mu.min()
+        negative_ideal = mu.max()
+        d_pos_ideal = np.sqrt(((mu - positive_ideal) ** 2).sum(axis=1))
+        d_neg_ideal = np.sqrt(((mu - negative_ideal) ** 2).sum(axis=1))
+        x['topsis_score'] = d_neg_ideal / (d_pos_ideal + d_neg_ideal)
+        x = x.sort_values(by='topsis_score', ascending=False)
+        result = self.plot_data.loc[x.index]
+        result['topsis_score'] = x['topsis_score']
+
+        if latex:
+            result['summary'] = result['summary'].apply(latexify)
+        return result

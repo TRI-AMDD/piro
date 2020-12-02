@@ -23,6 +23,8 @@ ST = {"O2": {0: 0, 298: 0.3170, 300: 0.3192, 400: 0.4433, 500: 0.5718, 600: 0.70
              1600: 2.0239, 1700: 2.1693, 1800: 2.3158, 1900: 2.4634, 2000: 2.6122}
       }
 
-H = {"CO": -0.5897, "CO2": -1.3583, "H2O": -0.82547}
+# Note, default experiment derived value for CO2 here is -1.3583 eV/atom. We include
+# a correction factor that ensures MP data for carbonates yield accurate decomposition energies.
+H = {"CO": -0.5897, "CO2": -1.3583-0.2482, "H2O": -0.82547}
 
 DEFAULT_GAS_PRESSURES = {'O2': 0.2095, 'CO2': 0.000394737, 'N2': 0.7809, 'H2': 0.1, 'H2O': 0.1, 'F2': 0.1}
