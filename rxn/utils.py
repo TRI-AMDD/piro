@@ -35,8 +35,12 @@ def get_v(c, elts):
 
 
 def through_cache(_parents, target, type="epitaxy"):
-    with open(os.path.join(RXN_FILES, "_" + type + "_cache.json"), "r") as f:
-        db = json.load(f)
+    cache_path = os.path.join(RXN_FILES, "_" + type + "_cache.json")
+    if os.path.isfile(cache_path):
+        with open(os.path.join(RXN_FILES, "_" + type + "_cache.json"), "r") as f:
+            db = json.load(f)
+    else:
+        db = {}
     ordered_pairs = ["_".join(sorted([target.entry_id, i.entry_id])) for i in _parents]
     indices_compt = [i for i in range(len(ordered_pairs)) if ordered_pairs[i] not in db]
 
