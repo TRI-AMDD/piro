@@ -107,8 +107,6 @@ class SynthesisRoutes:
                                                 property_data=['icsd_ids', 'formation_energy_per_atom'])
         for entry in self.entries:
             entry.structure.entry_id = entry.entry_id
-
-
         print('Total # of entries found in this chemistry: ', len(self.entries))
 
     @property

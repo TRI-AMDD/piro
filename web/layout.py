@@ -24,7 +24,7 @@ BOOL_OPTIONS = ["allow_gas_release",
 
 def layout_func(app):
     layout = html.Div([
-        dcc.Markdown('Synthesis analyzer'),
+        html.H1('Synthesis analyzer'),
         dcc.Input(id="input_mp_id",
                   placeholder="enter mp-id"
                   ),
@@ -59,7 +59,10 @@ def layout_func(app):
         #            },
         #            ),
         # dcc.Store(id='data_store', storage_type='memory'),
-        html.Div(id='synthesis_output'),
+        dcc.Loading(id='loading-1',
+                    children=[html.Div(id='synthesis_output')],
+                    type="cube"
+                    )
     ])
 
     @app.callback(Output('synthesis_output', 'children'),
@@ -77,51 +80,55 @@ def layout_func(app):
         if value is None:
             raise PreventUpdate
 
-        # Marshall options
-        temperature = float(temperature) if temperature else 1600.
-        pressure = float(pressure) if pressure else None
-        max_component_precursors = int(max_component_precursors) if max_component_precursors else 2
-        add_element = add_element
-        synthesis_bool_options = {bo: True if bo in synthesis_bool_options else False
-                                  for bo in BOOL_OPTIONS}
+        try:
+            # Marshall options
+            temperature = float(temperature) if temperature else 1600.
+            pressure = float(pressure) if pressure else None
+            max_component_precursors = int(max_component_precursors) if max_component_precursors else 2
+            add_element = add_element
+            synthesis_bool_options = {bo: True if bo in synthesis_bool_options else False
+                                      for bo in BOOL_OPTIONS}
 
-        # content_type, content_string = contents.split(',')
-        # decoded = base64.b64decode(content_string).decode('utf-8')
-        # logger.debug("Decoding {}".format(fname))
+            # content_type, content_string = contents.split(',')
+            # decoded = base64.b64decode(content_string).decode('utf-8')
+            # logger.debug("Decoding {}".format(fname))
 
-        # if fnmatch(fname.lower(), "*.cif*") or fnmatch(fname.lower(), "*.mcif*"):
-        #     parser = CifParser.from_string(decoded)
-        #     structures = parser.get_structures()
+            # if fnmatch(fname.lower(), "*.cif*") or fnmatch(fname.lower(), "*.mcif*"):
+            #     parser = CifParser.from_string(decoded)
+            #     structures = parser.get_structures()
 
-        # elif fnmatch(fname.lower(), '*.json'):
-        #     structures = json.loads(decoded, cls=MontyDecoder)
+            # elif fnmatch(fname.lower(), '*.json'):
+            #     structures = json.loads(decoded, cls=MontyDecoder)
 
-        # else:
-        #     return "Unsupported file format or filename, " \
-        #            "please convert to cif or pymatgen json"
+            # else:
+            #     return "Unsupported file format or filename, " \
+            #            "please convert to cif or pymatgen json"
 
-        # prediction = predict_from_structures(structures)
+            # prediction = predict_from_structures(structures)
 
-        # table = generate_table(prediction)
-        # return table
-        router = SynthesisRoutes(value, add_element=add_element)
-        fig = router.recommend_routes(
-            temperature=temperature,
-            pressure=pressure,
-            max_component_precursors=max_component_precursors,
-            **synthesis_bool_options
-        )
-        #     allow_gas_release=False,
-        #     show_fraction_known_precursors=False,
-        #     show_known_precursors_only=False,
-        #     confine_competing_to_icsd=False,
-        #     display_peroxides=True,
-        #     # custom_text=' - 1600K, 10<sup>-3</sup> atm, standard reactants',
-        #     # w=640, h=480,
-        #     add_pareto=True,
-        #           # yrange=(-0.25, 9)
-        #           )
-        return dcc.Graph(figure=fig)
+            # table = generate_table(prediction)
+            # return table
+            router = SynthesisRoutes(value, add_element=add_element)
+            fig = router.recommend_routes(
+                temperature=temperature,
+                pressure=pressure,
+                max_component_precursors=max_component_precursors,
+                **synthesis_bool_options
+            )
+            #     allow_gas_release=False,
+            #     show_fraction_known_precursors=False,
+            #     show_known_precursors_only=False,
+            #     confine_competing_to_icsd=False,
+            #     display_peroxides=True,
+            #     # custom_text=' - 1600K, 10<sup>-3</sup> atm, standard reactants',
+            #     # w=640, h=480,
+            #     add_pareto=True,
+            #           # yrange=(-0.25, 9)
+            #           )
+            return dcc.Graph(figure=fig)
+        except Exception as e:
+            return html.Div(children=[str(e)],
+                            style={'color': 'red'})
 
     return layout
 
