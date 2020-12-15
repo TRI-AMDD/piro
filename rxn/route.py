@@ -125,7 +125,7 @@ class SynthesisRoutes:
         elif self.hull_distance < np.inf:
             precursor_library = [e for e in self.entries if phased.get_e_above_hull(e) <= self.hull_distance]
         else:
-            precursor_library = self.entries
+            precursor_library = [e for e in self.entries]
         if self.confine_to_icsd:
             precursor_library = [i for i in precursor_library if i.data['icsd_ids']]
 
