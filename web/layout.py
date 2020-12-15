@@ -8,6 +8,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from rxn.route import SynthesisRoutes
 from dash.exceptions import PreventUpdate
+from pymatgen import Composition, MPRester
 from fnmatch import fnmatch
 
 
@@ -26,7 +27,7 @@ def layout_func(app):
     layout = html.Div([
         html.H1('Synthesis analyzer'),
         dcc.Input(id="input_mp_id",
-                  placeholder="enter mp-id"
+                  placeholder="enter mp-id or formula"
                   ),
         html.Button('run', id='run_button'),#, style={"display": "none"}),
         html.Details([
@@ -108,6 +109,14 @@ def layout_func(app):
 
             # table = generate_table(prediction)
             # return table
+            if not value.startswith("mp"):
+                with MPRester() as mpr:
+                    formula = Composition(value).reduced_formula
+                    options = mpr.query({"pretty_formula": formula}, ['material_id', 'e_above_hull'])
+                    if not options:
+                        raise ValueError("{} query failed, please enter valid formula or mp id".format(value))
+                    options = sorted(options, key=lambda x: x['e_above_hull'])
+                    value = options[0]['material_id']
             router = SynthesisRoutes(value, add_element=add_element)
             fig = router.recommend_routes(
                 temperature=temperature,
