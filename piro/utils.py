@@ -26,8 +26,8 @@ from sklearn.linear_model import LinearRegression
 
 from joblib import Parallel, delayed
 
-from rxn.data import ST, H
-from rxn import RXN_FILES
+from piro.data import ST, H
+from piro import RXN_FILES
 
 
 def get_v(c, elts):

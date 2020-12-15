@@ -9,9 +9,9 @@ from copy import deepcopy
 from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
-from rxn.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
-from rxn.utils import get_v, epitaxy, similarity, update_gases, through_cache
-from rxn import MP_API_KEY, RXN_FILES
+from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
+from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
+from piro import MP_API_KEY, RXN_FILES
 
 
 # TODO: for elements and gases (references) - don't allow multiple entries
