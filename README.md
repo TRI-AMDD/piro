@@ -1,7 +1,5 @@
 ## *piro:* rational planning of solid-state synthesis routes for inorganics
 
-**WIP**
-
 _piro_ is a recommendation system for navigation and planning of synthesis of 
 inorganic materials based on classical nucleation theory 
 and semi-empirical, data-driven approximations to its parts. Currently it
