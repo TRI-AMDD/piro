@@ -12,6 +12,8 @@ from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
 from piro import MP_API_KEY, RXN_FILES
+from tqdm import tqdm
+from math import comb
 
 
 # TODO: for elements and gases (references) - don't allow multiple entries
@@ -181,7 +183,8 @@ class SynthesisRoutes:
 
         target_c = get_v(self.target_entry.structure.composition.fractional_composition, self.elts)
 
-        for precursors in itertools.combinations(self.precursor_library, len(self.elts)):
+        for precursors in tqdm(itertools.combinations(self.precursor_library, len(self.elts)),
+                               total=comb(len(self.precursor_library),len(self.elts))):
 
             precursors = list(precursors)
 
