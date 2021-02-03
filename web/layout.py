@@ -23,6 +23,18 @@ BOOL_OPTIONS = ["allow_gas_release",
                 "add_pareto"
                 ]
 
+BOOL_TOOLTIPS = {"allow_gas_release": "Allow for gaseous reaction products, e.g. O2, CO2",
+                 "show_fraction_known_precursors": "Show the fraction of known synthetic reagents in reaction",
+                 "show_known_precursors_only": "Show only reactions with known precursors",
+                 "confine_competing_to_icsd": "Confine competing reactions to those containing ICSD materials",
+                 "display_peroxides": "Show reactions involving peroxide compounds",
+                 "add_pareto": "Show the Pareto front on the reaction analysis diagram"
+                 }
+
+INPUT_WIDTH = "150px"
+JUSTIFY = "left"
+
+
 def layout_func(app):
     layout = html.Div([
         html.H1('Synthesis analyzer'),
@@ -32,10 +44,22 @@ def layout_func(app):
         html.Button('run', id='run_button'),#, style={"display": "none"}),
         html.Details([
             html.Summary('Advanced options'),
-            dcc.Input(id="temperature", placeholder="1600 K"),
-            dcc.Input(id="pressure", placeholder="0.001 atm"),
-            dcc.Input(id="add_element", placeholder="add element"),
-            dcc.Input(id="max_component_precursors", placeholder="2"),
+            html.Div([
+                html.Span("Temperature", style={"width": INPUT_WIDTH, "float": JUSTIFY}),
+                dcc.Input(id="temperature", placeholder="1600 K")]
+            ),
+            html.Div([
+                html.Span("Pressure", style={"width": INPUT_WIDTH, "float": JUSTIFY}),
+                dcc.Input(id="pressure", placeholder="0.001 atm"),
+            ]),
+            html.Div([
+                html.Span("Add element", style={"width": INPUT_WIDTH, "float": JUSTIFY}),
+                dcc.Input(id="add_element", placeholder="None"),
+            ]),
+            html.Div([
+                html.Span("Max precursors", style={"width": INPUT_WIDTH, "float": JUSTIFY}),
+                dcc.Input(id="max_component_precursors", placeholder="2"),
+            ]),
             dcc.Checklist(
                 id="synthesis_bool_options",
                 options=[{"label": bo, "value": bo} for bo in BOOL_OPTIONS],
