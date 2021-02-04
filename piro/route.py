@@ -13,7 +13,7 @@ from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
 from piro import MP_API_KEY, RXN_FILES
 from tqdm import tqdm
-from math import comb
+from scipy.special import comb
 
 
 # TODO: for elements and gases (references) - don't allow multiple entries
@@ -109,8 +109,6 @@ class SynthesisRoutes:
                                                 property_data=['icsd_ids', 'formation_energy_per_atom'])
         for entry in self.entries:
             entry.structure.entry_id = entry.entry_id
-
-
         print('Total # of entries found in this chemistry: ', len(self.entries))
 
     @property
