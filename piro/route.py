@@ -9,9 +9,11 @@ from copy import deepcopy
 from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
-from rxn.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
-from rxn.utils import get_v, epitaxy, similarity, update_gases, through_cache
-from rxn import MP_API_KEY, RXN_FILES
+from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
+from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
+from piro import MP_API_KEY, RXN_FILES
+from tqdm import tqdm
+from math import comb
 
 
 # TODO: for elements and gases (references) - don't allow multiple entries
@@ -123,7 +125,7 @@ class SynthesisRoutes:
         elif self.hull_distance < np.inf:
             precursor_library = [e for e in self.entries if phased.get_e_above_hull(e) <= self.hull_distance]
         else:
-            precursor_library = self.entries
+            precursor_library = [e for e in self.entries]
         if self.confine_to_icsd:
             precursor_library = [i for i in precursor_library if i.data['icsd_ids']]
 
@@ -179,7 +181,8 @@ class SynthesisRoutes:
 
         target_c = get_v(self.target_entry.structure.composition.fractional_composition, self.elts)
 
-        for precursors in itertools.combinations(self.precursor_library, len(self.elts)):
+        for precursors in tqdm(itertools.combinations(self.precursor_library, len(self.elts)),
+                               total=comb(len(self.precursor_library),len(self.elts))):
 
             precursors = list(precursors)
 

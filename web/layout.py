@@ -6,7 +6,7 @@ from monty.json import MontyDecoder, jsanitize
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
-from rxn.route import SynthesisRoutes
+from piro.route import SynthesisRoutes
 from dash.exceptions import PreventUpdate
 from pymatgen import Composition, MPRester
 from fnmatch import fnmatch

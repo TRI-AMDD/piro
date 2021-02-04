@@ -1,21 +1,13 @@
-## **rxn** Reaction recommender for the synthesis of inorganic compounds
+## *piro:* rational planning of solid-state synthesis routes for inorganics
 
-**WIP**
-
-_rxn_ is a recommendation system for navigation of synthesis of 
+_piro_ is a recommendation system for navigation and planning of synthesis of 
 inorganic materials based on classical nucleation theory 
 and semi-empirical, data-driven approximations to its parts. Currently it
 works with Materials Project data via its Rester API.
 
-_rxn_ should in principle allow retrosynthetic analysis of target inorganic materials 
-(i.e. laying out all the reaction steps necessary to arrive at the target). This is currently in progress.
+- _piro_ creates synthesis reaction planning plots for target polymorphs under a specific set of thermodynamic conditions and precuror library, where favorable routes are those that are (nearly) Pareto optimal in terms of two metrics: nucleation barrier and phase-selection. 
 
-Currently rxn creates interactive plots where the best selective routes for a target polymorph
-are the ones closer to the lower left corner. There is Pareto optimality, but often the "good" reactions
-can be differentiated from the "bad" relatively easily by visual inspection.
+- _piro_ allows retrosynthetic analysis of target inorganic materials to generate a synthesis reaction tree.
+(i.e. laying out the reaction pathways necessary to arrive at the target from practical/purchasable reagents/starting materials)
 
-This is an example generated for the synthesis of a layered Li2MnO3 compound:
-![Example - Li2MnO3](https://github.awsinternal.tri.global/murat-aykol/rxn/raw/master/rxn/files/Example1%20-%20Li2MnO3.png)
-
-We can zoom into the lower left corner to inspect the most promising reactions:
-![Example - Li2MnO3](https://github.awsinternal.tri.global/murat-aykol/rxn/raw/master/rxn/files/Example2%20-%20Li2MnO3.png)
+- _piro_ supports generation of interactive plots and a web-UI for easy-navigation.

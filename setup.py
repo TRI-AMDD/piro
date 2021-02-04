@@ -1,16 +1,16 @@
 from setuptools import setup, find_packages
 import warnings
 
-DESCRIPTION = "rxn is software designed to assist in prediction of synthesis pathway"
+DESCRIPTION = "piro is software designed to assist in planning of synthesis pathways for inorganics"
 
 LONG_DESCRIPTION = """
-The rxn software package enables prediction of synthesis pathways
+The piro software package enables prediction and planning of synthesis pathways
 and determination of pareto-optimal frontiers for synthesis of
-specific materials
+specific inorganic materials.
 """
 
 setup(
-    name="rxn",
+    name="piro",
     version="2020.12.2",
     packages=find_packages(),
     description=DESCRIPTION,
