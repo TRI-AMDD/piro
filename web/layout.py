@@ -62,28 +62,10 @@ def layout_func(app):
             ]),
             dcc.Checklist(
                 id="synthesis_bool_options",
-                options=[{"label": bo, "value": bo} for bo in BOOL_OPTIONS],
+                options=[{"label": BOOL_TOOLTIPS[bo], "value": bo} for bo in BOOL_OPTIONS],
                 value=["display_peroxides", "add_pareto"]
             )
         ]),
-        # dcc.Upload(id='struct_upload_data',
-        #            children=html.Div([
-        #                html.Span(
-        #                    ['Drag and Drop or ',
-        #                     html.A('Select File')],
-        #                    id='struct_upload_label'),
-        #            ]),
-        #            style={
-        #                'width': '30%',
-        #                'height': '100px',
-        #                'lineHeight': '60px',
-        #                'borderWidth': '1px',
-        #                'borderStyle': 'dashed',
-        #                'borderRadius': '5px',
-        #                'textAlign': 'center',
-        #            },
-        #            ),
-        # dcc.Store(id='data_store', storage_type='memory'),
         dcc.Loading(id='loading-1',
                     children=[html.Div(id='synthesis_output')],
                     type="cube"
@@ -114,25 +96,6 @@ def layout_func(app):
             synthesis_bool_options = {bo: True if bo in synthesis_bool_options else False
                                       for bo in BOOL_OPTIONS}
 
-            # content_type, content_string = contents.split(',')
-            # decoded = base64.b64decode(content_string).decode('utf-8')
-            # logger.debug("Decoding {}".format(fname))
-
-            # if fnmatch(fname.lower(), "*.cif*") or fnmatch(fname.lower(), "*.mcif*"):
-            #     parser = CifParser.from_string(decoded)
-            #     structures = parser.get_structures()
-
-            # elif fnmatch(fname.lower(), '*.json'):
-            #     structures = json.loads(decoded, cls=MontyDecoder)
-
-            # else:
-            #     return "Unsupported file format or filename, " \
-            #            "please convert to cif or pymatgen json"
-
-            # prediction = predict_from_structures(structures)
-
-            # table = generate_table(prediction)
-            # return table
             if not value.startswith("mp"):
                 with MPRester() as mpr:
                     formula = Composition(value).reduced_formula
@@ -148,16 +111,6 @@ def layout_func(app):
                 max_component_precursors=max_component_precursors,
                 **synthesis_bool_options
             )
-            #     allow_gas_release=False,
-            #     show_fraction_known_precursors=False,
-            #     show_known_precursors_only=False,
-            #     confine_competing_to_icsd=False,
-            #     display_peroxides=True,
-            #     # custom_text=' - 1600K, 10<sup>-3</sup> atm, standard reactants',
-            #     # w=640, h=480,
-            #     add_pareto=True,
-            #           # yrange=(-0.25, 9)
-            #           )
             return dcc.Graph(figure=fig)
         except Exception as e:
             return html.Div(children=[str(e)],
