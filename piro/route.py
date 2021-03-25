@@ -82,7 +82,7 @@ class SynthesisRoutes:
         self.confine_competing_to_icsd = False
         self.exclude_compositions = exclude_compositions
         self.custom_target_entry = custom_target_entry
-        self.flexible_competition = 1 if flexible_competition else 0
+        self.flexible_competition = flexible_competition if flexible_competition else 0
         self._sigma = sigma if sigma else 2 * 6.242 * 0.01
         self._transport_constant = transport_constant if transport_constant else 10.0
 
