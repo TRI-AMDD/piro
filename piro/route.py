@@ -12,7 +12,7 @@ from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
 from piro import MP_API_KEY, RXN_FILES
-from tqdm import tqdm
+from tqdm.autonotebook import tqdm
 from scipy.special import comb
 
 
@@ -25,7 +25,7 @@ class SynthesisRoutes:
                  simple_precursors=False, explicit_includes=None, allow_gas_release=False,
                  add_element=None, temperature=298, pressure=1, use_cache=True, exclude_compositions=None,
                  entries=None, epitaxies=None, similarities=None, sigma=None, transport_constant=None,
-                 custom_target_entry=None):
+                 custom_target_entry=None, flexible_competition=None):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
             and high-throughput DFT data.
@@ -62,6 +62,9 @@ class SynthesisRoutes:
                 2.0 J/m^2.
             transport_constant (float): diffusion barrier coefficient (max barrier). Defaults to 10.0.
             custom_target_entry (MP entry): custom computed entry object pymatgen
+            flexible_competition (int): whether lower order targets are allowed in competing reactions. Defaults to 0
+                which forces competing reactions to have products of the same order as target. If 1, one order smaller
+                compounds and so on.
         """
 
         self.target_entry_id = target_entry_id
@@ -79,7 +82,7 @@ class SynthesisRoutes:
         self.confine_competing_to_icsd = False
         self.exclude_compositions = exclude_compositions
         self.custom_target_entry = custom_target_entry
-
+        self.flexible_competition = flexible_competition if flexible_competition else 0
         self._sigma = sigma if sigma else 2 * 6.242 * 0.01
         self._transport_constant = transport_constant if transport_constant else 10.0
 
@@ -337,9 +340,17 @@ class SynthesisRoutes:
             if confine_to_icsd:
                 if not entry.data['icsd_ids']:
                     continue
-            if not set(self.target_entry.composition.as_dict().keys()).issubset(
-                    set(entry.structure.composition.as_dict().keys())):
-                continue
+            if self.flexible_competition:
+                s1 = set(entry.composition.as_dict().keys())
+                s2 = set(self.target_entry.structure.composition.as_dict().keys())
+                if not (s1.issubset(s2)
+                        and (len(s2)-self.flexible_competition <= len(s1) <= len(s2))
+                        ):
+                    continue
+            else:
+                if not set(self.target_entry.composition.as_dict().keys()).issubset(
+                        set(entry.structure.composition.as_dict().keys())):
+                    continue
             if entry.entry_id in precursor_ids:
                 continue
             if entry.entry_id == self.target_entry_id:
