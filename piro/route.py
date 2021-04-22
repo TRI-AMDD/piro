@@ -194,7 +194,6 @@ class SynthesisRoutes:
                 continue
 
             try:
-                # coeffs = np.linalg.solve(np.vstack(c).T, target_c)
                 coeffs = np.linalg.solve(np.vstack(c).T, target_c)
                 effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
             except:
@@ -205,6 +204,8 @@ class SynthesisRoutes:
                 continue
 
             precursor_formulas = np.array([p.structure.composition.reduced_formula for p in precursors])
+            if len(set(precursor_formulas)) != len(precursor_formulas):
+                continue
 
             if np.any(coeffs < 0.0):
                 if not self.allow_gas_release:
@@ -217,10 +218,13 @@ class SynthesisRoutes:
                 if np.abs(coeffs[i]) < 0.00001:
                     precursors.pop(i)
                     coeffs = np.delete(coeffs, i)
-
+                    # Update effective rank
+                    c_new = [get_v(e.structure.composition.fractional_composition, self.elts) for e in precursors]
+                    effective_rank = scipy.linalg.lstsq(np.vstack(c_new).T, target_c)[2]
             if effective_rank<len(coeffs):
                 # Removes under-determined reactions.
-                print(effective_rank, precursor_formulas, [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
+                # print(effective_rank, precursor_formulas, \
+                # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
                 continue
 
             label = '_'.join(sorted([e.entry_id for e in precursors]))
