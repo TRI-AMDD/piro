@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 import json
 from copy import deepcopy
-from pymatgen import Composition
+from pymatgen.core.composition import Composition
 from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
 from matminer.featurizers.base import MultipleFeaturizer
 from matminer.featurizers.composition import (
@@ -45,9 +45,9 @@ def through_cache(_parents, target, type="epitaxy"):
     indices_compt = [i for i in range(len(ordered_pairs)) if ordered_pairs[i] not in db]
 
     if type == "epitaxy" and indices_compt:
-        _res = epitaxy(np.array(_parents)[indices_compt].tolist(), target)
+        _res = epitaxy(np.array(_parents, dtype="object")[indices_compt].tolist(), target)
     elif type == "similarity" and indices_compt:
-        _res = similarity(np.array(_parents)[indices_compt].tolist(), target)
+        _res = similarity(np.array(_parents, dtype="object")[indices_compt].tolist(), target)
     else:
         _res = []
     results = []

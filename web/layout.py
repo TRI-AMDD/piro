@@ -8,7 +8,8 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from piro.route import SynthesisRoutes
 from dash.exceptions import PreventUpdate
-from pymatgen import Composition, MPRester
+from pymatgen.ext.matproj import MPRester
+from pymatgen.core.composition import Composition
 from fnmatch import fnmatch
 
 
