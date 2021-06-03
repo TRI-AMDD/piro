@@ -10,37 +10,24 @@ COPY . ./piro/
 
 RUN apt-get update \
  && apt-get -y update \
- && apt-get install -y \
+ && apt-get install --no-install-recommends -y \
     software-properties-common \
     build-essential \
-    git \
  && apt-get clean -qq
 
 RUN add-apt-repository ppa:deadsnakes/ppa
 
 RUN apt-get update \
  && apt-get -y update \
- && apt-get install -y \
+ && apt-get install --no-install-recommends -y \
     python3.7 \
     python3.7-dev \
     python3-pip \
  && apt-get clean -qq
 
 RUN python3.7 -m pip install --upgrade \
-    pip \
     setuptools \
-    wheel
-
-RUN python3.7 -m pip install --upgrade \
-    numpy \
-    Cython \
-    jupyter \
-    pymatgen \
-    matminer \
-    joblib \
-    scipy \
-    threadpoolctl \
-    pytz
+    numpy
 
 WORKDIR /home/$USERNAME/piro/
 
