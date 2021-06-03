@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile1
-ARG VERSION=20.04
+ARG VERSION=18.04
 FROM ubuntu:$VERSION
 ENV USERNAME dev
 # Insert your generated `pymatgen` API key below in place of
@@ -12,25 +12,37 @@ COPY . ./piro/
 RUN apt-get update \
  && apt-get -y update \
  && apt-get install -y \
+    software-properties-common \
     build-essential \
     git \
-    python3 \
-    python3-dev \
-    python3-setuptools \
+ && apt-get clean -qq
+
+RUN add-apt-repository ppa:deadsnakes/ppa
+
+RUN apt-get update \
+ && apt-get -y update \
+ && apt-get install -y \
+    python3.7 \
+    python3.7-dev \
     python3-pip \
  && apt-get clean -qq
 
-RUN pip3 install -U numpy Cython jupyter
+RUN python3.7 -m pip install --upgrade \
+    pip \
+    setuptools \
+    wheel
 
-RUN git clone https://github.com/hackingmaterials/matminer.git
-
-WORKDIR /home/$USERNAME/matminer/
-
-# A pinned version of `matminer` with most recent `pymatgen` import patches
-RUN git checkout dd6a7326dca0f28527c76a0a5a6b9198999fb558
-
-RUN python3 setup.py install
+RUN python3.7 -m pip install --upgrade \
+    numpy \
+    Cython \
+    jupyter \
+    pymatgen \
+    matminer \
+    joblib \
+    scipy \
+    threadpoolctl \
+    pytz
 
 WORKDIR /home/$USERNAME/piro/
 
-RUN python3 setup.py develop
+RUN python3.7 setup.py develop
