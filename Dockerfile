@@ -1,10 +1,9 @@
 # syntax=docker/dockerfile1
 ARG VERSION=18.04
 FROM ubuntu:$VERSION
+ARG PYMATGEN_API_KEY
 ENV USERNAME dev
-# Insert your generated `pymatgen` API key below in place of
-# `insert-api-key-here` before building
-ENV MP_API_KEY insert-api-key-here
+ENV MP_API_KEY $PYMATGEN_API_KEY
 WORKDIR /home/$USERNAME
 
 COPY . ./piro/
