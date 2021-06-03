@@ -26,7 +26,7 @@ works with Materials Project data via its Rester API.
 
 Using the `Dockerfile` will likely be the quickest way to get `piro` up and running with little configuration necessary on your end.
 
- 1. Once you have substituted your own `pymatgen` API key, Build your Docker container by running the following command from within your cloned `piro` repository, being sure to substitute your own `pymatgen` API key in place of the below `{insert key here}`:
+ 1. Build your Docker container by running the following command from within your cloned `piro` repository, being sure to substitute your own `pymatgen` API key in place of the below `{insert key here}` portion:
      ```
      docker build -t piro:v1 --build-arg PYMATGEN_APY_KEY={insert key here} .
      ```
