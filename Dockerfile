@@ -27,8 +27,16 @@ RUN apt-get update \
 
 RUN python3.7 -m pip install --upgrade \
     setuptools \
-    numpy
+    numpy \
+    wheel
+
+RUN python3.7 -m pip install --upgrade \
+    dash \
+    jupyter
 
 WORKDIR /home/$USERNAME/piro/
+
+# Set ip and 
+RUN find . -name 'app.py' | xargs sed -i "s/app.run_server(debug=True)/app.run_server(host='0.0.0.0', port=8888, debug=True)/g"
 
 RUN python3.7 setup.py develop
