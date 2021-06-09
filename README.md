@@ -17,7 +17,7 @@ works with Materials Project data via its Rester API.
 ### Python 3.7
  - `piro` uses Python 3.7.  If you wish to develop or run a local server, we recommend following the Docker instructions below to create your own `piro` container instead of configuring your local environment.
 
-### Generate a pymatgen API key
+### Pymatgen API key
  - `piro` has a dependency on `pymatgen` which requires you to generate an API key.  Go [here](https://materialsproject.org/open) and follow the instructions to generate your API key.
 
 ### Docker (optional)
