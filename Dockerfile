@@ -1,9 +1,9 @@
-# syntax=docker/dockerfile1
+# syntax=docker/dockerfile:1
 ARG VERSION=18.04
 FROM ubuntu:$VERSION
 ARG PYMATGEN_API_KEY
 ENV USERNAME dev
-ENV MP_API_KEY $PYMATGEN_API_KEY
+ENV MP_API_KEY=$PYMATGEN_API_KEY
 WORKDIR /home/$USERNAME
 
 COPY . ./piro/
@@ -27,7 +27,12 @@ RUN apt-get update \
 
 RUN python3.7 -m pip install --upgrade \
     setuptools \
-    numpy
+    numpy \
+    wheel
+
+RUN python3.7 -m pip install --upgrade \
+    dash \
+    jupyter
 
 WORKDIR /home/$USERNAME/piro/
 
