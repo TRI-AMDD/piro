@@ -3,7 +3,7 @@ ARG VERSION=18.04
 FROM ubuntu:$VERSION
 ARG PYMATGEN_API_KEY
 ENV USERNAME dev
-ENV MP_API_KEY $PYMATGEN_API_KEY
+ENV MP_API_KEY=$PYMATGEN_API_KEY
 WORKDIR /home/$USERNAME
 
 COPY . ./piro/
@@ -35,8 +35,5 @@ RUN python3.7 -m pip install --upgrade \
     jupyter
 
 WORKDIR /home/$USERNAME/piro/
-
-# Set ip and port of Dash app for Docker
-RUN find . -name 'app.py' | xargs sed -i "s/app.run_server(debug=True)/app.run_server(host='0.0.0.0', port=8080, debug=True)/g"
 
 RUN python3.7 setup.py develop
