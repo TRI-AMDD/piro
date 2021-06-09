@@ -9,4 +9,4 @@ services:
     container_name: piro_dash
     command: python3.7 web/app.py
     ports:
-      - "8888:8888"
+      - "8080:8080" # For Dash

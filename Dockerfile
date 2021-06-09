@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile1
+# syntax=docker/dockerfile:1
 ARG VERSION=18.04
 FROM ubuntu:$VERSION
 ARG PYMATGEN_API_KEY
@@ -36,7 +36,7 @@ RUN python3.7 -m pip install --upgrade \
 
 WORKDIR /home/$USERNAME/piro/
 
-# Set ip and 
-RUN find . -name 'app.py' | xargs sed -i "s/app.run_server(debug=True)/app.run_server(host='0.0.0.0', port=8888, debug=True)/g"
+# Set ip and port of Dash app for Docker
+RUN find . -name 'app.py' | xargs sed -i "s/app.run_server(debug=True)/app.run_server(host='0.0.0.0', port=8080, debug=True)/g"
 
 RUN python3.7 setup.py develop

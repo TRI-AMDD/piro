@@ -37,7 +37,7 @@ Using the `Dockerfile` will likely be the quickest way to get a local `piro` dev
 
  1. Once this command is finished executing, run:
      ```
-     docker run -p 8888:8888 -it piro:v1 /bin/bash
+     docker run -p 8888:8888 -p 8080:8080 -it piro:v1 /bin/bash
      ```
     You can now develop with `piro` in this container
 
