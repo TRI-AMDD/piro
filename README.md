@@ -92,3 +92,7 @@ Using the `Dockerfile` will likely be the quickest way to get a local `piro` dev
     ERROR: could not find an available, non-overlapping IPv4 address pool among the defaults to assign to the network
     ```
     when attempting to run the Dash server, you will likely need to disable any VPNs you may have running.
+
+## Citation
+If you use `piro`, we kindly ask you to cite the following publication:
+* Aykol, M., Montoya, J.H., Hummelshøj, J. "Rational Solid-State Synthesis Routes for Inorganic Materials" J. Am. Chem. Soc. (2021): [https://doi.org/10.1021/jacs.1c04888](https://doi.org/10.1021/jacs.1c04888)
