@@ -31,7 +31,7 @@ jobs:
         flake8 --count --show-source --statistics piro
         # exit-zero treats all errors as warnings.
         flake8 --count --exit-zero --max-complexity=20 --statistics piro
-    - name: pydocstyle
-      run: |
-        pip install pydocstyle --upgrade --quiet
-        pydocstyle --count piro
+    # - name: pydocstyle
+    #   run: |
+    #     pip install pydocstyle --upgrade --quiet
+    #     pydocstyle --count piro
