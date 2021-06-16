@@ -11,7 +11,7 @@ from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
-from piro import MP_API_KEY, RXN_FILES
+from piro import RXN_FILES
 from tqdm.autonotebook import tqdm
 from scipy.special import comb
 
@@ -89,9 +89,9 @@ class SynthesisRoutes:
         self.plot_data = None
         self.reactions = {}
         if not entries:
-            a = MPRester(MP_API_KEY)
             if not custom_target_entry:
-                _e = a.get_entry_by_material_id(self.target_entry_id)
+                with MPRester() as mpr:
+                    _e = mpr.get_entry_by_material_id(self.target_entry_id)
             else:
                 _e = custom_target_entry
             self.elts = list(_e.composition.as_dict().keys())
@@ -107,9 +107,10 @@ class SynthesisRoutes:
         print("Precursor library ready.")
 
     def get_mp_entries(self):
-        a = MPRester(MP_API_KEY)
-        self.entries = a.get_entries_in_chemsys(self.elts, inc_structure='final',
-                                                property_data=['icsd_ids', 'formation_energy_per_atom'])
+        with MPRester() as mpr:
+            self.entries = mpr.get_entries_in_chemsys(
+                self.elts, inc_structure='final',
+                property_data=['icsd_ids', 'formation_energy_per_atom'])
         for entry in self.entries:
             entry.structure.entry_id = entry.entry_id
         print('Total # of entries found in this chemistry: ', len(self.entries))
