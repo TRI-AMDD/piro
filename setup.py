@@ -19,7 +19,7 @@ setup(
     install_requires=["matminer==0.6.4",
                       "scikit-learn==0.23.2",
                       "plotly==4.13.0",
-                      "pymatgen==2021.3.9"
+                      "pymatgen==2022.0.8"
                       ],
     classifiers=[
           "Programming Language :: Python :: 3",
