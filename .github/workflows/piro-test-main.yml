@@ -31,7 +31,7 @@ jobs:
       env:
         MPLBACKEND: "Agg"
       run: |
-        pytest piro --color=yes --cov=piro --cov-report html:coverage_reports
+        pytest tests  --color=yes --cov=piro --cov-report html:coverage_reports
     - name: Coveralls
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
