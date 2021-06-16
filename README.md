@@ -1,4 +1,7 @@
 # *piro:* rational planning of solid-state synthesis routes for inorganics
+![Testing - main](https://github.com/TRI-AMDD/piro/workflows/Testing%20-%20main/badge.svg)
+![Linting](https://github.com/TRI-AMDD/piro/workflows/Linting/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/TRI-AMDD/piro/badge.svg?branch=test)](https://coveralls.io/github/TRI-AMDD/piro?branch=test)
 
 _piro_ is a recommendation system for navigation and planning of synthesis of 
 inorganic materials based on classical nucleation theory 

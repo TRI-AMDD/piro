@@ -32,7 +32,11 @@ setup(
                 "dash-renderer>=0.12.1",
                 "dash-table==4.11.0",
                 "dash==1.17.0"
-                ]
+                ],
+        "tests": ["pytest",
+                  "pytest-cov",
+                  "coveralls"
+                  ]
     },
     include_package_data=True,
     author="AMDD - Toyota Research Institute",
