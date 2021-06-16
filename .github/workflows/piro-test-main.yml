@@ -30,6 +30,7 @@ jobs:
     - name: pytest
       env:
         MPLBACKEND: "Agg"
+        MAPI_KEY: ${{ secrets.MAPI_KEY }}
       run: |
         pytest tests  --color=yes --cov=piro --cov-report html:coverage_reports
     - name: Coveralls
