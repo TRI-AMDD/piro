@@ -369,7 +369,7 @@ class SynthesisRoutes:
         delta_Gv = rx_e * target_s.num_sites / target_s.volume
 
         precursors = self.reactions[rxn_label]["precursors"]
-        precursor_formulas = self.reactions[rxn_label]["precursor_formulas"]
+        # precursor_formulas = self.reactions[rxn_label]["precursor_formulas"]
 
         q_epi = (
             min(
