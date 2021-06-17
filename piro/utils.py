@@ -1,4 +1,4 @@
-from functools import cache
+from functools import lru_cache
 
 import pandas as pd
 import os
@@ -33,22 +33,22 @@ from piro.data import ST, H
 from piro import RXN_FILES
 
 
-@cache
+@lru_cache
 def get_composition(entry: ComputedStructureEntry) -> Composition:
     return entry.structure.composition
 
 
-@cache
+@lru_cache
 def get_reduced_formula(entry: ComputedStructureEntry) -> str:
     return get_composition(entry).reduced_formula
 
 
-@cache
+@lru_cache
 def get_fractional_composition(entry: ComputedStructureEntry) -> Composition:
     return get_composition(entry).fractional_composition
 
 
-@cache
+@lru_cache
 def get_composition_as_dict(composition: Composition) -> dict:
     return composition.as_dict()
 
