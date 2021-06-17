@@ -13,7 +13,7 @@ from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache, \
-    get_fractional_composition, get_reduced_formula, get_composition
+    get_fractional_composition, get_reduced_formula
 from piro import RXN_FILES
 from tqdm.autonotebook import tqdm
 from scipy.special import comb
@@ -250,6 +250,8 @@ class SynthesisRoutes:
         ):
             sorted_precursor_phase = sorted(precursor_phase, key=get_reduced_formula)
             precursor_reduced_formula = tuple([get_reduced_formula(p) for p in sorted_precursor_phase])
+            if len(set(precursor_reduced_formula)) != len(precursor_reduced_formula):
+                continue
 
             precursor_phases_by_formula[precursor_reduced_formula].append(sorted_precursor_phase)
             if precursor_reduced_formula not in precursor_composition_for_formula:
@@ -274,7 +276,6 @@ class SynthesisRoutes:
 
             try:
                 coeffs = np.linalg.solve(np.vstack(c).T, target_c)
-                effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
             except:
                 # need better handling here.
                 continue
@@ -282,50 +283,40 @@ class SynthesisRoutes:
             if np.any(np.abs(coeffs) > 100):
                 continue
 
-            precursor_formulas = np.array(formula)
-            if len(set(precursor_formulas)) != len(precursor_formulas):
-                continue
-
             if np.any(coeffs < 0.0):
                 if not self.allow_gas_release:
                     continue
                 else:
-                    if not set(precursor_formulas[coeffs < 0.0]).issubset(GAS_RELEASE):
+                    if not set(np.array(formula)[coeffs < 0.0]).issubset(GAS_RELEASE):
                         continue
 
             removed_coeff_indexes = []
-            for i in sorted(range(len(coeffs)), reverse=True):
+            for i in reversed(range(len(coeffs))):
                 if np.abs(coeffs[i]) < 0.00001:
+                    c.pop(i)
                     coeffs = np.delete(coeffs, i)
                     removed_coeff_indexes.append(i)
 
-            main_compositions = [p for i, p in enumerate(precursor_composition) if i not in removed_coeff_indexes]
-
-            # Update effective rank
-            c_new = [
-                get_v(e, self.elts)
-                for e in main_compositions
-            ]
-            effective_rank = scipy.linalg.lstsq(np.vstack(c_new).T, target_c)[2]
+            effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
             if effective_rank < len(coeffs):
                 # Removes under-determined reactions.
                 # print(effective_rank, precursor_formulas, \
                 # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
                 continue
 
+            main_formula = [p for i, p in enumerate(formula) if i not in removed_coeff_indexes]
             for precursors in precursor_phases_by_formula[formula]:
                 main_precursors = [p for i, p in enumerate(precursors) if i not in removed_coeff_indexes]
-                label = "_".join(sorted([e.entry_id for e in main_precursors]))
+                entry_ids = [e.entry_id for e in main_precursors]
+                label = "_".join(sorted(entry_ids))
                 if label in self.reactions:
                     continue
                 else:
                     self.reactions[label] = {
                         "precursors": deepcopy(main_precursors),
                         "coeffs": coeffs,
-                        "precursor_formulas": np.array(
-                            [get_reduced_formula(p) for p in main_precursors]
-                        ),
-                        "precursor_ids": [p.entry_id for p in main_precursors],
+                        "precursor_formulas": np.array(main_formula),
+                        "precursor_ids": entry_ids,
                     }
         print("Total # of balanced reactions obtained: ", len(self.reactions))
         return self.reactions
