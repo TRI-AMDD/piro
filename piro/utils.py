@@ -33,22 +33,22 @@ from piro.data import ST, H
 from piro import RXN_FILES
 
 
-@lru_cache
+@lru_cache()
 def get_composition(entry: ComputedStructureEntry) -> Composition:
     return entry.structure.composition
 
 
-@lru_cache
+@lru_cache()
 def get_reduced_formula(entry: ComputedStructureEntry) -> str:
     return get_composition(entry).reduced_formula
 
 
-@lru_cache
+@lru_cache()
 def get_fractional_composition(entry: ComputedStructureEntry) -> Composition:
     return get_composition(entry).fractional_composition
 
 
-@lru_cache
+@lru_cache()
 def get_composition_as_dict(composition: Composition) -> dict:
     return composition.as_dict()
 
