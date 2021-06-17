@@ -1,1 +1,7 @@
 /piro/notebooks/.ipynb_checkpoints/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Distribution / packaging
+*.egg-info/
