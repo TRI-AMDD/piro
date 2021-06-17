@@ -1,4 +1,5 @@
 import itertools
+
 import scipy
 import numpy as np
 import plotly.express as px
@@ -10,7 +11,8 @@ from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
-from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
+from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache, \
+    get_fractional_composition, get_reduced_formula
 from piro import RXN_FILES
 from tqdm.autonotebook import tqdm
 from scipy.special import comb
@@ -235,7 +237,7 @@ class SynthesisRoutes:
     def get_reactions(self):
 
         target_c = get_v(
-            self.target_entry.structure.composition.fractional_composition, self.elts
+            get_fractional_composition(self.target_entry), self.elts
         )
 
         for precursors in tqdm(
@@ -246,7 +248,7 @@ class SynthesisRoutes:
             precursors = list(precursors)
 
             c = [
-                get_v(e.structure.composition.fractional_composition, self.elts)
+                get_v(get_fractional_composition(e), self.elts)
                 for e in precursors
             ]
             if np.any(np.sum(np.array(c), axis=0) == 0.0):
@@ -263,7 +265,7 @@ class SynthesisRoutes:
                 continue
 
             precursor_formulas = np.array(
-                [p.structure.composition.reduced_formula for p in precursors]
+                [get_reduced_formula(p) for p in precursors]
             )
             if len(set(precursor_formulas)) != len(precursor_formulas):
                 continue
@@ -281,7 +283,7 @@ class SynthesisRoutes:
                     coeffs = np.delete(coeffs, i)
                     # Update effective rank
                     c_new = [
-                        get_v(e.structure.composition.fractional_composition, self.elts)
+                        get_v(get_fractional_composition(e), self.elts)
                         for e in precursors
                     ]
                     effective_rank = scipy.linalg.lstsq(np.vstack(c_new).T, target_c)[2]
@@ -299,7 +301,7 @@ class SynthesisRoutes:
                     "precursors": deepcopy(precursors),
                     "coeffs": coeffs,
                     "precursor_formulas": np.array(
-                        [p.structure.composition.reduced_formula for p in precursors]
+                        [get_reduced_formula(p) for p in precursors]
                     ),
                     "precursor_ids": [p.entry_id for p in precursors],
                 }

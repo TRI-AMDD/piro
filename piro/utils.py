@@ -1,3 +1,5 @@
+from functools import cache
+
 import pandas as pd
 import os
 import pickle
@@ -20,6 +22,7 @@ from matminer.featurizers.structure import (
     StructureComposition,
     MaximumPackingEfficiency,
 )
+from pymatgen.entries.computed_entries import ComputedStructureEntry
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import pairwise_distances
 from sklearn.linear_model import LinearRegression
@@ -30,8 +33,29 @@ from piro.data import ST, H
 from piro import RXN_FILES
 
 
+@cache
+def get_composition(entry: ComputedStructureEntry) -> Composition:
+    return entry.structure.composition
+
+
+@cache
+def get_reduced_formula(entry: ComputedStructureEntry) -> str:
+    return get_composition(entry).reduced_formula
+
+
+@cache
+def get_fractional_composition(entry: ComputedStructureEntry) -> Composition:
+    return get_composition(entry).fractional_composition
+
+
+@cache
+def get_composition_as_dict(composition: Composition) -> dict:
+    return composition.as_dict()
+
+
 def get_v(c, elts):
-    return np.array([c.as_dict()[el] for el in elts])
+    c_dict = get_composition_as_dict(c)
+    return np.array([c_dict[el] for el in elts])
 
 
 def through_cache(_parents, target, type="epitaxy"):
