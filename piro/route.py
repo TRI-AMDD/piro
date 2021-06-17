@@ -1,4 +1,5 @@
 import itertools
+from collections import defaultdict
 
 import scipy
 import numpy as np
@@ -12,7 +13,7 @@ from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache, \
-    get_fractional_composition, get_reduced_formula
+    get_fractional_composition, get_reduced_formula, get_composition
 from piro import RXN_FILES
 from tqdm.autonotebook import tqdm
 from scipy.special import comb
@@ -240,16 +241,33 @@ class SynthesisRoutes:
             get_fractional_composition(self.target_entry), self.elts
         )
 
-        for precursors in tqdm(
+        precursor_phases_by_formula = defaultdict(list)
+        precursor_composition_for_formula = dict()
+
+        for precursor_phase in tqdm(
             itertools.combinations(self.precursor_library, len(self.elts)),
             total=comb(len(self.precursor_library), len(self.elts)),
         ):
+            sorted_precursor_phase = sorted(precursor_phase, key=get_reduced_formula)
+            precursor_reduced_formula = tuple([get_reduced_formula(p) for p in sorted_precursor_phase])
 
-            precursors = list(precursors)
+            precursor_phases_by_formula[precursor_reduced_formula].append(sorted_precursor_phase)
+            if precursor_reduced_formula not in precursor_composition_for_formula:
+                precursor_composition_for_formula[precursor_reduced_formula] = [
+                    get_fractional_composition(p) for p in sorted_precursor_phase
+                ]
+
+        print("# of unique precursor compositions: ", len(precursor_composition_for_formula))
+
+        for formula in tqdm(
+            precursor_composition_for_formula,
+            total=len(precursor_composition_for_formula),
+        ):
+            precursor_composition = precursor_composition_for_formula[formula]
 
             c = [
-                get_v(get_fractional_composition(e), self.elts)
-                for e in precursors
+                get_v(e, self.elts)
+                for e in precursor_composition
             ]
             if np.any(np.sum(np.array(c), axis=0) == 0.0):
                 continue
@@ -264,9 +282,7 @@ class SynthesisRoutes:
             if np.any(np.abs(coeffs) > 100):
                 continue
 
-            precursor_formulas = np.array(
-                [get_reduced_formula(p) for p in precursors]
-            )
+            precursor_formulas = np.array(formula)
             if len(set(precursor_formulas)) != len(precursor_formulas):
                 continue
 
@@ -277,34 +293,40 @@ class SynthesisRoutes:
                     if not set(precursor_formulas[coeffs < 0.0]).issubset(GAS_RELEASE):
                         continue
 
+            removed_coeff_indexes = []
             for i in sorted(range(len(coeffs)), reverse=True):
                 if np.abs(coeffs[i]) < 0.00001:
-                    precursors.pop(i)
                     coeffs = np.delete(coeffs, i)
-                    # Update effective rank
-                    c_new = [
-                        get_v(get_fractional_composition(e), self.elts)
-                        for e in precursors
-                    ]
-                    effective_rank = scipy.linalg.lstsq(np.vstack(c_new).T, target_c)[2]
+                    removed_coeff_indexes.append(i)
+
+            main_compositions = [p for i, p in enumerate(precursor_composition) if i not in removed_coeff_indexes]
+
+            # Update effective rank
+            c_new = [
+                get_v(e, self.elts)
+                for e in main_compositions
+            ]
+            effective_rank = scipy.linalg.lstsq(np.vstack(c_new).T, target_c)[2]
             if effective_rank < len(coeffs):
                 # Removes under-determined reactions.
                 # print(effective_rank, precursor_formulas, \
                 # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
                 continue
 
-            label = "_".join(sorted([e.entry_id for e in precursors]))
-            if label in self.reactions:
-                continue
-            else:
-                self.reactions[label] = {
-                    "precursors": deepcopy(precursors),
-                    "coeffs": coeffs,
-                    "precursor_formulas": np.array(
-                        [get_reduced_formula(p) for p in precursors]
-                    ),
-                    "precursor_ids": [p.entry_id for p in precursors],
-                }
+            for precursors in precursor_phases_by_formula[formula]:
+                main_precursors = [p for i, p in enumerate(precursors) if i not in removed_coeff_indexes]
+                label = "_".join(sorted([e.entry_id for e in main_precursors]))
+                if label in self.reactions:
+                    continue
+                else:
+                    self.reactions[label] = {
+                        "precursors": deepcopy(main_precursors),
+                        "coeffs": coeffs,
+                        "precursor_formulas": np.array(
+                            [get_reduced_formula(p) for p in main_precursors]
+                        ),
+                        "precursor_ids": [p.entry_id for p in main_precursors],
+                    }
         print("Total # of balanced reactions obtained: ", len(self.reactions))
         return self.reactions
 
