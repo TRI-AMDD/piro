@@ -1,4 +1,6 @@
 import itertools
+from collections import defaultdict
+
 import scipy
 import numpy as np
 import plotly.express as px
@@ -10,7 +12,9 @@ from pymatgen import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
-from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
+from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache, \
+    get_fractional_composition, get_reduced_formula
+from piro.mongodb import query_epitaxies, query_similarities
 from piro import RXN_FILES
 from tqdm.autonotebook import tqdm
 from scipy.special import comb
@@ -42,6 +46,7 @@ class SynthesisRoutes:
         transport_constant=None,
         custom_target_entry=None,
         flexible_competition=None,
+        use_cache_database=False
     ):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
@@ -83,6 +88,7 @@ class SynthesisRoutes:
             flexible_competition (int): whether lower order targets are allowed in competing reactions. Defaults to 0
                 which forces competing reactions to have products of the same order as target. If 1, one order smaller
                 compounds and so on.
+            use_cache_database (bool): if True, use the cached epitaxy and similarity from the database.
         """
 
         self.target_entry_id = target_entry_id
@@ -120,9 +126,16 @@ class SynthesisRoutes:
             self.elts = list(self.target_entry.composition.as_dict().keys())
 
         self.get_precursor_library()
-        self.epitaxies = epitaxies if epitaxies else self.get_epitaxies()
-        self.similarities = similarities if similarities else self.get_similarities()
         print("Precursor library ready.")
+        if use_cache_database:
+            precursor_set = set([s.entry_id for s in self.precursor_library])
+            self.epitaxies = epitaxies if epitaxies else query_epitaxies(precursor_set, self.target_entry.entry_id)
+            self.similarities = (
+                similarities if similarities else query_similarities(precursor_set, self.target_entry_id)
+            )
+        else:
+            self.epitaxies = epitaxies if epitaxies else self.get_epitaxies()
+            self.similarities = similarities if similarities else self.get_similarities()
 
     def get_mp_entries(self):
         with MPRester() as mpr:
@@ -235,26 +248,44 @@ class SynthesisRoutes:
     def get_reactions(self):
 
         target_c = get_v(
-            self.target_entry.structure.composition.fractional_composition, self.elts
+            get_fractional_composition(self.target_entry), self.elts
         )
 
-        for precursors in tqdm(
+        precursor_phases_by_formula = defaultdict(list)
+        precursor_composition_for_formula = dict()
+
+        for precursor_phase in tqdm(
             itertools.combinations(self.precursor_library, len(self.elts)),
             total=comb(len(self.precursor_library), len(self.elts)),
         ):
+            sorted_precursor_phase = sorted(precursor_phase, key=get_reduced_formula)
+            precursor_reduced_formula = tuple([get_reduced_formula(p) for p in sorted_precursor_phase])
+            if len(set(precursor_reduced_formula)) != len(precursor_reduced_formula):
+                continue
 
-            precursors = list(precursors)
+            precursor_phases_by_formula[precursor_reduced_formula].append(sorted_precursor_phase)
+            if precursor_reduced_formula not in precursor_composition_for_formula:
+                precursor_composition_for_formula[precursor_reduced_formula] = [
+                    get_fractional_composition(p) for p in sorted_precursor_phase
+                ]
+
+        print("# of unique precursor compositions: ", len(precursor_composition_for_formula))
+
+        for formula in tqdm(
+            precursor_composition_for_formula,
+            total=len(precursor_composition_for_formula),
+        ):
+            precursor_composition = precursor_composition_for_formula[formula]
 
             c = [
-                get_v(e.structure.composition.fractional_composition, self.elts)
-                for e in precursors
+                get_v(e, self.elts)
+                for e in precursor_composition
             ]
             if np.any(np.sum(np.array(c), axis=0) == 0.0):
                 continue
 
             try:
                 coeffs = np.linalg.solve(np.vstack(c).T, target_c)
-                effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
             except:
                 # need better handling here.
                 continue
@@ -262,47 +293,41 @@ class SynthesisRoutes:
             if np.any(np.abs(coeffs) > 100):
                 continue
 
-            precursor_formulas = np.array(
-                [p.structure.composition.reduced_formula for p in precursors]
-            )
-            if len(set(precursor_formulas)) != len(precursor_formulas):
-                continue
-
             if np.any(coeffs < 0.0):
                 if not self.allow_gas_release:
                     continue
                 else:
-                    if not set(precursor_formulas[coeffs < 0.0]).issubset(GAS_RELEASE):
+                    if not set(np.array(formula)[coeffs < 0.0]).issubset(GAS_RELEASE):
                         continue
 
-            for i in sorted(range(len(coeffs)), reverse=True):
+            removed_coeff_indexes = []
+            for i in reversed(range(len(coeffs))):
                 if np.abs(coeffs[i]) < 0.00001:
-                    precursors.pop(i)
+                    c.pop(i)
                     coeffs = np.delete(coeffs, i)
-                    # Update effective rank
-                    c_new = [
-                        get_v(e.structure.composition.fractional_composition, self.elts)
-                        for e in precursors
-                    ]
-                    effective_rank = scipy.linalg.lstsq(np.vstack(c_new).T, target_c)[2]
+                    removed_coeff_indexes.append(i)
+
+            effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
             if effective_rank < len(coeffs):
                 # Removes under-determined reactions.
                 # print(effective_rank, precursor_formulas, \
                 # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
                 continue
 
-            label = "_".join(sorted([e.entry_id for e in precursors]))
-            if label in self.reactions:
-                continue
-            else:
-                self.reactions[label] = {
-                    "precursors": deepcopy(precursors),
-                    "coeffs": coeffs,
-                    "precursor_formulas": np.array(
-                        [p.structure.composition.reduced_formula for p in precursors]
-                    ),
-                    "precursor_ids": [p.entry_id for p in precursors],
-                }
+            main_formula = [p for i, p in enumerate(formula) if i not in removed_coeff_indexes]
+            for precursors in precursor_phases_by_formula[formula]:
+                main_precursors = [p for i, p in enumerate(precursors) if i not in removed_coeff_indexes]
+                entry_ids = [e.entry_id for e in main_precursors]
+                label = "_".join(sorted(entry_ids))
+                if label in self.reactions:
+                    continue
+                else:
+                    self.reactions[label] = {
+                        "precursors": deepcopy(main_precursors),
+                        "coeffs": coeffs,
+                        "precursor_formulas": np.array(main_formula),
+                        "precursor_ids": entry_ids,
+                    }
         print("Total # of balanced reactions obtained: ", len(self.reactions))
         return self.reactions
 
