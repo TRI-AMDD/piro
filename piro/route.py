@@ -14,6 +14,7 @@ from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache, \
     get_fractional_composition, get_reduced_formula
+from piro.mongodb import query_epitaxies, query_similarities
 from piro import RXN_FILES
 from tqdm.autonotebook import tqdm
 from scipy.special import comb
@@ -45,6 +46,7 @@ class SynthesisRoutes:
         transport_constant=None,
         custom_target_entry=None,
         flexible_competition=None,
+        use_cache_database=False
     ):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
@@ -86,6 +88,7 @@ class SynthesisRoutes:
             flexible_competition (int): whether lower order targets are allowed in competing reactions. Defaults to 0
                 which forces competing reactions to have products of the same order as target. If 1, one order smaller
                 compounds and so on.
+            use_cache_database (bool): if True, use the cached epitaxy and similarity from the database.
         """
 
         self.target_entry_id = target_entry_id
@@ -123,9 +126,16 @@ class SynthesisRoutes:
             self.elts = list(self.target_entry.composition.as_dict().keys())
 
         self.get_precursor_library()
-        self.epitaxies = epitaxies if epitaxies else self.get_epitaxies()
-        self.similarities = similarities if similarities else self.get_similarities()
         print("Precursor library ready.")
+        if use_cache_database:
+            precursor_set = set([s.entry_id for s in self.precursor_library])
+            self.epitaxies = epitaxies if epitaxies else query_epitaxies(precursor_set, self.target_entry.entry_id)
+            self.similarities = (
+                similarities if similarities else query_similarities(precursor_set, self.target_entry_id)
+            )
+        else:
+            self.epitaxies = epitaxies if epitaxies else self.get_epitaxies()
+            self.similarities = similarities if similarities else self.get_similarities()
 
     def get_mp_entries(self):
         with MPRester() as mpr:
