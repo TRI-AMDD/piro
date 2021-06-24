@@ -11,7 +11,7 @@ specific inorganic materials.
 
 setup(
     name="piro",
-    version="2021.6.16",
+    version="2021.6.24",
     packages=find_packages(),
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
