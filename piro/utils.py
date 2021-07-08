@@ -34,18 +34,13 @@ from piro import RXN_FILES
 
 
 @lru_cache()
-def get_composition(entry: ComputedStructureEntry) -> Composition:
-    return entry.structure.composition
-
-
-@lru_cache()
 def get_reduced_formula(entry: ComputedStructureEntry) -> str:
-    return get_composition(entry).reduced_formula
+    return entry.composition.reduced_formula
 
 
 @lru_cache()
 def get_fractional_composition(entry: ComputedStructureEntry) -> Composition:
-    return get_composition(entry).fractional_composition
+    return entry.composition.fractional_composition
 
 
 @lru_cache()
