@@ -11,15 +11,14 @@ specific inorganic materials.
 
 setup(
     name="piro",
-    version="2021.6.16",
+    version="2021.6.24",
     packages=find_packages(),
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
-    install_requires=["matminer==0.6.4",
-                      "scikit-learn==0.23.2",
+    install_requires=["matminer==0.7.3",
+                      "scikit-learn==0.24.2",
                       "plotly==4.13.0",
-                      "pymatgen==2021.3.9",
                       "pymongo==3.11.4"
                       ],
     classifiers=[
@@ -31,7 +30,7 @@ setup(
         "web": ["dash-core-components>=0.22.1",
                 "dash-html-components>=0.10.1",
                 "dash-renderer>=0.12.1",
-                "dash-table==4.11.0",
+                "dash-table==4.11.3",
                 "dash==1.17.0"
                 ],
         "tests": ["pytest",

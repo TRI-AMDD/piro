@@ -1,6 +1,5 @@
 import logging
 import json
-import base64
 
 from monty.json import MontyDecoder, jsanitize
 import dash_core_components as dcc
@@ -8,8 +7,8 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from piro.route import SynthesisRoutes
 from dash.exceptions import PreventUpdate
-from pymatgen import Composition, MPRester
-from fnmatch import fnmatch
+from pymatgen.core.composition import Composition
+from pymatgen.ext.matproj import MPRester
 from styles import (
     input_style,
     label_style,
