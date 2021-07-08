@@ -6,7 +6,7 @@ import pickle
 import numpy as np
 import json
 from copy import deepcopy
-from pymatgen import Composition
+from pymatgen.core.composition import Composition
 from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
 from matminer.featurizers.base import MultipleFeaturizer
 from matminer.featurizers.composition import (
@@ -90,12 +90,14 @@ def through_cache(_parents, target, type="epitaxy"):
 def epitaxy(_parents, target):
     def _func(s, target):
         sa = SubstrateAnalyzer(film_max_miller=2, substrate_max_miller=2)
-        gen = list(sa.calculate(s, target))
+        gen = [g for g in sa.calculate(s, target) if g]
         if gen:
             return min([e["match_area"] for e in gen])
         else:
             return 1000000.0
 
+    # Uncomment to debug SA issues
+    # return [_func(s, target) for s in _parents]
     return Parallel(n_jobs=-1, verbose=1)(delayed(_func)(s, target) for s in _parents)
 
 
