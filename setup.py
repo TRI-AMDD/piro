@@ -31,7 +31,7 @@ setup(
                 "dash-html-components>=0.10.1",
                 "dash-renderer>=0.12.1",
                 "dash-table==4.11.3",
-                "dash==1.17.0"
+                "dash==1.20.0"
                 ],
         "tests": ["pytest",
                   "pytest-cov",
