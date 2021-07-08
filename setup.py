@@ -18,7 +18,7 @@ setup(
     long_description_content_type='text/markdown',
     install_requires=["matminer==0.7.3",
                       "scikit-learn==0.24.2",
-                      "plotly==4.13.0",
+                      "plotly==5.1.0",
                       "pymongo==3.11.4"
                       ],
     classifiers=[
@@ -30,7 +30,7 @@ setup(
         "web": ["dash-core-components>=0.22.1",
                 "dash-html-components>=0.10.1",
                 "dash-renderer>=0.12.1",
-                "dash-table==4.11.0",
+                "dash-table==4.11.3",
                 "dash==1.17.0"
                 ],
         "tests": ["pytest",
