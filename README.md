@@ -23,7 +23,7 @@ works with Materials Project data via its Rester API.
 ### Pymatgen API key
  - `piro` has a dependency on `pymatgen` which requires you to generate an API key.  Go [here](https://materialsproject.org/open) and follow the instructions to generate your API key.
 
-### Access to MongoDB Cached Database
+### Access to MongoDB Cached Database (optional)
  - Once you get the credential, set up the environment variable as follow:
       ```
       MONGODB_URI = mongodb://{username}:{password}@{host}:{port}/{database}
@@ -40,8 +40,15 @@ works with Materials Project data via its Rester API.
  - Additionally, if you would simply like to host your own local server quickly, install Docker Compose [here](https://docs.docker.com/compose/install/).
 
 ## Setup
+There are a few options to install and run `piro` on your machine:
 
-###  - `piro` Environment for Local Development
+###  - Get `piro` from PyPI
+The most recent stable version of `piro` can be installed from [PyPI](https://pypi.org/project/piro/). We recommend installing `piro` in a dedicated environment to avoid any version conflicts for its dependencies.
+```
+pip install piro
+```
+
+###  - Setup a `piro` Environment for Local Development
 
 Using the `Dockerfile` will likely be the quickest way to get a local `piro` development environment up and running with little configuration necessary on your end.
 
@@ -107,6 +114,10 @@ Using the `Dockerfile` will likely be the quickest way to get a local `piro` dev
     ERROR: could not find an available, non-overlapping IPv4 address pool among the defaults to assign to the network
     ```
     when attempting to run the Dash server, you will likely need to disable any VPNs you may have running.
+ - If you run into API key errors, try running the following command:
+   ```
+   pmg config --add PMG_MAPI_KEY <your API key>
+   ```
 
 ## Citation
 If you use `piro`, we kindly ask you to cite the following publication:
