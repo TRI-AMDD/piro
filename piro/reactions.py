@@ -34,7 +34,7 @@ class Reaction:
         self.reduced_formulas = tuple([get_reduced_formula(p) for p in self.precursors])
 
         if len(set(self.reduced_formulas)) != len(self.reduced_formulas):
-            raise self.SkipReaction(f'Reaction has duplicate formula')
+            raise self.SkipReaction('Reaction has duplicate formula')
 
         self.elements = elements
         self.allow_gas_release = allow_gas_release
@@ -54,23 +54,23 @@ class Reaction:
             for e in [get_fractional_composition(p) for p in self.precursors]
         ]
         if np.any(np.sum(np.array(c), axis=0) == 0.0):
-            raise self.SkipReaction(f'Reaction as sum 0 c')
+            raise self.SkipReaction('Reaction as sum 0 c')
 
         try:
             coeffs = np.linalg.solve(np.vstack(c).T, target_c)
         except:
             # need better handling here.
-            raise self.SkipReaction(f'Reaction could not solve for coeffs')
+            raise self.SkipReaction('Reaction could not solve for coeffs')
 
         if np.any(np.abs(coeffs) > 100):
-            raise self.SkipReaction(f'Reaction has a coeff over 100')
+            raise self.SkipReaction('Reaction has a coeff over 100')
 
         if np.any(coeffs < 0.0):
             if not self.allow_gas_release:
-                raise self.SkipReaction(f'Reaction has a gas release')
+                raise self.SkipReaction('Reaction has a gas release')
             else:
                 if not set(np.array(self.reduced_formulas)[coeffs < 0.0]).issubset(GAS_RELEASE):
-                    raise self.SkipReaction(f'Reaction gas releases are not expected gases')
+                    raise self.SkipReaction('Reaction gas releases are not expected gases')
 
         removed_coeff_indexes = []
         for i in reversed(range(len(coeffs))):
@@ -84,7 +84,7 @@ class Reaction:
             # Removes under-determined reactions.
             # print(effective_rank, precursor_formulas, \
             # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
-            raise self.SkipReaction(f'Reaction is under-determined')
+            raise self.SkipReaction('Reaction is under-determined')
 
         main_formulas = np.array([
             p for i, p in enumerate(self.reduced_formulas) if i not in removed_coeff_indexes

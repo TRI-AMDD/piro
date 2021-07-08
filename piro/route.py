@@ -1,6 +1,3 @@
-import itertools
-from collections import defaultdict
-
 import scipy
 import numpy as np
 import plotly.express as px
