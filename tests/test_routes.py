@@ -18,9 +18,14 @@ class RoutesTest(unittest.TestCase):
             warnings.warn("Using mock MPRester response")
             self.monkeypatch = MonkeyPatch()
 
-            def get(*args, **kwargs):
+            def get_entries_in_chemsys(*args, **kwargs):
                 return loadfn(TEST_FILES / "ba-o-ti.json")
-            self.monkeypatch.setattr(MPRester, "get_entries_in_chemsys", get)
+            def get_entry_by_material_id(*args, **kwargs):
+                return loadfn(TEST_FILES / "ba-o-ti.json")[74]
+            self.monkeypatch.setattr(
+                MPRester, "get_entries_in_chemsys", get_entries_in_chemsys)
+            self.monkeypatch.setattr(
+                MPRester, "get_entry_by_material_id", get_entry_by_material_id)
 
     def test_basic_route(self):
         # BaTiO3 example
