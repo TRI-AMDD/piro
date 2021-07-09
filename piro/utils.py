@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Tuple
 
 import pandas as pd
 import os
@@ -22,7 +23,6 @@ from matminer.featurizers.structure import (
     StructureComposition,
     MaximumPackingEfficiency,
 )
-from pymatgen.entries.computed_entries import ComputedStructureEntry
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import pairwise_distances
 from sklearn.linear_model import LinearRegression
@@ -34,21 +34,12 @@ from piro import RXN_FILES
 
 
 @lru_cache()
-def get_reduced_formula(entry: ComputedStructureEntry) -> str:
-    return entry.composition.reduced_formula
-
-
-@lru_cache()
-def get_fractional_composition(entry: ComputedStructureEntry) -> Composition:
-    return entry.composition.fractional_composition
-
-
-@lru_cache()
 def get_composition_as_dict(composition: Composition) -> dict:
     return composition.as_dict()
 
 
-def get_v(c, elts):
+@lru_cache()
+def get_v(c: Composition, elts: Tuple[str]) -> np.array:
     c_dict = get_composition_as_dict(c)
     return np.array([c_dict[el] for el in elts])
 

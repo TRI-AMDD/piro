@@ -1,5 +1,4 @@
 from collections import defaultdict
-from unittest.mock import patch
 
 from numpy import nan, array
 from pandas._testing import assert_frame_equal
@@ -7,7 +6,6 @@ from pymatgen.entries.computed_entries import ComputedStructureEntry
 
 import pandas as pd
 
-from piro.reactions import Reaction
 from piro.route import SynthesisRoutes
 
 TARGET_ENTRY_DICT = {
@@ -1447,7 +1445,7 @@ SIMILARITIES = {
 
 EXPECTED_PLOT_DATA = [
     {'index': 'mp-1009657_mp-1018027_mp-2686',
-     'n_competing': 10,
+     'n_competing': 1,
      'barrier': 0.5789189802480729,
      'summary': '1.3333 Ca2N(mp-2686) + 0.3333 CaN2(mp-1009657) + 1.0 VN(mp-1018027)',
      'energy': -0.22549735714285668,
@@ -1455,7 +1453,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'CaN2', 'VN'], dtype='<U4')},
     {'index': 'mp-1009657_mp-1018027_mp-45',
-     'n_competing': 12,
+     'n_competing': 1,
      'barrier': 0.19222015403712947,
      'summary': '2.0 Ca(mp-45) + 1.0 CaN2(mp-1009657) + 1.0 VN(mp-1018027)',
      'energy': -0.513877448571428,
@@ -1463,7 +1461,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'CaN2', 'VN'], dtype='<U4')},
     {'index': 'mp-1009657_mp-1188283_mp-2686',
-     'n_competing': 11,
+     'n_competing': 1,
      'barrier': 0.20870340755772163,
      'summary': '1.0417 Ca2N(mp-2686) + 0.9167 CaN2(mp-1009657) + 0.125 V8N(mp-1188283)',
      'energy': -0.4733156905357133,
@@ -1471,7 +1469,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'CaN2', 'V8N'], dtype='<U4')},
     {'index': 'mp-1009657_mp-1188283_mp-45',
-     'n_competing': 13,
+     'n_competing': 1,
      'barrier': 0.14989673027000328,
      'summary': '1.5625 Ca(mp-45) + 1.4375 CaN2(mp-1009657) + 0.125 V8N(mp-1188283)',
      'energy': -0.6986126369642848,
@@ -1479,7 +1477,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'CaN2', 'V8N'], dtype='<U4')},
     {'index': 'mp-1009657_mp-1188283_mp-844',
-     'n_competing': 11,
+     'n_competing': 1,
      'barrier': 0.2339704914750757,
      'summary': '0.7812 Ca3N2(mp-844) + 0.6562 CaN2(mp-1009657) + 0.125 V8N(mp-1188283)',
      'energy': -0.4263516082254458,
@@ -1487,7 +1485,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.3333',
      'precursor_formulas': array(['Ca3N2', 'CaN2', 'V8N'], dtype='<U5')},
     {'index': 'mp-1009657_mp-146_mp-2686',
-     'n_competing': 12,
+     'n_competing': 1,
      'barrier': 0.1666290885704565,
      'summary': '1.0 Ca2N(mp-2686) + 1.0 CaN2(mp-1009657) + 1.0 V(mp-146)',
      'energy': -0.5219188557142851,
@@ -1495,7 +1493,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.3333',
      'precursor_formulas': array(['Ca2N', 'CaN2', 'V'], dtype='<U4')},
     {'index': 'mp-1009657_mp-146_mp-45',
-     'n_competing': 13,
+     'n_competing': 1,
      'barrier': 0.13330559124887414,
      'summary': '1.5 Ca(mp-45) + 1.5 CaN2(mp-1009657) + 1.0 V(mp-146)',
      'energy': -0.7382039242857136,
@@ -1503,7 +1501,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.3333',
      'precursor_formulas': array(['Ca', 'CaN2', 'V'], dtype='<U4')},
     {'index': 'mp-1009657_mp-146_mp-844',
-     'n_competing': 13,
+     'n_competing': 1,
      'barrier': 0.17982457701765836,
      'summary': '0.75 Ca3N2(mp-844) + 0.75 CaN2(mp-1009657) + 1.0 V(mp-146)',
      'energy': -0.47683333669642813,
@@ -1511,7 +1509,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.6667',
      'precursor_formulas': array(['Ca3N2', 'CaN2', 'V'], dtype='<U5')},
     {'index': 'mp-1009657_mp-2686_mp-33090',
-     'n_competing': 11,
+     'n_competing': 1,
      'barrier': 0.26490659047170095,
      'summary': '1.1667 Ca2N(mp-2686) + 0.6667 CaN2(mp-1009657) + 0.5 V2N(mp-33090)',
      'energy': -0.33176198761904696,
@@ -1519,7 +1517,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'CaN2', 'V2N'], dtype='<U4')},
     {'index': 'mp-1009657_mp-33090_mp-45',
-     'n_competing': 12,
+     'n_competing': 1,
      'barrier': 0.15320162857579173,
      'summary': '1.75 Ca(mp-45) + 1.25 CaN2(mp-1009657) + 0.5 V2N(mp-33090)',
      'energy': -0.584094567619047,
@@ -1527,7 +1525,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'CaN2', 'V2N'], dtype='<U4')},
     {'index': 'mp-1009657_mp-33090_mp-844',
-     'n_competing': 11,
+     'n_competing': 1,
      'barrier': 0.33290455838671207,
      'summary': '0.875 Ca3N2(mp-844) + 0.375 CaN2(mp-1009657) + 0.5 V2N(mp-33090)',
      'energy': -0.2791622154315475,
@@ -1535,7 +1533,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.3333',
      'precursor_formulas': array(['Ca3N2', 'CaN2', 'V2N'], dtype='<U5')},
     {'index': 'mp-1018027_mp-1080711_mp-2686',
-     'n_competing': 4,
+     'n_competing': 1,
      'barrier': 8.259215616280242,
      'summary': '1.5 Ca2N(mp-2686) + 0.25 N2(mp-1080711) + 1.0 VN(mp-1018027)',
      'energy': -0.0904245162846602,
@@ -1543,7 +1541,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'N2', 'VN'], dtype='<U4')},
     {'index': 'mp-1018027_mp-1080711_mp-45',
-     'n_competing': 6,
+     'n_competing': 1,
      'barrier': 5.5247031510120665,
      'summary': '3.0 Ca(mp-45) + 1.0 N2(mp-1080711) + 1.0 VN(mp-1018027)',
      'energy': -0.11777613085292815,
@@ -1551,7 +1549,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'N2', 'VN'], dtype='<U2')},
     {'index': 'mp-1018027_mp-2686_mp-676',
-     'n_competing': 11,
+     'n_competing': 1,
      'barrier': 1.306907112973467,
      'summary': '1.4545 Ca2N(mp-2686) + 0.0909 CaN6(mp-676) + 1.0 VN(mp-1018027)',
      'energy': -0.24399278974025917,
@@ -1559,7 +1557,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'CaN6', 'VN'], dtype='<U4')},
     {'index': 'mp-1018027_mp-45_mp-676',
-     'n_competing': 14,
+     'n_competing': 1,
      'barrier': 0.3607608414735328,
      'summary': '2.6667 Ca(mp-45) + 0.3333 CaN6(mp-676) + 1.0 VN(mp-1018027)',
      'energy': -0.6778207319047616,
@@ -1567,7 +1565,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'CaN6', 'VN'], dtype='<U4')},
     {'index': 'mp-1018027_mp-844',
-     'n_competing': 2,
+     'n_competing': 0,
      'barrier': 3.272253412857058,
      'summary': '1.0 Ca3N2(mp-844) + 1.0 VN(mp-1018027)',
      'energy': -0.1653833317857143,
@@ -1575,7 +1573,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.5',
      'precursor_formulas': array(['Ca3N2', 'VN'], dtype='<U5')},
     {'index': 'mp-1080711_mp-1188283_mp-2686',
-     'n_competing': 4,
+     'n_competing': 1,
      'barrier': 6.550559067484007,
      'summary': '1.5 Ca2N(mp-2686) + 0.6875 N2(mp-1080711) + 0.125 V8N(mp-1188283)',
      'energy': -0.1018653781756731,
@@ -1583,7 +1581,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'N2', 'V8N'], dtype='<U4')},
     {'index': 'mp-1080711_mp-1188283_mp-45',
-     'n_competing': 7,
+     'n_competing': 1,
      'barrier': 43.80863327826171,
      'summary': '3.0 Ca(mp-45) + 1.4375 N2(mp-1080711) + 0.125 V8N(mp-1188283)',
      'energy': -0.12921699274394127,
@@ -1591,7 +1589,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'N2', 'V8N'], dtype='<U3')},
     {'index': 'mp-1080711_mp-1188283_mp-844',
-     'n_competing': 8,
+     'n_competing': 1,
      'barrier': 2.1396301126981703,
      'summary': '1.0 Ca3N2(mp-844) + 0.4375 N2(mp-1080711) + 0.125 V8N(mp-1188283)',
      'energy': -0.1768241936767272,
@@ -1599,7 +1597,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.5',
      'precursor_formulas': array(['Ca3N2', 'N2', 'V8N'], dtype='<U5')},
     {'index': 'mp-1080711_mp-146_mp-2686',
-     'n_competing': 7,
+     'n_competing': 1,
      'barrier': 2.0669988271963304,
      'summary': '1.5 Ca2N(mp-2686) + 0.75 N2(mp-1080711) + 1.0 V(mp-146)',
      'energy': -0.11670033313969586,
@@ -1607,7 +1605,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.5',
      'precursor_formulas': array(['Ca2N', 'N2', 'V'], dtype='<U4')},
     {'index': 'mp-1080711_mp-146_mp-45',
-     'n_competing': 8,
+     'n_competing': 1,
      'barrier': 190.07278908037654,
      'summary': '3.0 Ca(mp-45) + 1.5 N2(mp-1080711) + 1.0 V(mp-146)',
      'energy': -0.1440519477079638,
@@ -1615,7 +1613,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.5',
      'precursor_formulas': array(['Ca', 'N2', 'V'], dtype='<U2')},
     {'index': 'mp-1080711_mp-146_mp-844',
-     'n_competing': 8,
+     'n_competing': 1,
      'barrier': 0.5940953168736282,
      'summary': '1.0 Ca3N2(mp-844) + 0.5 N2(mp-1080711) + 1.0 V(mp-146)',
      'energy': -0.19165914864074973,
@@ -1623,7 +1621,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '1.0',
      'precursor_formulas': array(['Ca3N2', 'N2', 'V'], dtype='<U5')},
     {'index': 'mp-1080711_mp-2686_mp-33090',
-     'n_competing': 4,
+     'n_competing': 1,
      'barrier': 6.897534383668158,
      'summary': '1.5 Ca2N(mp-2686) + 0.5 N2(mp-1080711) + 0.5 V2N(mp-33090)',
      'energy': -0.06161630590265399,
@@ -1631,7 +1629,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'N2', 'V2N'], dtype='<U4')},
     {'index': 'mp-1080711_mp-33090_mp-45',
-     'n_competing': 4,
+     'n_competing': 1,
      'barrier': 3.4124722705748,
      'summary': '3.0 Ca(mp-45) + 1.25 N2(mp-1080711) + 0.5 V2N(mp-33090)',
      'energy': -0.08896792047092217,
@@ -1639,7 +1637,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'N2', 'V2N'], dtype='<U3')},
     {'index': 'mp-1080711_mp-33090_mp-844',
-     'n_competing': 6,
+     'n_competing': 1,
      'barrier': 1.0730789337125497,
      'summary': '1.0 Ca3N2(mp-844) + 0.25 N2(mp-1080711) + 0.5 V2N(mp-33090)',
      'energy': -0.1365751214037083,
@@ -1647,7 +1645,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.5',
      'precursor_formulas': array(['Ca3N2', 'N2', 'V2N'], dtype='<U5')},
     {'index': 'mp-1188283_mp-2686_mp-676',
-     'n_competing': 13,
+     'n_competing': 1,
      'barrier': 0.4398321324143746,
      'summary': '1.375 Ca2N(mp-2686) + 0.25 CaN6(mp-676) + 0.125 V8N(mp-1188283)',
      'energy': -0.5241781301785706,
@@ -1655,7 +1653,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'CaN6', 'V8N'], dtype='<U4')},
     {'index': 'mp-1188283_mp-45_mp-676',
-     'n_competing': 15,
+     'n_competing': 1,
      'barrier': 2.9662842868538926,
      'summary': '2.5208 Ca(mp-45) + 0.4792 CaN6(mp-676) + 0.125 V8N(mp-1188283)',
      'energy': -0.9342811067559517,
@@ -1663,7 +1661,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'CaN6', 'V8N'], dtype='<U4')},
     {'index': 'mp-1188283_mp-676_mp-844',
-     'n_competing': 12,
+     'n_competing': 1,
      'barrier': 0.4151122626069478,
      'summary': '0.9453 Ca3N2(mp-844) + 0.1641 CaN6(mp-676) + 0.125 V8N(mp-1188283)',
      'energy': -0.44986762695591487,
@@ -1671,7 +1669,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.3333',
      'precursor_formulas': array(['Ca3N2', 'CaN6', 'V8N'], dtype='<U5')},
     {'index': 'mp-146_mp-2686_mp-676',
-     'n_competing': 14,
+     'n_competing': 1,
      'barrier': 0.2762652898621103,
      'summary': '1.3636 Ca2N(mp-2686) + 0.2727 CaN6(mp-676) + 1.0 V(mp-146)',
      'energy': -0.577405153506493,
@@ -1679,7 +1677,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.3333',
      'precursor_formulas': array(['Ca2N', 'CaN6', 'V'], dtype='<U4')},
     {'index': 'mp-146_mp-45_mp-676',
-     'n_competing': 15,
+     'n_competing': 1,
      'barrier': 2.7481665035189966,
      'summary': '2.5 Ca(mp-45) + 0.5 CaN6(mp-676) + 1.0 V(mp-146)',
      'energy': -0.9841188492857138,
@@ -1687,7 +1685,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.3333',
      'precursor_formulas': array(['Ca', 'CaN6', 'V'], dtype='<U4')},
     {'index': 'mp-146_mp-676_mp-844',
-     'n_competing': 14,
+     'n_competing': 1,
      'barrier': 0.17153371719779226,
      'summary': '0.9375 Ca3N2(mp-844) + 0.1875 CaN6(mp-676) + 1.0 V(mp-146)',
      'energy': -0.503708786674107,
@@ -1695,7 +1693,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.6667',
      'precursor_formulas': array(['Ca3N2', 'CaN6', 'V'], dtype='<U5')},
     {'index': 'mp-2686_mp-33090_mp-676',
-     'n_competing': 12,
+     'n_competing': 1,
      'barrier': 0.38699736587413847,
      'summary': '1.4091 Ca2N(mp-2686) + 0.1818 CaN6(mp-676) + 0.5 V2N(mp-33090)',
      'energy': -0.3687528528138523,
@@ -1703,7 +1701,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca2N', 'CaN6', 'V2N'], dtype='<U4')},
     {'index': 'mp-33090_mp-45_mp-676',
-     'n_competing': 14,
+     'n_competing': 1,
      'barrier': 0.2408438056502627,
      'summary': '2.5833 Ca(mp-45) + 0.4167 CaN6(mp-676) + 0.5 V2N(mp-33090)',
      'energy': -0.7890236717857139,
@@ -1711,7 +1709,7 @@ EXPECTED_PLOT_DATA = [
      'exp_precursors': '0.0',
      'precursor_formulas': array(['Ca', 'CaN6', 'V2N'], dtype='<U4')},
     {'index': 'mp-33090_mp-676_mp-844',
-     'n_competing': 12,
+     'n_competing': 1,
      'barrier': 0.31200338455432075,
      'summary': '0.9688 Ca3N2(mp-844) + 0.0937 CaN6(mp-676) + 0.5 V2N(mp-33090)',
      'energy': -0.29259994042038684,
@@ -1721,14 +1719,7 @@ EXPECTED_PLOT_DATA = [
 ]
 
 
-@patch('piro.utils.deepcopy')
-@patch(f'{Reaction.__module__}.deepcopy')
-def test_get_reactions(rdeepcopy_mock, deepcopy_mock):
-    # don't know why, but deepcopy throws errors during this test
-    # maybe the preset PRECURSOR_LIBRARY data for this test is missing something.
-    # note: the below workaround is as slow or slower than deepcopy, so don't replace the real code with it
-    rdeepcopy_mock.side_effect = lambda entries: [ComputedStructureEntry.from_dict(e.as_dict()) for e in entries]
-    deepcopy_mock.side_effect = lambda entries: [ComputedStructureEntry.from_dict(e.as_dict()) for e in entries]
+def test_get_reactions():
 
     # mimics the jupyter notebook
     router = SynthesisRoutes(
@@ -1758,13 +1749,17 @@ def test_get_reactions(rdeepcopy_mock, deepcopy_mock):
     reactions_coeffs_only = {k: {'coeffs': [round(c, 10) for c in v['coeffs']]} for k, v in router.reactions.items()}
     assert reactions_coeffs_only == EXPECTED_REACTIONS
 
-    # check the plot data is expected
-    ignore_columns = [
-        'n_competing',  # n_competing is different because I passed in a small subset of entries to SynthesisRoutes
-        'summary',  # a single number has a rounding error on Mac only. but coeffs are already checked above
-    ]
+    # check that the plot data is as expected
+    our_df = router.plot_data.sort_index().reset_index()
+    expected_df = pd.DataFrame.from_records(EXPECTED_PLOT_DATA)
+
+    # this one has a mac only rounding error
+    ignore_index = expected_df[
+        expected_df['summary'] == '0.7812 Ca3N2(mp-844) + 0.6562 CaN2(mp-1009657) + 0.125 V8N(mp-1188283)'
+    ].index
+
     assert_frame_equal(
-        router.plot_data.sort_index().reset_index().drop(columns=ignore_columns),
-        pd.DataFrame.from_records(EXPECTED_PLOT_DATA).drop(columns=ignore_columns)
+        our_df.drop(ignore_index),
+        expected_df.drop(ignore_index)
     )
 
