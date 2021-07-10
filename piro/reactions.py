@@ -427,11 +427,58 @@ class Reactions:
         self.flexible_competition = flexible_competition
 
     def get_reactions(self) -> Dict:
-        reactions_dict = {}
+        self.cache_common_calculations()
 
+        reactions_dict = {}
         reaction_by_reduced_formulas = dict()
 
-        # cache things
+        for precursors in tqdm(
+                itertools.combinations(self.precursor_library, len(self.elements)),
+                total=comb(len(self.precursor_library), len(self.elements)),
+        ):
+            sorted_precursors = sorted(precursors, key=lambda p: p.data['reduced_formula'])
+            reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
+
+            if reduced_formulas not in reaction_by_reduced_formulas:
+                reaction = Reaction(reduced_formulas, self.target_entry, self.elements)
+                try:
+                    reaction.get_balanced_reaction(sorted_precursors, self.allow_gas_release)
+                except Reaction.SkipReaction as e:
+                    logger.debug("Skipping precursors %s: %s", precursors, e)
+                    continue
+                reaction_by_reduced_formulas[reduced_formulas] = reaction
+
+            reaction = reaction_by_reduced_formulas[reduced_formulas]
+            reaction_result = ReactionResult(sorted_precursors, reaction)
+
+            if reaction_result.label in reactions_dict:
+                continue
+            else:
+                reaction_result.update_reaction_energy(
+                    self.temperature,
+                    self.pressure
+                )
+                reaction_result.update_nucleation_barrier(
+                    self.epitaxies,
+                    self.similarities,
+                    self.sigma,
+                    self.transport_constant
+                )
+                reaction_result.update_reaction_summary()
+                reaction_result.update_competing_phases(
+                    self.entries,
+                    self.confine_competing_to_icsd,
+                    self.flexible_competition,
+                    self.allow_gas_release,
+                    self.temperature,
+                    self.pressure
+                )
+                reactions_dict[reaction_result.label] = reaction_result.as_dict()
+
+        logger.info(f"Total # of balanced reactions obtained: {len(reactions_dict)}")
+        return reactions_dict
+
+    def cache_common_calculations(self):
         self.target_entry.data['v'] = get_v(
             self.target_entry.composition.fractional_composition, tuple(self.elements)
         )
@@ -439,7 +486,6 @@ class Reactions:
         self.target_entry.data['reduced_composition_sum'] = sum(
             self.target_entry.composition.reduced_composition.as_dict().values()
         )
-
         for p in self.precursor_library:
             p.data['v'] = get_v(
                 p.composition.fractional_composition, tuple(self.elements)
@@ -447,49 +493,3 @@ class Reactions:
             p.data['reduced_formula'] = p.composition.reduced_formula
             p.data['composition_keys'] = set(p.composition.as_dict().keys())
             p.data['reduced_composition_sum'] = sum(p.composition.reduced_composition.as_dict().values())
-
-        for precursors in tqdm(
-                itertools.combinations(self.precursor_library, len(self.elements)),
-                total=comb(len(self.precursor_library), len(self.elements)),
-        ):
-            try:
-                sorted_precursors = sorted(precursors, key=lambda p: p.data['reduced_formula'])
-                reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
-                if reduced_formulas not in reaction_by_reduced_formulas:
-                    reaction = Reaction(reduced_formulas, self.target_entry, self.elements)
-                    reaction.get_balanced_reaction(sorted_precursors, self.allow_gas_release)
-                    reaction_by_reduced_formulas[reduced_formulas] = reaction
-
-                reaction = reaction_by_reduced_formulas[reduced_formulas]
-                reaction_result = ReactionResult(sorted_precursors, reaction)
-
-                if reaction_result.label in reactions_dict:
-                    continue
-                else:
-                    reaction_result.update_reaction_energy(
-                        self.temperature,
-                        self.pressure
-                    )
-                    reaction_result.update_nucleation_barrier(
-                        self.epitaxies,
-                        self.similarities,
-                        self.sigma,
-                        self.transport_constant
-                    )
-                    reaction_result.update_reaction_summary()
-                    reaction_result.update_competing_phases(
-                        self.entries,
-                        self.confine_competing_to_icsd,
-                        self.flexible_competition,
-                        self.allow_gas_release,
-                        self.temperature,
-                        self.pressure
-                    )
-                    reactions_dict[reaction_result.label] = reaction_result.as_dict()
-
-            except Reaction.SkipReaction as e:
-                logger.debug("Skipping precursors %s: %s", precursors, e)
-                continue
-
-        logger.info(f"Total # of balanced reactions obtained: {len(reactions_dict)}")
-        return reactions_dict

@@ -1762,4 +1762,3 @@ def test_get_reactions():
         our_df.drop(ignore_index),
         expected_df.drop(ignore_index)
     )
-
