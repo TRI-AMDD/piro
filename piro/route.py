@@ -4,13 +4,12 @@ import pandas as pd
 import os
 import json
 
-import scipy
 from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.reactions import Reactions
-from piro.utils import epitaxy, similarity, through_cache, get_v, update_gases
+from piro.utils import epitaxy, similarity, through_cache
 from piro.mongodb import query_epitaxies, query_similarities
 from piro import RXN_FILES
 
