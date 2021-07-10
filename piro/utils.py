@@ -1,4 +1,3 @@
-from functools import lru_cache
 from typing import Tuple
 
 import pandas as pd
@@ -33,14 +32,8 @@ from piro.data import ST, H
 from piro import RXN_FILES
 
 
-@lru_cache()
-def get_composition_as_dict(composition: Composition) -> dict:
-    return composition.as_dict()
-
-
-@lru_cache()
 def get_v(c: Composition, elts: Tuple[str]) -> np.array:
-    c_dict = get_composition_as_dict(c)
+    c_dict = c.as_dict()
     return np.array([c_dict[el] for el in elts])
 
 
