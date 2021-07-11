@@ -1,10 +1,11 @@
 import itertools
 import logging
+
 import scipy
 from numpy import ndarray
 from pymatgen.core import Composition
 from scipy.special import comb
-from typing import List, Dict, Tuple, Any, Union
+from typing import List, Tuple, Any, Union
 
 import numpy as np
 from pymatgen.entries.computed_entries import ComputedStructureEntry
@@ -16,7 +17,7 @@ from piro.utils import get_v
 logger = logging.getLogger(__name__)
 
 
-class Reaction:
+class ReactionReducedFormula:
 
     class SkipReaction(Exception):
         pass
@@ -93,17 +94,17 @@ class Reaction:
         return [e for i, e in enumerate(entries) if i not in self.removed_coeff_indexes]
 
 
-class ReactionResult:
+class Reaction:
 
     def __init__(
         self,
         sorted_precursors: List[ComputedStructureEntry],
-        reaction: Reaction
+        reaction_reduced_formula: ReactionReducedFormula
     ):
         self.sorted_precursors = sorted_precursors
-        self.reaction = reaction
+        self.reaction_reduced_formula = reaction_reduced_formula
 
-        self.precursors = self.reaction.filter_entries(sorted_precursors)
+        self.precursors = self.reaction_reduced_formula.filter_entries(sorted_precursors)
         self.entry_ids = [str(p.entry_id) for p in self.precursors]
         self.label = "_".join(sorted(self.entry_ids))
 
@@ -123,8 +124,8 @@ class ReactionResult:
     def as_dict(self) -> dict:
         return {
             "precursors": self.precursors,
-            "coeffs": self.reaction.coeffs,
-            "precursor_formulas": self.reaction.main_formulas,
+            "coeffs": self.reaction_reduced_formula.coeffs,
+            "precursor_formulas": self.reaction_reduced_formula.main_formulas,
             "precursor_ids": self.entry_ids,
             "energy": self.energy,
             "enthalpy": self.enthalpy,
@@ -138,8 +139,8 @@ class ReactionResult:
         }
 
     def update_reaction_summary(self):
-        coeffs = self.reaction.coeffs
-        num_sites = self.reaction.target_entry.data['reduced_composition_sum']
+        coeffs = self.reaction_reduced_formula.coeffs
+        num_sites = self.reaction_reduced_formula.target_entry.data['reduced_composition_sum']
         _coeffs = []
         for i in range(len(coeffs)):
             p = self.precursors[i]
@@ -193,14 +194,14 @@ class ReactionResult:
             temperature: float = 298,
             pressure: Union[float, dict] = 1
     ) -> float:
-        target_entry_energy = self.reaction.target_entry.data["formation_energy_per_atom"]
+        target_entry_energy = self.reaction_reduced_formula.target_entry.data["formation_energy_per_atom"]
         energies, enthalpies = self.get_energies_and_enthalpies(
             self.precursors,
             temperature,
             pressure
         )
-        self.energy = target_entry_energy - np.sum(self.reaction.coeffs * np.array(energies))
-        self.enthalpy = target_entry_energy - np.sum(self.reaction.coeffs * np.array(enthalpies))
+        self.energy = target_entry_energy - np.sum(self.reaction_reduced_formula.coeffs * np.array(energies))
+        self.enthalpy = target_entry_energy - np.sum(self.reaction_reduced_formula.coeffs * np.array(enthalpies))
         self.temperature = temperature
 
         return self.energy
@@ -226,7 +227,7 @@ class ReactionResult:
             self._params = None
             return self.barrier
 
-        target_s = self.reaction.target_entry.structure
+        target_s = self.reaction_reduced_formula.target_entry.structure
         delta_Gv = self.energy * target_s.num_sites / target_s.volume
 
         q_epi = (
@@ -284,7 +285,7 @@ class ReactionResult:
         _competing = []
         _competing_rxe = []
 
-        target_entry_keys = self.reaction.target_entry.data['composition_keys']
+        target_entry_keys = self.reaction_reduced_formula.target_entry.data['composition_keys']
 
         elts_precs = set()
         for p in self.precursors:
@@ -297,7 +298,7 @@ class ReactionResult:
         ]
 
         precursor_formulas = np.array(
-            self.reaction.main_formulas
+            self.reaction_reduced_formula.main_formulas
         )
 
         for entry in entries:
@@ -321,7 +322,7 @@ class ReactionResult:
                     continue
             if entry.entry_id in precursor_ids:
                 continue
-            if entry.entry_id == self.reaction.target_entry.entry_id:
+            if entry.entry_id == self.reaction_reduced_formula.target_entry.entry_id:
                 continue
             competing_target_entry = entry
 
@@ -391,105 +392,49 @@ class ReactionResult:
         return self.n_competing
 
 
-class Reactions:
+def generate_reactions(
+    target_entry: ComputedStructureEntry,
+    elements: List[str],
+    precursor_library: List[ComputedStructureEntry],
+    allow_gas_release: bool = False,
+) -> List[Reaction]:
 
-    def __init__(
-            self,
-            target_entry: ComputedStructureEntry,
-            elements: List[str],
-            precursor_library: List[ComputedStructureEntry],
-            epitaxies: dict,
-            similarities: dict,
-            entries: List[ComputedStructureEntry],
-            allow_gas_release: bool = False,
-            temperature: float = 298,
-            pressure: Union[float, dict] = 1,
-            sigma: float = 2 * 6.242 * 0.01,
-            transport_constant: float = 10.0,
-            confine_competing_to_icsd: bool = True,
-            flexible_competition: int = 0
+    cache_common_calculations(target_entry, elements, precursor_library)
+    reaction_by_reduced_formulas = dict()
+
+    for precursors in tqdm(
+            itertools.combinations(precursor_library, len(elements)),
+            total=comb(len(precursor_library), len(elements)),
     ):
-        self.target_entry = target_entry
-        self.elements = elements
-        self.precursor_library = precursor_library
-        self.allow_gas_release = allow_gas_release
+        sorted_precursors = sorted(precursors, key=lambda p: p.data['reduced_formula'])
+        reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
 
-        self.temperature = temperature
-        self.pressure = pressure
-
-        self.epitaxies = epitaxies
-        self.similarities = similarities
-        self.sigma = sigma
-        self.transport_constant = transport_constant
-
-        self.entries = entries
-        self.confine_competing_to_icsd = confine_competing_to_icsd
-        self.flexible_competition = flexible_competition
-
-    def get_reactions(self) -> Dict:
-        self.cache_common_calculations()
-
-        reactions_dict = {}
-        reaction_by_reduced_formulas = dict()
-
-        for precursors in tqdm(
-                itertools.combinations(self.precursor_library, len(self.elements)),
-                total=comb(len(self.precursor_library), len(self.elements)),
-        ):
-            sorted_precursors = sorted(precursors, key=lambda p: p.data['reduced_formula'])
-            reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
-
-            if reduced_formulas not in reaction_by_reduced_formulas:
-                reaction = Reaction(reduced_formulas, self.target_entry, self.elements)
-                try:
-                    reaction.get_balanced_reaction(sorted_precursors, self.allow_gas_release)
-                except Reaction.SkipReaction as e:
-                    logger.debug("Skipping precursors %s: %s", precursors, e)
-                    continue
-                reaction_by_reduced_formulas[reduced_formulas] = reaction
-
-            reaction = reaction_by_reduced_formulas[reduced_formulas]
-            reaction_result = ReactionResult(sorted_precursors, reaction)
-
-            if reaction_result.label in reactions_dict:
+        if reduced_formulas not in reaction_by_reduced_formulas:
+            reaction = ReactionReducedFormula(reduced_formulas, target_entry, elements)
+            try:
+                reaction.get_balanced_reaction(sorted_precursors, allow_gas_release)
+            except ReactionReducedFormula.SkipReaction as e:
+                logger.debug("Skipping precursors %s: %s", precursors, e)
                 continue
-            else:
-                reaction_result.update_reaction_energy(
-                    self.temperature,
-                    self.pressure
-                )
-                reaction_result.update_nucleation_barrier(
-                    self.epitaxies,
-                    self.similarities,
-                    self.sigma,
-                    self.transport_constant
-                )
-                reaction_result.update_reaction_summary()
-                reaction_result.update_competing_phases(
-                    self.entries,
-                    self.confine_competing_to_icsd,
-                    self.flexible_competition,
-                    self.allow_gas_release,
-                    self.temperature,
-                    self.pressure
-                )
-                reactions_dict[reaction_result.label] = reaction_result.as_dict()
+            reaction_by_reduced_formulas[reduced_formulas] = reaction
 
-        logger.info(f"Total # of balanced reactions obtained: {len(reactions_dict)}")
-        return reactions_dict
+        reaction = reaction_by_reduced_formulas[reduced_formulas]
+        reaction_result = Reaction(sorted_precursors, reaction)
 
-    def cache_common_calculations(self):
-        self.target_entry.data['v'] = get_v(
-            self.target_entry.composition.fractional_composition, tuple(self.elements)
-        )
-        self.target_entry.data['composition_keys'] = set(self.target_entry.composition.as_dict().keys())
-        self.target_entry.data['reduced_composition_sum'] = sum(
-            self.target_entry.composition.reduced_composition.as_dict().values()
-        )
-        for p in self.precursor_library:
-            p.data['v'] = get_v(
-                p.composition.fractional_composition, tuple(self.elements)
-            )
-            p.data['reduced_formula'] = p.composition.reduced_formula
-            p.data['composition_keys'] = set(p.composition.as_dict().keys())
-            p.data['reduced_composition_sum'] = sum(p.composition.reduced_composition.as_dict().values())
+        yield reaction_result
+
+
+def cache_common_calculations(
+    target_entry: ComputedStructureEntry,
+    elements: List[str],
+    precursor_library: List[ComputedStructureEntry],
+):
+    target_entry.data['v'] = get_v(target_entry.composition.fractional_composition, tuple(elements))
+    target_entry.data['composition_keys'] = set(target_entry.composition.as_dict().keys())
+    target_entry.data['reduced_composition_sum'] = sum(target_entry.composition.reduced_composition.as_dict().values())
+
+    for p in precursor_library:
+        p.data['v'] = get_v(p.composition.fractional_composition, tuple(elements))
+        p.data['reduced_formula'] = p.composition.reduced_formula
+        p.data['composition_keys'] = set(p.composition.as_dict().keys())
+        p.data['reduced_composition_sum'] = sum(p.composition.reduced_composition.as_dict().values())

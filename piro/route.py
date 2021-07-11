@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 import plotly.express as px
 import pandas as pd
@@ -8,10 +10,13 @@ from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
-from piro.reactions import Reactions
+from piro.reactions import generate_reactions
 from piro.utils import epitaxy, similarity, through_cache
 from piro.mongodb import query_epitaxies, query_similarities
 from piro import RXN_FILES
+
+
+logger = logging.getLogger(__name__)
 
 
 # TODO: for elements and gases (references) - don't allow multiple entries
@@ -239,23 +244,47 @@ class SynthesisRoutes:
         print("Epitaxies ready")
         return self.epitaxies
 
+    @property
+    def sigma(self):
+        return self._sigma
+
+    @property
+    def transport_constant(self):
+        return self._transport_constant
+
     def get_reactions(self):
 
-        self.reactions = Reactions(
-            self.target_entry,
-            self.elts,
-            self.precursor_library,
-            self.epitaxies,
-            self.similarities,
-            self.entries,
-            self.allow_gas_release,
-            self.temperature,
-            self.pressure,
-            self._sigma,
-            self._transport_constant,
-            self.confine_competing_to_icsd,
-            self.flexible_competition
-        ).get_reactions()
+        for reaction_result in generate_reactions(
+                self.target_entry,
+                self.elts,
+                self.precursor_library,
+                self.allow_gas_release
+        ):
+            if reaction_result.label in self.reactions:
+                continue
+            else:
+                reaction_result.update_reaction_energy(
+                    self.temperature,
+                    self.pressure
+                )
+                reaction_result.update_nucleation_barrier(
+                    self.epitaxies,
+                    self.similarities,
+                    self.sigma,
+                    self.transport_constant
+                )
+                reaction_result.update_reaction_summary()
+                reaction_result.update_competing_phases(
+                    self.entries,
+                    self.confine_competing_to_icsd,
+                    self.flexible_competition,
+                    self.allow_gas_release,
+                    self.temperature,
+                    self.pressure
+                )
+                self.reactions[reaction_result.label] = reaction_result.as_dict()
+
+        logger.info(f"Total # of balanced reactions obtained: {len(self.reactions)}")
         return self.reactions
 
     def recommend_routes(
@@ -290,8 +319,6 @@ class SynthesisRoutes:
             self.allow_gas_release = allow_gas_release
             self.confine_competing_to_icsd = confine_competing_to_icsd
             self.get_reactions()
-            # for label in self.reactions.keys():
-            #     self.get_competing_phases(label, self.confine_competing_to_icsd)
             self.check_if_known_precursors()
 
         self.plot_data = pd.DataFrame.from_dict(self.reactions, orient="index")[
