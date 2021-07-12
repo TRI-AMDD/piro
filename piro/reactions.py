@@ -34,13 +34,14 @@ def get_balanced_reaction(
         target_entry: ComputedStructureEntry,
         reduced_formulas: Tuple[str],
         precursors: List[ComputedStructureEntry],
+        v_elements_key: str,
         allow_gas_release: bool = False
 ) -> BalancedReaction:
     if len(set(reduced_formulas)) != len(reduced_formulas):
         raise SkipReaction('Reaction has duplicate formula')
 
-    target_c = target_entry.data['v']
-    c = np.vstack([p.data['v'] for p in precursors])
+    target_c = target_entry.data[v_elements_key]
+    c = np.vstack([p.data[v_elements_key] for p in precursors])
 
     if np.any(np.sum(c, axis=0) == 0.0):
         raise SkipReaction('Reaction as sum 0 c')
@@ -395,14 +396,14 @@ def generate_reactions(
     allow_gas_release: bool = False,
 ) -> List[Reaction]:
 
-    cache_common_calculations(target_entry, elements, precursor_library)
+    v_elements_key = f'v_{"_".join(elements)}'
+    cache_common_calculations(target_entry, tuple(elements), precursor_library, v_elements_key)
     balanced_reaction_by_reduced_formulas = dict()
 
-    for precursors in tqdm(
-            itertools.combinations(precursor_library, len(elements)),
+    for sorted_precursors in tqdm(
+            itertools.combinations(sorted(precursor_library, key=lambda p: p.data['reduced_formula']), len(elements)),
             total=comb(len(precursor_library), len(elements)),
     ):
-        sorted_precursors = sorted(precursors, key=lambda p: p.data['reduced_formula'])
         reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
 
         if reduced_formulas not in balanced_reaction_by_reduced_formulas:
@@ -411,10 +412,11 @@ def generate_reactions(
                     target_entry,
                     reduced_formulas,
                     sorted_precursors,
+                    v_elements_key,
                     allow_gas_release
                 )
             except SkipReaction as e:
-                logger.debug("Skipping precursors %s: %s", precursors, e)
+                logger.debug("Skipping precursors %s: %s", sorted_precursors, e)
                 continue
             balanced_reaction_by_reduced_formulas[reduced_formulas] = balanced_reaction
 
@@ -426,15 +428,16 @@ def generate_reactions(
 
 def cache_common_calculations(
     target_entry: ComputedStructureEntry,
-    elements: List[str],
+    elements: Tuple[str],
     precursor_library: List[ComputedStructureEntry],
+    v_elements_key: str
 ):
-    target_entry.data['v'] = get_v(target_entry.composition.fractional_composition, tuple(elements))
+    target_entry.data[v_elements_key] = get_v(target_entry.composition.fractional_composition, elements)
     target_entry.data['composition_keys'] = set(target_entry.composition.as_dict().keys())
     target_entry.data['reduced_composition_sum'] = sum(target_entry.composition.reduced_composition.as_dict().values())
 
     for p in precursor_library:
-        p.data['v'] = get_v(p.composition.fractional_composition, tuple(elements))
+        p.data[v_elements_key] = get_v(p.composition.fractional_composition, elements)
         p.data['reduced_formula'] = p.composition.reduced_formula
         p.data['composition_keys'] = set(p.composition.as_dict().keys())
         p.data['reduced_composition_sum'] = sum(p.composition.reduced_composition.as_dict().values())
