@@ -1,11 +1,11 @@
 import itertools
 import logging
+from dataclasses import dataclass
 
 import scipy
-from numpy import ndarray
 from pymatgen.core import Composition
 from scipy.special import comb
-from typing import List, Tuple, Any, Union
+from typing import List, Tuple, Union
 
 import numpy as np
 from pymatgen.entries.computed_entries import ComputedStructureEntry
@@ -17,81 +17,75 @@ from piro.utils import get_v
 logger = logging.getLogger(__name__)
 
 
-class ReactionReducedFormula:
+@dataclass
+class BalancedReaction:
+    reduced_formulas: Tuple[str]
+    target_entry: ComputedStructureEntry
+    coeffs: np.array
+    removed_coeff_indexes: List[int]
+    main_formulas: np.array
 
-    class SkipReaction(Exception):
-        pass
 
-    def __init__(
-            self,
-            reduced_formulas: Tuple[str],
-            target_entry: ComputedStructureEntry,
-            elements: List[str]
-    ):
-        self.reduced_formulas = reduced_formulas
+class SkipReaction(Exception):
+    pass
 
-        self.elements = elements
-        self.target_entry = target_entry
 
-        self.coeffs = None
-        self.removed_coeff_indexes = []
-        self.main_formulas = None
+def get_balanced_reaction(
+        target_entry: ComputedStructureEntry,
+        reduced_formulas: Tuple[str],
+        precursors: List[ComputedStructureEntry],
+        allow_gas_release: bool = False
+) -> BalancedReaction:
+    if len(set(reduced_formulas)) != len(reduced_formulas):
+        raise SkipReaction('Reaction has duplicate formula')
 
-    def get_balanced_reaction(
-            self,
-            precursors: List[ComputedStructureEntry],
-            allow_gas_release: bool = False
-    ) -> Tuple[Any, List[int], ndarray]:
-        if len(set(self.reduced_formulas)) != len(self.reduced_formulas):
-            raise self.SkipReaction('Reaction has duplicate formula')
+    target_c = target_entry.data['v']
+    c = np.vstack([p.data['v'] for p in precursors])
 
-        target_c = self.target_entry.data['v']
-        c = np.vstack([p.data['v'] for p in precursors])
+    if np.any(np.sum(c, axis=0) == 0.0):
+        raise SkipReaction('Reaction as sum 0 c')
 
-        if np.any(np.sum(c, axis=0) == 0.0):
-            raise self.SkipReaction('Reaction as sum 0 c')
+    try:
+        coeffs = np.linalg.solve(c.T, target_c)
+    except:
+        # need better handling here.
+        raise SkipReaction('Reaction could not solve for coeffs')
 
-        try:
-            coeffs = np.linalg.solve(c.T, target_c)
-        except:
-            # need better handling here.
-            raise self.SkipReaction('Reaction could not solve for coeffs')
+    if np.any(np.abs(coeffs) > 100):
+        raise SkipReaction('Reaction has a coeff over 100')
 
-        if np.any(np.abs(coeffs) > 100):
-            raise self.SkipReaction('Reaction has a coeff over 100')
+    if np.any(coeffs < 0.0):
+        if not allow_gas_release:
+            raise SkipReaction('Reaction has a gas release')
+        else:
+            if not set(np.array(reduced_formulas)[coeffs < 0.0]).issubset(GAS_RELEASE):
+                raise SkipReaction('Reaction gas releases are not expected gases')
 
-        if np.any(coeffs < 0.0):
-            if not allow_gas_release:
-                raise self.SkipReaction('Reaction has a gas release')
-            else:
-                if not set(np.array(self.reduced_formulas)[coeffs < 0.0]).issubset(GAS_RELEASE):
-                    raise self.SkipReaction('Reaction gas releases are not expected gases')
+    removed_coeff_indexes = []
+    for i in reversed(range(len(coeffs))):
+        if np.abs(coeffs[i]) < 0.00001:
+            c = np.delete(c, i, 0)
+            coeffs = np.delete(coeffs, i)
+            removed_coeff_indexes.append(i)
 
-        removed_coeff_indexes = []
-        for i in reversed(range(len(coeffs))):
-            if np.abs(coeffs[i]) < 0.00001:
-                c = np.delete(c, i, 0)
-                coeffs = np.delete(coeffs, i)
-                removed_coeff_indexes.append(i)
+    effective_rank = scipy.linalg.lstsq(c.T, target_c)[2]
+    if effective_rank < len(coeffs):
+        # Removes under-determined reactions.
+        # print(effective_rank, precursor_formulas, \
+        # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
+        raise SkipReaction('Reaction is under-determined')
 
-        effective_rank = scipy.linalg.lstsq(c.T, target_c)[2]
-        if effective_rank < len(coeffs):
-            # Removes under-determined reactions.
-            # print(effective_rank, precursor_formulas, \
-            # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
-            raise self.SkipReaction('Reaction is under-determined')
+    main_formulas = np.array([
+        p for i, p in enumerate(reduced_formulas) if i not in removed_coeff_indexes
+    ])
 
-        main_formulas = np.array([
-            p for i, p in enumerate(self.reduced_formulas) if i not in removed_coeff_indexes
-        ])
-
-        self.coeffs = coeffs
-        self.removed_coeff_indexes = removed_coeff_indexes
-        self.main_formulas = main_formulas
-        return self.coeffs, self.removed_coeff_indexes, self.main_formulas
-
-    def filter_entries(self, entries: List[ComputedStructureEntry]) -> List[ComputedStructureEntry]:
-        return [e for i, e in enumerate(entries) if i not in self.removed_coeff_indexes]
+    return BalancedReaction(
+        reduced_formulas,
+        target_entry,
+        coeffs,
+        removed_coeff_indexes,
+        main_formulas,
+    )
 
 
 class Reaction:
@@ -99,12 +93,14 @@ class Reaction:
     def __init__(
         self,
         sorted_precursors: List[ComputedStructureEntry],
-        reaction_reduced_formula: ReactionReducedFormula
+        balanced_reaction: BalancedReaction
     ):
         self.sorted_precursors = sorted_precursors
-        self.reaction_reduced_formula = reaction_reduced_formula
+        self.balanced_reaction = balanced_reaction
 
-        self.precursors = self.reaction_reduced_formula.filter_entries(sorted_precursors)
+        self.precursors = [
+            p for i, p in enumerate(sorted_precursors) if i not in self.balanced_reaction.removed_coeff_indexes
+        ]
         self.entry_ids = [str(p.entry_id) for p in self.precursors]
         self.label = "_".join(sorted(self.entry_ids))
 
@@ -124,8 +120,8 @@ class Reaction:
     def as_dict(self) -> dict:
         return {
             "precursors": self.precursors,
-            "coeffs": self.reaction_reduced_formula.coeffs,
-            "precursor_formulas": self.reaction_reduced_formula.main_formulas,
+            "coeffs": self.balanced_reaction.coeffs,
+            "precursor_formulas": self.balanced_reaction.main_formulas,
             "precursor_ids": self.entry_ids,
             "energy": self.energy,
             "enthalpy": self.enthalpy,
@@ -139,8 +135,8 @@ class Reaction:
         }
 
     def update_reaction_summary(self):
-        coeffs = self.reaction_reduced_formula.coeffs
-        num_sites = self.reaction_reduced_formula.target_entry.data['reduced_composition_sum']
+        coeffs = self.balanced_reaction.coeffs
+        num_sites = self.balanced_reaction.target_entry.data['reduced_composition_sum']
         _coeffs = []
         for i in range(len(coeffs)):
             p = self.precursors[i]
@@ -194,14 +190,14 @@ class Reaction:
             temperature: float = 298,
             pressure: Union[float, dict] = 1
     ) -> float:
-        target_entry_energy = self.reaction_reduced_formula.target_entry.data["formation_energy_per_atom"]
+        target_entry_energy = self.balanced_reaction.target_entry.data["formation_energy_per_atom"]
         energies, enthalpies = self.get_energies_and_enthalpies(
             self.precursors,
             temperature,
             pressure
         )
-        self.energy = target_entry_energy - np.sum(self.reaction_reduced_formula.coeffs * np.array(energies))
-        self.enthalpy = target_entry_energy - np.sum(self.reaction_reduced_formula.coeffs * np.array(enthalpies))
+        self.energy = target_entry_energy - np.sum(self.balanced_reaction.coeffs * np.array(energies))
+        self.enthalpy = target_entry_energy - np.sum(self.balanced_reaction.coeffs * np.array(enthalpies))
         self.temperature = temperature
 
         return self.energy
@@ -227,7 +223,7 @@ class Reaction:
             self._params = None
             return self.barrier
 
-        target_s = self.reaction_reduced_formula.target_entry.structure
+        target_s = self.balanced_reaction.target_entry.structure
         delta_Gv = self.energy * target_s.num_sites / target_s.volume
 
         q_epi = (
@@ -285,7 +281,7 @@ class Reaction:
         _competing = []
         _competing_rxe = []
 
-        target_entry_keys = self.reaction_reduced_formula.target_entry.data['composition_keys']
+        target_entry_keys = self.balanced_reaction.target_entry.data['composition_keys']
 
         elts_precs = set()
         for p in self.precursors:
@@ -298,7 +294,7 @@ class Reaction:
         ]
 
         precursor_formulas = np.array(
-            self.reaction_reduced_formula.main_formulas
+            self.balanced_reaction.main_formulas
         )
 
         for entry in entries:
@@ -322,7 +318,7 @@ class Reaction:
                     continue
             if entry.entry_id in precursor_ids:
                 continue
-            if entry.entry_id == self.reaction_reduced_formula.target_entry.entry_id:
+            if entry.entry_id == self.balanced_reaction.target_entry.entry_id:
                 continue
             competing_target_entry = entry
 
@@ -400,7 +396,7 @@ def generate_reactions(
 ) -> List[Reaction]:
 
     cache_common_calculations(target_entry, elements, precursor_library)
-    reaction_by_reduced_formulas = dict()
+    balanced_reaction_by_reduced_formulas = dict()
 
     for precursors in tqdm(
             itertools.combinations(precursor_library, len(elements)),
@@ -409,19 +405,23 @@ def generate_reactions(
         sorted_precursors = sorted(precursors, key=lambda p: p.data['reduced_formula'])
         reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
 
-        if reduced_formulas not in reaction_by_reduced_formulas:
-            reaction = ReactionReducedFormula(reduced_formulas, target_entry, elements)
+        if reduced_formulas not in balanced_reaction_by_reduced_formulas:
             try:
-                reaction.get_balanced_reaction(sorted_precursors, allow_gas_release)
-            except ReactionReducedFormula.SkipReaction as e:
+                balanced_reaction = get_balanced_reaction(
+                    target_entry,
+                    reduced_formulas,
+                    sorted_precursors,
+                    allow_gas_release
+                )
+            except SkipReaction as e:
                 logger.debug("Skipping precursors %s: %s", precursors, e)
                 continue
-            reaction_by_reduced_formulas[reduced_formulas] = reaction
+            balanced_reaction_by_reduced_formulas[reduced_formulas] = balanced_reaction
 
-        reaction = reaction_by_reduced_formulas[reduced_formulas]
-        reaction_result = Reaction(sorted_precursors, reaction)
+        balanced_reaction = balanced_reaction_by_reduced_formulas[reduced_formulas]
+        reaction = Reaction(sorted_precursors, balanced_reaction)
 
-        yield reaction_result
+        yield reaction
 
 
 def cache_common_calculations(
