@@ -8,7 +8,7 @@ router = fastapi.APIRouter()
 
 @router.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return fastapi.responses.RedirectResponse(url='/docs')
 
 
 @router.post("/api/recommend_routes", description="generated recommended routes for given material", status_code=201)

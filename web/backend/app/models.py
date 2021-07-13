@@ -4,12 +4,12 @@ from pydantic import BaseModel
 
 
 class SynthesisBoolOptions(BaseModel):
-    allow_gas_release = False
-    show_fraction_known_precursors = False
-    show_known_precursors_only = False
-    confine_competing_to_icsd = False
-    display_peroxides = False
-    add_pareto = False
+    allow_gas_release: bool = False
+    show_fraction_known_precursors: bool = False
+    show_known_precursors_only: bool = False
+    confine_competing_to_icsd: bool = False
+    display_peroxides: bool = False
+    add_pareto: bool = False
 
 
 class RecommendRoutesForm(BaseModel):
