@@ -4,6 +4,8 @@ import plotly.express as px
 import pandas as pd
 import os
 import json
+
+from pymatgen.core import Composition
 from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
@@ -28,7 +30,7 @@ class SynthesisRoutes:
         simple_precursors=False,
         explicit_includes=None,
         allow_gas_release=False,
-        add_element=None,
+        add_elements=None,
         temperature=298,
         pressure=1,
         use_cache=True,
@@ -60,7 +62,7 @@ class SynthesisRoutes:
             exclude_compositions (list): list of compositions to avoid in precursor library.
             allow_gas_release (bool): Many reactions require the release of gases like CO2, O2, etc. depending on the
                 precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
-            add_element (str): Add an element to the chemical space of libraries that doesn't exist in the target
+            add_elements List(str): Add elements to the chemical space of libraries that doesn't exist in the target
                 material. Best example is 'C', which would allow carbonates to be added to the precursor library.
             temperature (float): Temperature (in Kelvin) to consider in free energy adjustments for gases.
             pressure (dict or float): Gas pressures (in atm). If float, all gases are assumed to have the same constant
@@ -93,7 +95,7 @@ class SynthesisRoutes:
         self.allow_gas_release = allow_gas_release
         self.temperature = temperature
         self.pressure = pressure if pressure else DEFAULT_GAS_PRESSURES
-        self.add_element = add_element if add_element else []
+        self.add_elements = add_elements if add_elements else []
         self.entries = entries
         self.hull_distance = hull_distance
         self.use_cache = use_cache
@@ -113,8 +115,8 @@ class SynthesisRoutes:
             else:
                 _e = custom_target_entry
             self.elts = list(_e.composition.as_dict().keys())
-            if add_element:
-                self.elts.append(add_element)
+            if add_elements:
+                self.elts.extend(add_elements)
             self.get_mp_entries()
         else:
             self.elts = list(self.target_entry.composition.as_dict().keys())
@@ -552,7 +554,7 @@ class SynthesisRoutes:
             allowed_precursor_ids = [
                 i.entry_id
                 for i in self.precursor_library
-                if len(set(i.composition.as_dict().keys()).difference(self.add_element))
+                if len(set(i.composition.as_dict().keys()).difference(self.add_elements))
                 <= max_component_precursors
                 or i.composition.reduced_formula in GAS_RELEASE
             ]
@@ -772,3 +774,15 @@ class SynthesisRoutes:
         if latex:
             result["summary"] = result["summary"].apply(latexify)
         return result
+
+    @staticmethod
+    def get_material_id_from_formula(formula_str: str) -> str:
+        with MPRester() as mpr:
+            options = mpr.query(
+                {"pretty_formula": Composition(formula_str).reduced_formula},
+                ["material_id", "e_above_hull"]
+            )
+            if not options:
+                raise ValueError("{} query failed, please enter valid formula or mp id".format(form.mp_id))
+            options = sorted(options, key=lambda x: x["e_above_hull"])
+            return options[0]["material_id"]
