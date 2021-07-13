@@ -8,7 +8,7 @@ ENV MAPI_KEY=$PYMATGEN_API_KEY
 ENV MONGODB_URI=$MONGODB_URI
 WORKDIR /home/$USERNAME
 
-COPY . ./piro/
+COPY ../.. ./piro/
 
 RUN apt-get update \
  && apt-get -y update \
