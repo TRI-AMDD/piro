@@ -1,0 +1,26 @@
+.App {
+    background-color: rgb(246, 246, 248);
+    min-height: 100%;
+    padding: 12px;
+}
+
+.AppHeader h1 {
+    color: #2c2c35;
+    font-size: 30px;
+}
+
+.AppLink {
+    color: #61dafb;
+}
+
+.Form {
+    border: solid 1px #c6c6d1;
+    background-color: #ffffff;
+    padding: 16px;
+}
+.Form > div, .Form > label {
+    margin-bottom: 6px;
+}
+.Form input[type="checkbox" i] {
+    margin: 3px;
+}

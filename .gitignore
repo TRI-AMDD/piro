@@ -5,3 +5,14 @@ __pycache__/
 
 # Distribution / packaging
 *.egg-info/
+
+# dependencies
+web/frontend/node_modules
+web/frontend/.pnp
+web/frontend/.pnp.js
+
+# testing
+web/frontend/coverage
+
+# production
+web/frontend/build
