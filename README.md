@@ -54,7 +54,7 @@ Using the `Dockerfile` will likely be the quickest way to get a local `piro` dev
 
  1. Build your Docker container by running the following command from within your cloned `piro` repository, being sure to substitute your own `pymatgen` API key in place of the below `{insert key here}` portion. If you want to use the cache database, pass in the `{uri}` argument as well:
      ```
-     docker build -t piro:v1 --build-arg PYMATGEN_API_KEY={insert key here} --build-arg MONGODB_URI={uri}.
+     docker build -t piro:v1 --build-arg PYMATGEN_API_KEY={insert key here} --build-arg MONGODB_URI={uri} -f web/dash/Dockerfile .
      ```
 
  1. Once this command is finished executing, run:
@@ -67,6 +67,7 @@ Using the `Dockerfile` will likely be the quickest way to get a local `piro` dev
  1. Build the Docker container with Docker Compose, being sure to substitute your own `pymatgen` API key in place of the below `{insert key here}` portion. If you want to use the cache database, pass in the `{uri}` argument as well:
 
     ```
+    cd web/dash
     docker-compose build --build-arg PYMATGEN_API_KEY={insert key here} --build-arg MONGODB_URI={uri}
     ```
  1. Run the `piro` server:
