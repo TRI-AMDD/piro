@@ -1,12 +1,12 @@
 import React, { FC, createContext, useContext, useState, useMemo } from 'react';
 
-const CounterContext = createContext(
-    {} as {
-        count: number;
-        handleIncrement: () => void;
-        handleDecrement: () => void;
-    }
-);
+type ContextProps = {
+    count: number;
+    handleIncrement: () => void;
+    handleDecrement: () => void;
+};
+
+const CounterContext = createContext<Partial<ContextProps>>({});
 
 const CounterProvider: FC = ({ children }) => {
     const [count, setCount] = useState(0);
