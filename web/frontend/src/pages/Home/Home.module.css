@@ -24,3 +24,9 @@
 .Form input[type="checkbox" i] {
     margin: 3px;
 }
+.Plot {
+    margin: 16px 0;
+}
+.Plot > div {
+    border: solid 1px #c6c6d1;
+}

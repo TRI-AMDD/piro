@@ -1,10 +1,17 @@
+import { Dispatch } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button, Input } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs } from './TypeProps';
 
-export default function Form() {
+
+interface Props {
+    setRequest: Dispatch<any>;
+}
+
+export default function Form(props: Props) {
+    const { setRequest } = props;
     const {
         control,
         register,
@@ -15,6 +22,7 @@ export default function Form() {
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         console.log(data);
         // make api call here
+        setRequest(data);
     };
 
     return (
