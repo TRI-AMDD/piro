@@ -2,7 +2,6 @@ import os
 
 import uvicorn
 import fastapi
-from starlette.responses import PlainTextResponse
 from starlette.staticfiles import StaticFiles
 
 from app import api
@@ -17,8 +16,8 @@ app.mount('/static', StaticFiles(directory=os.path.join(react_dir, 'static')), n
 
 
 @app.exception_handler(Exception)
-async def http_exception_handler(request, exc):
-    return PlainTextResponse(str(exc), status_code=500)
+def http_exception_handler(request, exc):
+    return fastapi.responses.JSONResponse(content={'error_message': str(exc)}, status_code=500)
 
 
 if __name__ == '__main__':
