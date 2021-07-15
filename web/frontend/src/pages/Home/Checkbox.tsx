@@ -18,7 +18,7 @@ export interface CheckboxProps {
 const FormCheckbox: FC<CheckboxProps> = ({ name, control, label }) => (
     <div>
         <Controller
-            name={name}
+            name={`synthesis_bool_options.${name}`}
             control={control}
             defaultValue={false}
             render={({ field }) => (

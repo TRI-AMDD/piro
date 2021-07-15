@@ -5,7 +5,6 @@ import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs } from './TypeProps';
 
-
 interface Props {
     setRequest: Dispatch<any>;
 }
@@ -20,8 +19,7 @@ export default function Form(props: Props) {
     } = useForm<Inputs>();
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        console.log(data);
-        // make api call here
+        // set the form request to trigger an api call
         setRequest(data);
     };
 
@@ -33,41 +31,47 @@ export default function Form(props: Props) {
                 {...register('formula', { required: true })}
                 error={errors.formula ? 'Formula field is required' : ''}
             />
-            <Input type="number" label="Temperature" {...register('temperature')} placeholder="1600 K" />
-            <Input type="number" label="Pressure" {...register('pressure')} placeholder="0.001 atm" />
-            <Input label="Add element" {...register('addElement')} placeholder="None" />
-            <Input label="Max precursors" {...register('precursors')} placeholder="2" />
-
-            <FormCheckbox
-                name="allowGasRelease"
-                control={control}
-                label="Allow for gaseous reaction products, e.g. O2, CO2"
-            />
-            <FormCheckbox
-                name="showFractionKnownPrecursors"
-                control={control}
-                label="Show the fraction of known synthetic reagents in reaction"
-            />
-            <FormCheckbox
-                name="showKnownPrecursorsOnly"
-                control={control}
-                label="Show only reactions with known precursors"
-            />
-            <FormCheckbox
-                name="confineCompetingToIcsd"
-                control={control}
-                label="Confine competing reactions to those containing ICSD materials"
-            />
-            <FormCheckbox
-                name="displayPeroxides"
-                control={control}
-                label="Show reactions involving peroxide compounds"
-            />
-            <FormCheckbox
-                name="addPareto"
-                control={control}
-                label="Show the Pareto front on the reaction analysis diagram"
-            />
+            <h3>Advanced Options</h3>
+            <div className={styles.FormGrid}>
+                <div>
+                    <Input type="number" label="Temperature (K)" {...register('temperature')} placeholder="1600" />
+                    <Input type="number" label="Pressure (atm)" {...register('pressure')} placeholder="0.001" />
+                    <Input label="Add element" {...register('add_elements')} placeholder="None" />
+                    <Input label="Max precursors" {...register('max_component_precursors')} placeholder="2" />
+                </div>
+                <div className={styles.Checkboxes}>
+                    <FormCheckbox
+                        name="allowGasRelease"
+                        control={control}
+                        label="Allow for gaseous reaction products, e.g. O2, CO2"
+                    />
+                    <FormCheckbox
+                        name="showFractionKnownPrecursors"
+                        control={control}
+                        label="Show the fraction of known synthetic reagents in reaction"
+                    />
+                    <FormCheckbox
+                        name="showKnownPrecursorsOnly"
+                        control={control}
+                        label="Show only reactions with known precursors"
+                    />
+                    <FormCheckbox
+                        name="confineCompetingToIcsd"
+                        control={control}
+                        label="Confine competing reactions to those containing ICSD materials"
+                    />
+                    <FormCheckbox
+                        name="displayPeroxides"
+                        control={control}
+                        label="Show reactions involving peroxide compounds"
+                    />
+                    <FormCheckbox
+                        name="addPareto"
+                        control={control}
+                        label="Show the Pareto front on the reaction analysis diagram"
+                    />
+                </div>
+            </div>
 
             <Button type="submit">Run</Button>
         </form>

@@ -12,7 +12,7 @@ function Home() {
                 <h1>Synthesis Analyzer</h1>
             </header>
             <Form setRequest={setRequest} />
-            <SynthesisPlot request={request} />
+            {request && <SynthesisPlot request={request} />}
         </div>
     );
 }

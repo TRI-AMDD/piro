@@ -24,6 +24,17 @@
 .Form input[type="checkbox" i] {
     margin: 3px;
 }
+.FormGrid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    column-gap: 16px;
+}
+.Checkboxes {
+    padding-top: 12px;
+}
+.Checkboxes > div {
+    margin-bottom: 6px;
+}
 .Plot {
     margin: 16px 0;
 }
