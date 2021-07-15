@@ -1,5 +1,3 @@
-import json
-
 import fastapi
 
 from app.models import RecommendRoutesForm
@@ -10,7 +8,8 @@ router = fastapi.APIRouter()
 
 @router.post("/api/recommend_routes", description="generated recommended routes for given material")
 def recommend_routes(form: RecommendRoutesForm):
-    return fastapi.responses.JSONResponse(
-        content=json.loads(route_recommendation_service(form).to_json()),
-        status_code=201
+    return fastapi.responses.Response(
+        content=route_recommendation_service(form).to_json(),
+        status_code=201,
+        media_type='application/json',
     )
