@@ -1,5 +1,15 @@
 # Piro web app backend API
 
+Built using [FastAPI](https://fastapi.tiangolo.com)
+
+## Environment variables
+
+See [settings code](app/settings.py) or [example dotenv file](.env-template) for environment variables that can be set.
+
+You can create a web/backend/.env file or export the environment variables in the shell
+
+**MAPI_KEY** for the MaterialsProject API is required
+
 ## Run with docker
 
 From the root of the piro repository.
@@ -12,7 +22,11 @@ docker build -t piro_backend -f web/backend/Dockerfile .
 ### Run the image
  
  ```
-docker run -d --name piro_backend -p 8080:8080 piro_backend
+ # pick one of the environment variable setting methods in the below command
+docker run -d --name piro_backend -p 8080:8080 -e MAPI_KEY piro_backend  # if MAPI_KEY is already in environment
+docker run -d --name piro_backend -p 8080:8080 -e MAPI_KEY={key} piro_backend  # set MAPI_KEY manually
+docker run -d --name piro_backend -p 8080:8080 --env-file=web/backend/.env piro_backend  # use dotenv file
+
  ```
 
 ### Use the API
@@ -59,8 +73,10 @@ pip install -e .
 
 ### Run the app 
 ```
-export PYTHONPATH=web/backend
-python web/backend/app/main.py
+# set environment variables if not already done previously or in a web/backend/.env 
+# export MAPI_KEY={key}
+
+PYTHONPATH=web/backend python web/backend/app/main.py
 ```
 
 ### Use the API

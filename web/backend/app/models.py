@@ -19,3 +19,5 @@ class RecommendRoutesForm(BaseModel):
     max_component_precursors: int = 2
     add_elements: List[str] = []
     synthesis_bool_options: SynthesisBoolOptions = SynthesisBoolOptions()
+
+
