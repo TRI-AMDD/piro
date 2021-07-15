@@ -1,7 +1,10 @@
 # python API
 fastapi
 uvicorn
-aiofiles
+
+# for serving react
+aiofiles  # static files
+jinja2  # templates
 
 # piro module
 matminer==0.7.3

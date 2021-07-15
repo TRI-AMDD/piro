@@ -7,7 +7,13 @@ from starlette.templating import Jinja2Templates
 
 
 def configure_for_react(app: fastapi.FastAPI):
-    react_dir = os.environ.get('REACT_BUILD_DIR', '../../frontend/build')
+    react_dir = os.environ.get('REACT_BUILD_DIR', os.path.join(
+        os.path.dirname(__file__),
+        os.path.pardir,
+        os.path.pardir,
+        'frontend',
+        'build'
+    ))
 
     # add routes for any multi-page endpoints
     templates = Jinja2Templates(react_dir)

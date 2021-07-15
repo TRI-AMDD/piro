@@ -6,7 +6,7 @@ From the root of the piro repository.
 
 ### Build the image
 ```
-docker build -t piro_backend --build-arg PYMATGEN_API_KEY={insert key here} --build-arg MONGODB_URI={uri} -f web/backend/Dockerfile .
+docker build -t piro_backend -f web/backend/Dockerfile .
 ```
 
 ### Run the image
@@ -59,8 +59,6 @@ pip install -e .
 
 ### Run the app 
 ```
-export PYMATGEN_API_KEY={insert key here}
-export MONGODB_URI={uri}
 export PYTHONPATH=web/backend
 python web/backend/app/main.py
 ```

@@ -1,6 +1,7 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 # this image is setup to run fastapi via gunicorn
 # reference for how to use the image https://hub.docker.com/r/tiangolo/uvicorn-gunicorn-fastapi
+# this should be built from root of repo
 
 RUN apt update
 RUN apt upgrade -y
@@ -8,33 +9,27 @@ RUN apt upgrade -y
 # for React
 RUN apt install npm -y
 
-# copy only the requirements file and get most non-changing requirements installed
+# 1) Install 3rd party requirements first (only copy the requirements files)
+## python
 COPY web/backend/requirements.txt /app/web/backend/requirements.txt
 RUN python3.7 -m pip install -r /app/web/backend/requirements.txt
 
-# create React
-COPY web/frontend /app/web/frontend
+## react
+COPY web/frontend/package-lock.json /app/web/frontend/package-lock.json
 WORKDIR /app/web/frontend
 RUN npm install
+
+# 2) Then copy and install source
+## react
+COPY web/frontend /app/web/frontend
 RUN npm build
 ENV REACT_BUILD_DIR='web/frontend/build'
-WORKDIR /app
 
-# copy piro and install that locally
+# python piro module
 COPY setup.py /app/setup.py
 COPY piro /app/piro
+WORKDIR /app
 RUN python3.7 -m pip install -e .
 
-# copy web app files
+# python backend api code
 COPY web/backend/app /app/app
-
-# set environment variables
-ARG PORT
-ENV PORT=8080
-
-ARG PYMATGEN_API_KEY
-ENV MAPI_KEY=$PYMATGEN_API_KEY
-
-ARG MONGODB_URI
-ENV MONGODB_URI=$MONGODB_URI
-
