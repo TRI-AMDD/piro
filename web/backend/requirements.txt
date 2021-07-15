@@ -1,6 +1,7 @@
 # python API
 fastapi
 uvicorn
+aiofiles
 
 # piro module
 matminer==0.7.3
