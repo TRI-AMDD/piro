@@ -8,8 +8,8 @@ class SynthesisBoolOptions(BaseModel):
     show_fraction_known_precursors: bool = False
     show_known_precursors_only: bool = False
     confine_competing_to_icsd: bool = False
-    display_peroxides: bool = False
-    add_pareto: bool = False
+    display_peroxides: bool = True
+    add_pareto: bool = True
 
 
 class RecommendRoutesForm(BaseModel):
