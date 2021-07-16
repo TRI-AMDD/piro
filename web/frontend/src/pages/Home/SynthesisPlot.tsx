@@ -1,31 +1,34 @@
 import Plot from 'react-plotly.js';
-import { useQuery } from "react-query";
+import { UseMutationResult } from "react-query";
 import styles from './Home.module.css';
+import { Loading } from '@toyota-research-institute/lakefront';
 
 interface Props {
-    request: any;
+    mutation: UseMutationResult<any, unknown, void, unknown>;
 }
 
 function SynthesisPlot(props: Props) {
-    const { request } = props;
-    const { data, error, isLoading } = useQuery('plotData', () => fetch('/api/recommend_routes', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(request)
-    }).then(function(response) {
-        return response.json();
-    }));
+    const { mutation } = props;
+    const { data, error, isLoading } = mutation;
 
-    if (isLoading) return <>Loading...</>;
+    if (isLoading) return (
+        <div className={styles.Loading}>
+            <Loading
+                animated
+                height={24}
+                label="Loading..."
+                width={24}
+            />
+        </div>
+    );
 
     if (error) {
         return <>An error has occurred</>;
     }
 
-    console.log(request);
-    console.log(data);
+    if (!data) {
+        return null;
+    }
 
     return (
         <div className={styles.Plot}>

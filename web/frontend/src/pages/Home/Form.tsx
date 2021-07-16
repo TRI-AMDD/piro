@@ -1,16 +1,17 @@
-import { Dispatch } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { UseMutationResult } from "react-query";
 import { Button, Input } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs } from './TypeProps';
 
 interface Props {
-    setRequest: Dispatch<any>;
+    mutation: UseMutationResult<any, unknown, void, unknown>;
 }
 
 export default function Form(props: Props) {
-    const { setRequest } = props;
+    const { mutation } = props;
+
     const {
         control,
         register,
@@ -21,7 +22,9 @@ export default function Form(props: Props) {
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         // set the form request to trigger an api call
         data.add_elements = [];
-        setRequest(data);
+
+        // @ts-ignore
+        mutation.mutate(data);
     };
 
     return (

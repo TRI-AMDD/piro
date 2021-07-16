@@ -35,9 +35,12 @@
 .Checkboxes > div {
     margin-bottom: 6px;
 }
-.Plot {
+.Plot, .Loading {
     margin: 16px 0;
 }
 .Plot > div {
     border: solid 1px #c6c6d1;
+}
+.Loading {
+    display: flex;
 }
