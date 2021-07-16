@@ -38,41 +38,47 @@ export default function Form(props: Props) {
             <h3>Advanced Options</h3>
             <div className={styles.FormGrid}>
                 <div>
-                    <Input type="number" label="Temperature (K)" {...register('temperature', { valueAsNumber: true })} placeholder="1600" />
-                    <Input type="number" label="Pressure (atm)" {...register('pressure', { valueAsNumber: true })} placeholder="0.001" />
+                    <Input type="number" step="any" label="Temperature (K)" {...register('temperature', { valueAsNumber: true })} placeholder="1600" />
+                    <Input type="number" step="any" label="Pressure (atm)" {...register('pressure', { valueAsNumber: true })} placeholder="0.001" />
                     <Input label="Add element" {...register('add_elements')} placeholder="None" />
                     <Input label="Max precursors" {...register('max_component_precursors', { valueAsNumber: true })} placeholder="2" />
                 </div>
                 <div className={styles.Checkboxes}>
                     <FormCheckbox
-                        name="allowGasRelease"
+                        name="allow_gas_release"
                         control={control}
                         label="Allow for gaseous reaction products, e.g. O2, CO2"
+                        defaultValue={false}
                     />
                     <FormCheckbox
-                        name="showFractionKnownPrecursors"
+                        name="show_fraction_known_precursors"
                         control={control}
                         label="Show the fraction of known synthetic reagents in reaction"
+                        defaultValue={false}
                     />
                     <FormCheckbox
-                        name="showKnownPrecursorsOnly"
+                        name="show_known_precursors_only"
                         control={control}
                         label="Show only reactions with known precursors"
+                        defaultValue={false}
                     />
                     <FormCheckbox
-                        name="confineCompetingToIcsd"
+                        name="confine_competing_to_icsd"
                         control={control}
                         label="Confine competing reactions to those containing ICSD materials"
+                        defaultValue={false}
                     />
                     <FormCheckbox
-                        name="displayPeroxides"
+                        name="display_peroxides"
                         control={control}
                         label="Show reactions involving peroxide compounds"
+                        defaultValue={true}
                     />
                     <FormCheckbox
-                        name="addPareto"
+                        name="add_pareto"
                         control={control}
                         label="Show the Pareto front on the reaction analysis diagram"
+                        defaultValue={true}
                     />
                 </div>
             </div>

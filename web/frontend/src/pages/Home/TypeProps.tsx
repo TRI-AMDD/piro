@@ -6,11 +6,11 @@ export interface Inputs {
     pressure: number;
     max_component_precursors: number;
     synthesis_bool_options: {
-        allowGasRelease: boolean;
-        showFractionKnownPrecursors: boolean;
-        showKnownPrecursorsOnly: boolean;
-        confineCompetingToIcsd: boolean;
-        displayPeroxides: boolean;
-        addPareto: boolean;
+        allow_gas_release: boolean;
+        show_fraction_known_precursors: boolean;
+        show_known_precursors_only: boolean;
+        confine_competing_to_icsd: boolean;
+        display_peroxides: boolean;
+        add_pareto: boolean;
     }
 }
