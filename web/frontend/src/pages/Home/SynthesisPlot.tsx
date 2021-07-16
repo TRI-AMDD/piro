@@ -10,6 +10,9 @@ function SynthesisPlot(props: Props) {
     const { request } = props;
     const { data, error, isLoading } = useQuery('plotData', () => fetch('/api/recommend_routes', {
         method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(request)
     }).then(function(response) {
         return response.json();
