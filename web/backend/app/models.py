@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import List, Union
 
 from pydantic import BaseModel, Field
 
@@ -35,11 +35,11 @@ class RecommendRoutesForm(BaseModel):
         ...,
         description="enter mp-id or formula"
     )
-    temperature: Optional[float] = Field(
+    temperature: float = Field(
         298,
         description="Temperature (in Kelvin) to consider in free energy adjustments for gases."
     )
-    pressure: Optional[Union[float, dict]] = Field(
+    pressure: Union[float, dict] = Field(
         1,
         description=(
             "Gas pressures (in atm). If float, all gases are assumed to have the same constant"
