@@ -16,3 +16,5 @@ web/frontend/coverage
 
 # production
 web/frontend/build
+
+.env

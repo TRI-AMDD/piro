@@ -1,6 +1,7 @@
 # python API
 fastapi
 uvicorn
+pydantic[dotenv]
 
 # for serving react
 aiofiles  # static files
