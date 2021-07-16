@@ -169,7 +169,11 @@ def layout_func(app):
                         )
                     options = sorted(options, key=lambda x: x["e_above_hull"])
                     value = options[0]["material_id"]
-            router = SynthesisRoutes(value, add_elements=[add_element], use_cache_database=False)
+            router = SynthesisRoutes(
+                value,
+                add_elements=[add_element] if add_element else None,
+                use_cache_database=False
+            )
             fig = router.recommend_routes(
                 temperature=temperature,
                 pressure=pressure,
