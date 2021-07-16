@@ -1,7 +1,7 @@
 export interface Inputs {
-    formula: string;
+    mp_id: string;
     example: string;
-    add_elements: string;
+    add_elements: string[];
     temperature: number;
     pressure: number;
     max_component_precursors: number;

@@ -8,7 +8,12 @@ interface Props {
 
 function SynthesisPlot(props: Props) {
     const { request } = props;
-    const { data, error, isLoading } = useQuery('cats', () => fetch('/sample_resp.json').then((res) => res.json()));
+    const { data, error, isLoading } = useQuery('plotData', () => fetch('/api/recommend_routes', {
+        method: 'post',
+        body: JSON.stringify(request)
+    }).then(function(response) {
+        return response.json();
+    }));
 
     if (isLoading) return <>Loading...</>;
 
