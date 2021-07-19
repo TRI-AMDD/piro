@@ -20,10 +20,11 @@ export default function Form(props: Props) {
     } = useForm<Inputs>();
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        // set the form request to trigger an api call
+        // set add_elements to empty string
         data.add_elements = [];
 
         // @ts-ignore
+        // set the form request to trigger an api call
         mutation.mutate(data);
     };
 
@@ -38,10 +39,26 @@ export default function Form(props: Props) {
             <h3>Advanced Options</h3>
             <div className={styles.FormGrid}>
                 <div>
-                    <Input type="number" step="any" label="Temperature (K)" {...register('temperature', { valueAsNumber: true })} placeholder="1600" />
-                    <Input type="number" step="any" label="Pressure (atm)" {...register('pressure', { valueAsNumber: true })} placeholder="0.001" />
+                    <Input
+                        type="number"
+                        step="any"
+                        label="Temperature (K)"
+                        defaultValue={1600}
+                        {...register('temperature', { valueAsNumber: true })}
+                    />
+                    <Input
+                        type="number"
+                        step="any"
+                        label="Pressure (atm)"
+                        {...register('pressure', { valueAsNumber: true })}
+                        defaultValue={0}
+                    />
+                    <Input
+                        label="Max precursors"
+                        {...register('max_component_precursors', { valueAsNumber: true })}
+                        defaultValue={2}
+                    />
                     <Input label="Add element" {...register('add_elements')} placeholder="None" />
-                    <Input label="Max precursors" {...register('max_component_precursors', { valueAsNumber: true })} placeholder="2" />
                 </div>
                 <div className={styles.Checkboxes}>
                     <FormCheckbox
