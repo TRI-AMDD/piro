@@ -4,6 +4,8 @@ import { Button, Input } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs } from './TypeProps';
+import { useState } from "react";
+import MultiSelect from "./MultiSelect";
 
 interface Props {
     mutation: UseMutationResult<any, unknown, void, unknown>;
@@ -11,6 +13,7 @@ interface Props {
 
 export default function Form(props: Props) {
     const { mutation } = props;
+    const [elements, setElements] = useState<{ label: string; value: string; }[]>([]);
 
     const {
         control,
@@ -20,8 +23,8 @@ export default function Form(props: Props) {
     } = useForm<Inputs>();
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        // set add_elements to empty string
-        data.add_elements = [];
+        // set add_elements values
+        data.add_elements = elements.map(e => e.value);
 
         // @ts-ignore
         // set the form request to trigger an api call
@@ -58,7 +61,11 @@ export default function Form(props: Props) {
                         {...register('max_component_precursors', { valueAsNumber: true })}
                         defaultValue={2}
                     />
-                    <Input label="Add element" {...register('add_elements')} placeholder="None" />
+                    <MultiSelect
+                        label="Add element"
+                        placeholder="Type element and press enter"
+                        setValues={setElements}
+                    />
                 </div>
                 <div className={styles.Checkboxes}>
                     <FormCheckbox

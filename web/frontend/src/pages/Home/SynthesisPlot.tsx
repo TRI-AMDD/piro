@@ -1,7 +1,7 @@
 import Plot from 'react-plotly.js';
 import { UseMutationResult } from "react-query";
-import styles from './Home.module.css';
 import { Loading } from '@toyota-research-institute/lakefront';
+import styles from './Home.module.css';
 import ErrorMessage from "./ErrorMessage";
 
 interface Props {
@@ -24,7 +24,7 @@ function SynthesisPlot(props: Props) {
     );
 
     if (error) {
-        return <>An error has occurred</>;
+        return <ErrorMessage error="An error has occurred when making the api call." />;
     }
 
     if (!data) {
@@ -33,6 +33,10 @@ function SynthesisPlot(props: Props) {
 
     if (data.detail) {
         return <ErrorMessage error={data.detail} />;
+    }
+
+    if (data.error_message) {
+        return <ErrorMessage error={data.error_message} />;
     }
 
     return (
