@@ -35,7 +35,7 @@
 .Checkboxes > div {
     margin-bottom: 6px;
 }
-.Plot, .Loading {
+.Plot, .Loading, .Error {
     margin: 16px 0;
 }
 .Plot > div {
@@ -43,4 +43,7 @@
 }
 .Loading {
     display: flex;
+}
+.Error {
+    color: #f47368;
 }

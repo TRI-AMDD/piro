@@ -2,6 +2,7 @@ import Plot from 'react-plotly.js';
 import { UseMutationResult } from "react-query";
 import styles from './Home.module.css';
 import { Loading } from '@toyota-research-institute/lakefront';
+import ErrorMessage from "./ErrorMessage";
 
 interface Props {
     mutation: UseMutationResult<any, unknown, void, unknown>;
@@ -28,6 +29,10 @@ function SynthesisPlot(props: Props) {
 
     if (!data) {
         return null;
+    }
+
+    if (data.detail) {
+        return <ErrorMessage error={data.detail} />;
     }
 
     return (
