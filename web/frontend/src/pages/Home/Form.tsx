@@ -54,7 +54,7 @@ export default function Form(props: Props) {
                         step="any"
                         label="Pressure (atm)"
                         {...register('pressure', { valueAsNumber: true })}
-                        defaultValue={0}
+                        defaultValue={0.001}
                     />
                     <Input
                         label="Max precursors"
