@@ -125,38 +125,6 @@ def similarity(_parents, target):
     return _res
 
 
-def update_gases(entries, T, P=1, copy=False):
-    """
-    Modify entry objects corresponding to gas phases to account for enthalpy and entropy
-    changes wrt. T and standard pressure.
-    Args:
-        entries (list): List of pymatgen Entry objects.
-        T (float): temperature in K.
-        P (float): pressure dict or float in atm
-        copy (bool): deepcopy entries or update in place.
-    Returns:
-        list of updated entries
-    """
-    if copy:
-        _entries = deepcopy(entries)
-    else:
-        _entries = entries
-    for e in _entries:
-        c = e.composition.reduced_formula
-        if c in ST:
-            if isinstance(P, dict):
-                pp = P.get(c, 1.0)
-            else:
-                pp = P
-            e.data["formation_energy_per_atom"] = (
-                H.get(c, 0.0)
-                - ST[c][T]
-                + 8.6173324e-5 * T * np.log(pp) / Composition(c).num_atoms
-            )
-            e.data["enthalpy"] = H.get(e.composition.reduced_formula, 0.0)
-    return _entries
-
-
 def recompute_flatd(source="camd/shared-data/oqmd1.2_icsd_featurized_clean_v2.pickle"):
     from camd import S3_CACHE
 
