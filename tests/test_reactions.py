@@ -1,5 +1,7 @@
 from collections import defaultdict
+from unittest.mock import Mock
 
+import pytest
 from numpy import nan, array
 from pandas._testing import assert_frame_equal
 from pymatgen.entries.computed_entries import ComputedStructureEntry
@@ -1719,9 +1721,8 @@ EXPECTED_PLOT_DATA = [
 ]
 
 
-def test_get_reactions():
-
-    # mimics the jupyter notebook
+@pytest.fixture(scope='class')
+def mp9029_router():
     router = SynthesisRoutes(
         'mp-9029',
         pressure=0.001,
@@ -1734,31 +1735,62 @@ def test_get_reactions():
         custom_target_entry=TARGET_ENTRY,
         entries=PRECURSOR_LIBRARY
     )
-    router.recommend_routes(temperature=1600,
-                            allow_gas_release=False,
-                            max_component_precursors=2,
-                            show_fraction_known_precursors=False,
-                            show_known_precursors_only=False,
-                            confine_competing_to_icsd=False,
-                            display_peroxides=True,
-                            custom_text=' - 1600K, 10<sup>-3</sup> atm, standard reactants',
-                            w=640, h=480,
-                            add_pareto=True, yrange=(-0.25, 9))
+    return router
 
-    # check the reactions are expected
-    reactions_coeffs_only = {k: {'coeffs': [round(c, 10) for c in v['coeffs']]} for k, v in router.reactions.items()}
-    assert reactions_coeffs_only == EXPECTED_REACTIONS
 
-    # check that the plot data is as expected
-    our_df = router.plot_data.sort_index().reset_index()
-    expected_df = pd.DataFrame.from_records(EXPECTED_PLOT_DATA)
+class TestGetReactions:
 
-    # this one has a mac only rounding error
-    ignore_index = expected_df[
-        expected_df['summary'] == '0.7812 Ca3N2(mp-844) + 0.6562 CaN2(mp-1009657) + 0.125 V8N(mp-1188283)'
-    ].index
+    def test_recommend_routes(self, mp9029_router):
 
-    assert_frame_equal(
-        our_df.drop(ignore_index),
-        expected_df.drop(ignore_index)
-    )
+        # mimics the jupyter notebook
+        mp9029_router.recommend_routes(
+            temperature=1600,
+            allow_gas_release=False,
+            max_component_precursors=2,
+            show_fraction_known_precursors=False,
+            show_known_precursors_only=False,
+            confine_competing_to_icsd=False,
+            display_peroxides=True,
+            custom_text=' - 1600K, 10<sup>-3</sup> atm, standard reactants',
+            w=640, h=480,
+            add_pareto=True, yrange=(-0.25, 9)
+        )
+
+        # check the reactions are expected
+        reactions_coeffs_only = {k: {'coeffs': [
+            round(c, 10) for c in v['coeffs']]} for k, v in mp9029_router.reactions.items()
+        }
+        assert reactions_coeffs_only == EXPECTED_REACTIONS
+
+        # check that the plot data is as expected
+        our_df = mp9029_router.plot_data.sort_index().reset_index()
+        expected_df = pd.DataFrame.from_records(EXPECTED_PLOT_DATA)
+
+        # this one has a mac only rounding error
+        ignore_index = expected_df[
+            expected_df['summary'] == '0.7812 Ca3N2(mp-844) + 0.6562 CaN2(mp-1009657) + 0.125 V8N(mp-1188283)'
+        ].index
+
+        assert_frame_equal(
+            our_df.drop(ignore_index),
+            expected_df.drop(ignore_index)
+        )
+
+    def test_recommend_routes_does_not_recompute_with_same_parameters(self, mp9029_router, monkeypatch):
+        get_reactions_mock = Mock()
+
+        mp9029_router.recommend_routes(temperature=1600, pressure=0.001)
+
+        monkeypatch.setattr(mp9029_router, 'get_reactions', get_reactions_mock)
+        mp9029_router.recommend_routes(temperature=1600, pressure=0.001)
+
+        assert get_reactions_mock.call_count == 0
+
+    def test_recommend_routes_does_recompute_with_different_parameters(self, mp9029_router, monkeypatch):
+        mp9029_router.recommend_routes(temperature=1600, pressure=0.001)
+        reactions_energies1 = {k: {'energy': v['energy']} for k, v in mp9029_router.reactions.items()}
+
+        mp9029_router.recommend_routes(temperature=1600, pressure=1)
+        reactions_energies2 = {k: {'energy': v['energy']} for k, v in mp9029_router.reactions.items()}
+
+        assert reactions_energies1 != reactions_energies2

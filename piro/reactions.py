@@ -1,5 +1,4 @@
 import itertools
-import logging
 from dataclasses import dataclass
 
 import scipy
@@ -13,8 +12,6 @@ from tqdm.autonotebook import tqdm
 
 from piro.data import GAS_RELEASE, ST, H, GASES
 from piro.utils import get_v
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -399,12 +396,16 @@ def generate_reactions(
     v_elements_key = f'v_{"_".join(elements)}'
     cache_common_calculations(target_entry, tuple(elements), precursor_library, v_elements_key)
     balanced_reaction_by_reduced_formulas = dict()
+    skipped = set()
 
     for sorted_precursors in tqdm(
             itertools.combinations(sorted(precursor_library, key=lambda p: p.data['reduced_formula']), len(elements)),
             total=comb(len(precursor_library), len(elements)),
     ):
         reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
+
+        if reduced_formulas in skipped:
+            continue
 
         if reduced_formulas not in balanced_reaction_by_reduced_formulas:
             try:
@@ -415,8 +416,8 @@ def generate_reactions(
                     v_elements_key,
                     allow_gas_release
                 )
-            except SkipReaction as e:
-                logger.debug("Skipping precursors %s: %s", sorted_precursors, e)
+            except SkipReaction:
+                skipped.add(reduced_formulas)
                 continue
             balanced_reaction_by_reduced_formulas[reduced_formulas] = balanced_reaction
 

@@ -254,13 +254,14 @@ class SynthesisRoutes:
 
     def get_reactions(self):
 
+        reactions = {}
         for reaction_result in generate_reactions(
                 self.target_entry,
                 self.elts,
                 self.precursor_library,
                 self.allow_gas_release
         ):
-            if reaction_result.label in self.reactions:
+            if reaction_result.label in reactions:
                 continue
             else:
                 reaction_result.update_reaction_energy(
@@ -282,10 +283,10 @@ class SynthesisRoutes:
                     self.temperature,
                     self.pressure
                 )
-                self.reactions[reaction_result.label] = reaction_result.as_dict()
+                reactions[reaction_result.label] = reaction_result.as_dict()
 
-        logger.info(f"Total # of balanced reactions obtained: {len(self.reactions)}")
-        return self.reactions
+        logger.info(f"Total # of balanced reactions obtained: {len(reactions)}")
+        return reactions
 
     def recommend_routes(
         self,
@@ -318,7 +319,7 @@ class SynthesisRoutes:
             self.pressure = pressure if pressure else self.pressure
             self.allow_gas_release = allow_gas_release
             self.confine_competing_to_icsd = confine_competing_to_icsd
-            self.get_reactions()
+            self.reactions = self.get_reactions()
             self.check_if_known_precursors()
 
         self.plot_data = pd.DataFrame.from_dict(self.reactions, orient="index")[
