@@ -30,7 +30,7 @@ class SynthesisRoutes:
         target_entry_id,
         confine_to_icsd=True,
         confine_to_stables=True,
-        hull_distance=np.inf,
+        hull_distance=None,
         simple_precursors=False,
         explicit_includes=None,
         allow_gas_release=False,
@@ -159,7 +159,7 @@ class SynthesisRoutes:
         phased = PhaseDiagram(self.entries)
         if self.confine_to_stables:
             precursor_library = list(phased.stable_entries)
-        elif self.hull_distance < np.inf:
+        elif self.hull_distance is not None:
             precursor_library = [
                 e
                 for e in self.entries
