@@ -1,17 +1,22 @@
-import scipy
+import logging
+
 import numpy as np
 import plotly.express as px
 import pandas as pd
 import os
 import json
+
 from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
-from piro.reactions import Reactions
-from piro.utils import get_v, epitaxy, similarity, update_gases, through_cache
+from piro.reactions import generate_reactions
+from piro.utils import epitaxy, similarity, through_cache
 from piro.mongodb import query_epitaxies, query_similarities
 from piro import RXN_FILES
+
+
+logger = logging.getLogger(__name__)
 
 
 # TODO: for elements and gases (references) - don't allow multiple entries
@@ -239,60 +244,6 @@ class SynthesisRoutes:
         print("Epitaxies ready")
         return self.epitaxies
 
-    def get_reactions(self):
-
-        self.reactions = Reactions(
-            self.target_entry,
-            self.elts,
-            self.precursor_library,
-            self.allow_gas_release
-        ).get_reactions()
-        return self.reactions
-
-    def get_reaction_energy(self, rxn_label, verbose=False):
-        precursors = update_gases(
-            self.reactions[rxn_label]["precursors"],
-            T=self.temperature,
-            P=self.pressure,
-            copy=True,
-        )
-        # Free energy per atom
-        energies = np.array([e.data["formation_energy_per_atom"] for e in precursors])
-        self.reactions[rxn_label]["energy"] = self.target_entry.data[
-            "formation_energy_per_atom"
-        ] - np.sum(self.reactions[rxn_label]["coeffs"] * energies)
-        # Enthalpy energy per atom
-        enthalpies = np.array(
-            [
-                e.data["enthalpy"]
-                if "enthalpy" in e.data
-                else e.data["formation_energy_per_atom"]
-                for e in precursors
-            ]
-        )
-        self.reactions[rxn_label]["enthalpy"] = self.target_entry.data[
-            "formation_energy_per_atom"
-        ] - np.sum(self.reactions[rxn_label]["coeffs"] * enthalpies)
-
-        self.reactions[rxn_label]["temperature"] = self.temperature
-
-        if verbose:
-            print("target e: ", self.target_entry.data["formation_energy_per_atom"])
-            print("precursr: ", [e.composition.reduced_formula for e in precursors])
-            print("energies: ", energies)
-            print("coeffs:   ", self.reactions[rxn_label]["coeffs"])
-
-        return self.reactions[rxn_label]["energy"]
-
-    @staticmethod
-    def f(q):
-        S = 1.0 - 2 * q
-        if S < -1:
-            S = -1
-        elif S > 1:
-            S = 1
-        return (2 - 3 * S + S ** 3) / 4
-
     @property
     def sigma(self):
         return self._sigma
@@ -301,200 +252,41 @@ class SynthesisRoutes:
     def transport_constant(self):
         return self._transport_constant
 
-    def get_nucleation_barrier(self, rxn_label):
-        rx_e = self.reactions[rxn_label]["energy"]
-        if rx_e > 0.0:
-            self.reactions[rxn_label]["barrier"] = np.inf
-            self.reactions[rxn_label]["_params"] = None
-            return self.reactions[rxn_label]["barrier"]
+    def get_reactions(self):
 
-        target_s = self.target_entry.structure
-        delta_Gv = rx_e * target_s.num_sites / target_s.volume
-
-        precursors = self.reactions[rxn_label]["precursors"]
-        # precursor_formulas = self.reactions[rxn_label]["precursor_formulas"]
-
-        q_epi = (
-            min(
-                [
-                    self.epitaxies[i.entry_id]
-                    for i in precursors
-                    if i.structure.composition.reduced_formula not in GASES
-                ]
-            )
-            / 1000.0
-        )
-        q_epi = min(q_epi, 1.0)
-
-        try:
-            q_sim = min(
-                [
-                    self.similarities[i.entry_id]
-                    for i in precursors
-                    if int(self.similarities[i.entry_id]) != -1
-                    and i.structure.composition.reduced_formula not in GASES
-                ]
-            )
-        except:
-            # better handling needed
-            q_sim = 1.0
-
-        f_t = self.f((q_epi + q_sim) / 2.0)
-        G_star = 16 / 3 * np.pi * self.sigma ** 3 * f_t / delta_Gv ** 2
-        E_d = self.transport_constant * q_sim
-
-        self.reactions[rxn_label]["barrier"] = G_star + E_d
-        self.reactions[rxn_label]["_params"] = {
-            "f_t": f_t,
-            "G_star": G_star,
-            "E_d": E_d,
-            "q_sim": q_sim,
-            "q_epi": q_epi,
-        }
-
-        return self.reactions[rxn_label]["barrier"]
-
-    def get_rxn_summary(self, rxn_label):
-        coeffs = self.reactions[rxn_label]["coeffs"]
-        num_sites = sum(
-            self.target_entry.structure.composition.reduced_composition.as_dict().values()
-        )
-        _coeffs = []
-        for i in range(len(coeffs)):
-            p = self.reactions[rxn_label]["precursors"][i]
-            _coeffs.append(
-                coeffs[i]
-                / sum(p.structure.composition.reduced_composition.as_dict().values())
-                * num_sites
-            )
-        _coeffs = np.round(_coeffs, decimals=4)
-        report = " + ".join(
-            [
-                i + " " + j
-                for i, j in list(
-                    zip(
-                        [str(c) for c in _coeffs],
-                        [
-                            p.structure.composition.reduced_formula
-                            + "("
-                            + p.entry_id
-                            + ")"
-                            for p in self.reactions[rxn_label]["precursors"]
-                        ],
-                    )
-                )
-            ]
-        )
-        self.reactions[rxn_label]["summary"] = report
-        return report
-
-    def get_competing_phases(self, rxn_label, confine_to_icsd=True):
-
-        precursors = self.reactions[rxn_label]["precursors"]
-        precursor_ids = [i.entry_id for i in precursors]
-        _competing = []
-        _competing_rxe = []
-
-        for entry in self.entries:
-            if confine_to_icsd:
-                if not entry.data["icsd_ids"]:
-                    continue
-            if self.flexible_competition:
-                s1 = set(entry.composition.as_dict().keys())
-                s2 = set(self.target_entry.structure.composition.as_dict().keys())
-                if not (
-                    s1.issubset(s2)
-                    and (len(s2) - self.flexible_competition <= len(s1) <= len(s2))
-                ):
-                    continue
+        reactions = {}
+        for reaction_result in generate_reactions(
+                self.target_entry,
+                self.elts,
+                self.precursor_library,
+                self.allow_gas_release
+        ):
+            if reaction_result.label in reactions:
+                continue
             else:
-                if not set(self.target_entry.composition.as_dict().keys()).issubset(
-                    set(entry.structure.composition.as_dict().keys())
-                ):
-                    continue
-            if entry.entry_id in precursor_ids:
-                continue
-            if entry.entry_id == self.target_entry_id:
-                continue
-            competing_target_entry = entry
+                reaction_result.update_reaction_energy(
+                    self.temperature,
+                    self.pressure
+                )
+                reaction_result.update_nucleation_barrier(
+                    self.epitaxies,
+                    self.similarities,
+                    self.sigma,
+                    self.transport_constant
+                )
+                reaction_result.update_reaction_summary()
+                reaction_result.update_competing_phases(
+                    self.entries,
+                    self.confine_competing_to_icsd,
+                    self.flexible_competition,
+                    self.allow_gas_release,
+                    self.temperature,
+                    self.pressure
+                )
+                reactions[reaction_result.label] = reaction_result.as_dict()
 
-            elts_precs = set()
-            for s in [
-                set(p.structure.composition.as_dict().keys()) for p in precursors
-            ]:
-                elts_precs = elts_precs.union(s)
-            if not set(entry.composition.as_dict().keys()).issubset(elts_precs):
-                # print(entry.composition)
-                continue
-
-            elts_precs = sorted(list(elts_precs))
-
-            target_c = get_v(
-                competing_target_entry.structure.composition.fractional_composition,
-                elts_precs,
-            )
-            c = [
-                get_v(e.structure.composition.fractional_composition, elts_precs)
-                for e in precursors
-            ]
-
-            precursor_formulas = np.array(
-                [p.structure.composition.reduced_formula for p in precursors]
-            )
-
-            # trying to solve for compound fractions.
-            try:
-                coeffs = np.linalg.solve(np.vstack(c).T, target_c)
-            except:
-                try:
-                    x = scipy.sparse.linalg.lsqr(np.vstack(c).T, target_c)
-                    coeffs = x[0]
-                    if x[1] != 1:
-                        continue
-                except:
-                    print(
-                        "     failed:",
-                        competing_target_entry.composition.reduced_formula,
-                        precursor_formulas,
-                    )
-                    print(np.vstack(c).T, target_c)
-                    continue
-            if np.any(coeffs < 0.0):
-                if not self.allow_gas_release:
-                    continue
-                else:
-                    if not set(precursor_formulas[coeffs < 0.0]).issubset(GAS_RELEASE):
-                        continue
-            _precursors = update_gases(
-                precursors, T=self.temperature, P=self.pressure, copy=True
-            )
-
-            for i in sorted(range(len(coeffs)), reverse=True):
-                if np.abs(coeffs[i]) < 0.00001:
-                    _precursors.pop(i)
-                    coeffs = np.delete(coeffs, i)
-
-            try:
-                effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
-                if effective_rank < len(coeffs):
-                    # print(precursor_formulas, coeffs)
-                    # Removes under-determined reactions.
-                    continue
-            except:
-                continue
-            energies = np.array(
-                [e.data["formation_energy_per_atom"] for e in _precursors]
-            )
-            rx_e = competing_target_entry.data["formation_energy_per_atom"] - np.sum(
-                coeffs * energies
-            )
-            if rx_e < 0.0:
-                _competing.append(competing_target_entry.entry_id)
-                _competing_rxe.append((rx_e))
-        self.reactions[rxn_label]["competing"] = _competing
-        self.reactions[rxn_label]["competing_rxe"] = _competing_rxe
-        self.reactions[rxn_label]["n_competing"] = len(_competing)
-        return len(_competing)
+        logger.info(f"Total # of balanced reactions obtained: {len(reactions)}")
+        return reactions
 
     def recommend_routes(
         self,
@@ -527,14 +319,7 @@ class SynthesisRoutes:
             self.pressure = pressure if pressure else self.pressure
             self.allow_gas_release = allow_gas_release
             self.confine_competing_to_icsd = confine_competing_to_icsd
-            self.get_reactions()
-            for rxn_label in self.reactions:
-                self.get_reaction_energy(rxn_label)
-                self.get_nucleation_barrier(rxn_label)
-                self.get_rxn_summary(rxn_label)
-                self.get_competing_phases(
-                    rxn_label, confine_to_icsd=confine_competing_to_icsd
-                )
+            self.reactions = self.get_reactions()
             self.check_if_known_precursors()
 
         self.plot_data = pd.DataFrame.from_dict(self.reactions, orient="index")[
