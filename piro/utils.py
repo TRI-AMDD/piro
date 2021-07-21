@@ -5,7 +5,8 @@ import os
 import pickle
 import numpy as np
 import json
-from copy import deepcopy
+from functools import lru_cache
+from scipy.interpolate import interp1d
 from pymatgen.core.composition import Composition
 from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
 from matminer.featurizers.base import MultipleFeaturizer
@@ -28,7 +29,7 @@ from sklearn.linear_model import LinearRegression
 
 from joblib import Parallel, delayed
 
-from piro.data import ST, H
+from piro.data import ST
 from piro import RXN_FILES
 
 
@@ -124,6 +125,13 @@ def similarity(_parents, target):
     _res[nulls] = -1
     return _res
 
+
+@lru_cache
+def get_ST(c, T):
+    f = interp1d(np.fromiter(ST[c].keys(), dtype=float),
+                 np.fromiter(ST[c].values(), dtype=float),
+                 bounds_error=True)
+    return f(T)
 
 def recompute_flatd(source="camd/shared-data/oqmd1.2_icsd_featurized_clean_v2.pickle"):
     from camd import S3_CACHE
