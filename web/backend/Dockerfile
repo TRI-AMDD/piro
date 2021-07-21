@@ -3,11 +3,11 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 # reference for how to use the image https://hub.docker.com/r/tiangolo/uvicorn-gunicorn-fastapi
 # this should be built from root of repo
 
+# get the latest utilities
 RUN apt update
 RUN apt upgrade -y
-
-# for React
 RUN apt install npm -y
+RUN python3.7 -m pip install --upgrade pip
 
 # 1) Install 3rd party requirements first (only copy the requirements files)
 ## python

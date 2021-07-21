@@ -44,11 +44,6 @@ works with Materials Project data via its Rester API.
       ```
  - You will need to reactive the conda environment so the change will take effective.
 
-
-### Docker (optional)
- - If you wish to develop on and build `piro`, the easiest way to get started is Docker. If you haven't already, go [here](https://docs.docker.com/get-docker/) and follow the instructions in order to install the Docker Engine.
- - Additionally, if you would simply like to host your own local server quickly, install Docker Compose [here](https://docs.docker.com/compose/install/).
-
 ## Setup
 There are a few options to install and run `piro` on your machine:
 
@@ -73,7 +68,12 @@ python setup.py develop
 
 ## Web app
 
-See the corresponding README
+### Docker (optional)
+ - You can run the web app locally or run docker containers.
+ - If you don't have docker, you can go [here](https://docs.docker.com/get-docker/) and follow the instructions in order to install the Docker Engine.
+ - Additionally, if you would simply like to host your own local server quickly, install Docker Compose [here](https://docs.docker.com/compose/install/).
+
+### See the corresponding README
 - [React + FastAPI](web/backend/README.md)
 - [Dash](web/dash/README.md) (old)
 
