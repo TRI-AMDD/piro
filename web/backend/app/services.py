@@ -1,5 +1,4 @@
 import json
-from collections import defaultdict
 
 from plotly.graph_objs import Figure
 from piro.route import SynthesisRoutes
