@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List, Union, Optional
 
 from plotly.graph_objs import Figure
@@ -104,3 +105,17 @@ class RecommendRoutesRequest(BaseModel):
 
 
 PlotlyFigureResponse = create_model('PlotlyFigureResponse', **Figure().to_dict())
+
+
+class RecommendRoutesTaskStatus(str, Enum):
+    INVALID = 'invalid'
+    STARTED = 'started'
+    FAILURE = 'failure'
+    SUCCESS = 'success'
+
+
+class RecommendRoutesTask(BaseModel):
+    task_id: Optional[str] = None
+    request: Optional[RecommendRoutesRequest] = None
+    status: RecommendRoutesTaskStatus = RecommendRoutesTaskStatus.INVALID
+    result: Optional[PlotlyFigureResponse] = None
