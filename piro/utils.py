@@ -5,7 +5,8 @@ import os
 import pickle
 import numpy as np
 import json
-from copy import deepcopy
+from functools import lru_cache
+from scipy.interpolate import interp1d
 from pymatgen.core.composition import Composition
 from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
 from matminer.featurizers.base import MultipleFeaturizer
@@ -28,7 +29,7 @@ from sklearn.linear_model import LinearRegression
 
 from joblib import Parallel, delayed
 
-from piro.data import ST, H
+from piro.data import ST
 from piro import RXN_FILES
 
 
@@ -125,36 +126,12 @@ def similarity(_parents, target):
     return _res
 
 
-def update_gases(entries, T, P=1, copy=False):
-    """
-    Modify entry objects corresponding to gas phases to account for enthalpy and entropy
-    changes wrt. T and standard pressure.
-    Args:
-        entries (list): List of pymatgen Entry objects.
-        T (float): temperature in K.
-        P (float): pressure dict or float in atm
-        copy (bool): deepcopy entries or update in place.
-    Returns:
-        list of updated entries
-    """
-    if copy:
-        _entries = deepcopy(entries)
-    else:
-        _entries = entries
-    for e in _entries:
-        c = e.composition.reduced_formula
-        if c in ST:
-            if isinstance(P, dict):
-                pp = P.get(c, 1.0)
-            else:
-                pp = P
-            e.data["formation_energy_per_atom"] = (
-                H.get(c, 0.0)
-                - ST[c][T]
-                + 8.6173324e-5 * T * np.log(pp) / Composition(c).num_atoms
-            )
-            e.data["enthalpy"] = H.get(e.composition.reduced_formula, 0.0)
-    return _entries
+@lru_cache()
+def get_ST(c, T):
+    f = interp1d(np.fromiter(ST[c].keys(), dtype=float),
+                 np.fromiter(ST[c].values(), dtype=float),
+                 bounds_error=True)
+    return f(T)
 
 
 def recompute_flatd(source="camd/shared-data/oqmd1.2_icsd_featurized_clean_v2.pickle"):
