@@ -126,7 +126,7 @@ def similarity(_parents, target):
     return _res
 
 
-@lru_cache
+@lru_cache()
 def get_ST(c, T):
     f = interp1d(np.fromiter(ST[c].keys(), dtype=float),
                  np.fromiter(ST[c].values(), dtype=float),
