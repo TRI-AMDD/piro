@@ -11,7 +11,7 @@ from pymatgen.entries.computed_entries import ComputedStructureEntry
 from tqdm.autonotebook import tqdm
 
 from piro.data import GAS_RELEASE, ST, H, GASES
-from piro.utils import get_v
+from piro.utils import get_v, get_ST
 
 
 @dataclass
@@ -171,7 +171,7 @@ class Reaction:
                     pp = pressure
                 formation_energy_per_atom_list.append(
                     H.get(c, 0.0)
-                    - ST[c][temperature]
+                    - get_ST(c, temperature)
                     + 8.6173324e-5 * temperature * np.log(pp) / Composition(c).num_atoms
                 )
                 enthalpy_list.append(H.get(c, 0.0))
