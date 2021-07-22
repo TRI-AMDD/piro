@@ -133,6 +133,7 @@ def get_ST(c, T):
                  bounds_error=True)
     return f(T)
 
+
 def recompute_flatd(source="camd/shared-data/oqmd1.2_icsd_featurized_clean_v2.pickle"):
     from camd import S3_CACHE
 

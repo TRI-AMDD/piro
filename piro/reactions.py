@@ -171,7 +171,7 @@ class Reaction:
                     pp = pressure
                 formation_energy_per_atom_list.append(
                     H.get(c, 0.0)
-                    - get_ST(c,temperature)
+                    - get_ST(c, temperature)
                     + 8.6173324e-5 * temperature * np.log(pp) / Composition(c).num_atoms
                 )
                 enthalpy_list.append(H.get(c, 0.0))
