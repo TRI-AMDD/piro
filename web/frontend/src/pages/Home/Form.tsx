@@ -26,6 +26,8 @@ export default function Form(props: Props) {
         // set add_elements values
         data.add_elements = elements.map(e => e.value);
 
+        // add various inputs
+
         // @ts-ignore
         // set the form request to trigger an api call
         mutation.mutate(data);
@@ -36,8 +38,8 @@ export default function Form(props: Props) {
         <form onSubmit={handleSubmit(onSubmit)} className={styles.Form}>
             <Input
                 label="Formula"
-                {...register('mp_id', { required: true })}
-                error={errors.mp_id ? 'Formula field is required' : ''}
+                {...register('target_entry_id', { required: true })}
+                error={errors.target_entry_id ? 'Formula field is required' : ''}
             />
             <h3>Advanced Options</h3>
             <div className={styles.FormGrid}>

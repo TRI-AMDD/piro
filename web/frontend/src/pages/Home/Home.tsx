@@ -1,10 +1,10 @@
 import Form from './Form';
 import SynthesisPlot from "./SynthesisPlot";
 import styles from './Home.module.css';
-import usePlotData from "./usePlotData";
+import { useSubmitTask } from "./usePlotData";
 
 function Home() {
-    const mutation = usePlotData();
+    const mutation = useSubmitTask();
 
     return (
         <div className={styles.App}>

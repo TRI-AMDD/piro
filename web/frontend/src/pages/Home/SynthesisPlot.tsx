@@ -1,8 +1,8 @@
-import Plot from 'react-plotly.js';
 import { UseMutationResult } from "react-query";
 import { Loading } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import ErrorMessage from "./ErrorMessage";
+import PlotResults from './PlotResults';
 
 interface Props {
     mutation: UseMutationResult<any, unknown, void, unknown>;
@@ -37,13 +37,11 @@ function SynthesisPlot(props: Props) {
 
     if (data.error_message) {
         return <ErrorMessage error={data.error_message} />;
-    }
-
+    }    
+    
     return (
-        <div className={styles.Plot}>
-            <Plot {...data} />
-        </div>
-    );
+        <PlotResults key={data.task_id} taskId={data.task_id} />
+    );    
 }
 
 export default SynthesisPlot;

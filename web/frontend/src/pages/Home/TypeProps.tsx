@@ -1,5 +1,5 @@
 export interface Inputs {
-    mp_id: string;
+    target_entry_id: string;
     example: string;
     add_elements: string[];
     temperature: number;
