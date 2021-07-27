@@ -25,8 +25,9 @@
     margin: 3px;
 }
 .FormGrid {
+    margin-top: 16px;
     display: grid;
-    grid-template-columns: 350px 1fr;
+    grid-template-columns: 375px 300px 1fr;
     column-gap: 16px;
 }
 .Checkboxes {

@@ -13,6 +13,7 @@ export interface CheckboxProps {
         | 'show_known_precursors_only'
         | 'confine_competing_to_icsd'
         | 'display_peroxides'
+        | 'display_superoxides'
         | 'add_pareto';
     control: Control<Inputs>;
     defaultValue: boolean;
