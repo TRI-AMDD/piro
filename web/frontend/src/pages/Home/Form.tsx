@@ -37,7 +37,8 @@ export default function Form(props: Props) {
         /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
         <form onSubmit={handleSubmit(onSubmit)} className={styles.Form}>
             <Input
-                label="Formula"
+                label="Target Compound (mp-id)"
+                placeholder="mp-9029"
                 {...register('target_entry_id', { required: true })}
                 error={errors.target_entry_id ? 'Formula field is required' : ''}
             />
@@ -48,8 +49,18 @@ export default function Form(props: Props) {
                         type="number"
                         step="any"
                         label="Temperature (K)"
-                        defaultValue={1600}
+                        placeholder="1000"
                         {...register('temperature', { valueAsNumber: true })}
+                    />
+                    <Input
+                        label="Maximum number of components in precursors"
+                        {...register('max_component_precursors', { valueAsNumber: true })}
+                        defaultValue={0}
+                    />
+                    <MultiSelect
+                        label="Additional element to consider"
+                        placeholder="Type element and press enter e.g. (C, H)"
+                        setValues={setElements}
                     />
                     <Input
                         type="number"
@@ -58,28 +69,18 @@ export default function Form(props: Props) {
                         {...register('pressure', { valueAsNumber: true })}
                         defaultValue={0.001}
                     />
-                    <Input
-                        label="Max precursors"
-                        {...register('max_component_precursors', { valueAsNumber: true })}
-                        defaultValue={2}
-                    />
-                    <MultiSelect
-                        label="Add element"
-                        placeholder="Type element and press enter"
-                        setValues={setElements}
-                    />
                 </div>
                 <div className={styles.Checkboxes}>
                     <FormCheckbox
                         name="allow_gas_release"
                         control={control}
-                        label="Allow for gaseous reaction products, e.g. O2, CO2"
+                        label="Allow for gaseous reaction products"
                         defaultValue={false}
                     />
                     <FormCheckbox
                         name="show_fraction_known_precursors"
                         control={control}
-                        label="Show the fraction of known synthetic reagents in reaction"
+                        label="Show the fraction of known precursors in reaction"
                         defaultValue={false}
                     />
                     <FormCheckbox
@@ -89,21 +90,33 @@ export default function Form(props: Props) {
                         defaultValue={false}
                     />
                     <FormCheckbox
+                        name="confine_to_stables"
+                        control={control}
+                        label="Stable Precursors Only"
+                        defaultValue={true}
+                    />
+                    <FormCheckbox
+                        name="confine_to_icsd"
+                        control={control}
+                        label="ICSD-based Precursors Only"
+                        defaultValue={true}
+                    />
+                    <FormCheckbox
                         name="confine_competing_to_icsd"
                         control={control}
-                        label="Confine competing reactions to those containing ICSD materials"
+                        label="ICSD-based Parasitic Phases Only"
                         defaultValue={false}
                     />
                     <FormCheckbox
                         name="display_peroxides"
                         control={control}
-                        label="Show reactions involving peroxide compounds"
+                        label="Show reactions involving peroxides"
                         defaultValue={true}
                     />
                     <FormCheckbox
                         name="add_pareto"
                         control={control}
-                        label="Show the Pareto front on the reaction analysis diagram"
+                        label="Show the Pareto front"
                         defaultValue={true}
                     />
                 </div>
