@@ -7,6 +7,7 @@ import { Inputs } from './TypeProps';
 import { useState } from "react";
 import MultiSelect from "./MultiSelect";
 import AdvancedOptions from "./AdvancedOptions";
+import Pressure from "./Pressure";
 
 interface Props {
     mutation: UseMutationResult<any, unknown, void, unknown>;
@@ -14,6 +15,7 @@ interface Props {
 
 export default function Form(props: Props) {
     const { mutation } = props;
+    const [pressure, setPressure] = useState<any>(null);
     const [addElements, setAddElements] = useState<{ label: string; value: string; }[]>([]);
     const [explicitIncludes, setExplicitIncludes] = useState<{ label: string; value: string; }[]>([]);
     const [excludeCompositions, setExcludeCompositions] = useState<{ label: string; value: string; }[]>([]);
@@ -34,6 +36,8 @@ export default function Form(props: Props) {
         data.add_elements = addElements.map(e => e.value);
         data.explicit_includes = explicitIncludes.map(e => e.value);
         data.exclude_compositions = excludeCompositions.map(e => e.value);
+        // get value from pressure
+        data.pressure = pressure;
 
         // @ts-ignore
         // set the form request to trigger an api call
@@ -83,13 +87,6 @@ export default function Form(props: Props) {
                         label="Explicitly include as precursor"
                         setValues={setExplicitIncludes}
                     />
-                    <Input
-                        type="number"
-                        step="any"
-                        label="Pressure (atm)"
-                        {...register('pressure', { valueAsNumber: true })}
-                        defaultValue={0.001}
-                    />
                 </div>
                 <div className={styles.Checkboxes}>
                     <FormCheckbox
@@ -123,6 +120,7 @@ export default function Form(props: Props) {
                         defaultValue={true}
                     />
                 </div>
+                <Pressure setPressure={setPressure} />
             </div>
             <AdvancedOptions control={control} register={register} setExcludeCompositions={setExcludeCompositions} />
 

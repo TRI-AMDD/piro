@@ -27,8 +27,8 @@
 .FormGrid {
     margin-top: 16px;
     display: grid;
-    grid-template-columns: 375px 300px 1fr;
-    column-gap: 16px;
+    grid-template-columns: 375px 300px 300px;
+    column-gap: 24px;
 }
 .Checkboxes {
     padding-top: 12px;
@@ -55,4 +55,7 @@
 }
 .Multi {
     margin-bottom: 16px;
+}
+.PressureOptions {
+    margin-top: 16px;
 }
