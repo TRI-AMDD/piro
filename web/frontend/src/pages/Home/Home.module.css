@@ -1,0 +1,57 @@
+.App {
+    background-color: rgb(246, 246, 248);
+    min-height: 100%;
+    padding: 12px;
+}
+
+.AppHeader h1 {
+    color: #2c2c35;
+    font-size: 30px;
+}
+
+.AppLink {
+    color: #61dafb;
+}
+
+.Form {
+    border: solid 1px #c6c6d1;
+    background-color: #ffffff;
+    padding: 16px;
+}
+.Form > div, .Form > label {
+    margin-bottom: 6px;
+}
+.Form input[type="checkbox" i] {
+    margin: 3px;
+}
+.FormGrid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    column-gap: 16px;
+}
+.Checkboxes {
+    padding-top: 12px;
+}
+.Checkboxes > div {
+    margin-bottom: 6px;
+}
+.Plot, .Loading, .Error {
+    margin: 16px 0;
+}
+.Plot > div {
+    border: solid 1px #c6c6d1;
+}
+.Loading {
+    display: flex;
+}
+.Error {
+    color: #f47368;
+}
+.Label {
+    color: #0f0f1a;
+    font-size: 12px;
+    font-weight: 600;
+}
+.Multi {
+    margin-bottom: 16px;
+}
