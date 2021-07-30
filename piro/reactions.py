@@ -20,7 +20,7 @@ class BalancedReaction:
     target_entry: ComputedStructureEntry
     coeffs: np.array
     removed_coeff_indexes: List[int]
-    main_formulas: np.array
+    main_formulas: List[str]
 
 
 class SkipReaction(Exception):
@@ -40,7 +40,7 @@ def get_balanced_reaction(
     target_c = target_entry.data[v_elements_key]
     c = np.vstack([p.data[v_elements_key] for p in precursors])
 
-    if np.any(np.sum(c, axis=0) == 0.0):
+    if not c.sum(axis=0).all():
         raise SkipReaction('Reaction as sum 0 c')
 
     try:
@@ -49,31 +49,30 @@ def get_balanced_reaction(
         # need better handling here.
         raise SkipReaction('Reaction could not solve for coeffs')
 
-    if np.any(np.abs(coeffs) > 100):
-        raise SkipReaction('Reaction has a coeff over 100')
+    removed_coeff_indexes = []
+    main_formulas = []
+    for i, (coeff, reduced_formula) in enumerate(zip(coeffs, reduced_formulas)):
+        if abs(coeff) > 100:
+            raise SkipReaction('Reaction has a coeff over 100')
 
-    if np.any(coeffs < 0.0):
-        if not allow_gas_release:
-            raise SkipReaction('Reaction has a gas release')
-        else:
-            if not set(np.array(reduced_formulas)[coeffs < 0.0]).issubset(GAS_RELEASE):
+        if coeff < 0.0:
+            if not allow_gas_release:
+                raise SkipReaction('Reaction has a gas release')
+            if reduced_formula not in GAS_RELEASE:
                 raise SkipReaction('Reaction gas releases are not expected gases')
 
-    removed_coeff_indexes = []
-    for i in reversed(range(len(coeffs))):
-        if np.abs(coeffs[i]) < 0.00001:
-            c = np.delete(c, i, 0)
-            coeffs = np.delete(coeffs, i)
+        if abs(coeff) < 0.0001:
             removed_coeff_indexes.append(i)
+        else:
+            main_formulas.append(reduced_formula)
+
+    c = np.delete(c, removed_coeff_indexes, 0)
+    coeffs = np.delete(coeffs, removed_coeff_indexes)
 
     effective_rank = scipy.linalg.lstsq(c.T, target_c)[2]
     if effective_rank < len(coeffs):
         # Removes under-determined reactions.
         raise SkipReaction('Reaction is under-determined')
-
-    main_formulas = np.array([
-        p for i, p in enumerate(reduced_formulas) if i not in removed_coeff_indexes
-    ])
 
     return BalancedReaction(
         reduced_formulas,
@@ -117,7 +116,7 @@ class Reaction:
         return {
             "precursors": self.precursors,
             "coeffs": self.balanced_reaction.coeffs,
-            "precursor_formulas": self.balanced_reaction.main_formulas,
+            "precursor_formulas": np.array(self.balanced_reaction.main_formulas),
             "precursor_ids": self.entry_ids,
             "energy": self.energy,
             "enthalpy": self.enthalpy,
