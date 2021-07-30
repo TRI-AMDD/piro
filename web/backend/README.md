@@ -18,6 +18,7 @@ From the root of the piro repository.
 ```
 docker build -t piro_backend -f web/backend/Dockerfile .
 ```
+Note: If "npm run build" fails due to out of memory, you can increase Docker memory resources in Docker preferences.
 
 ### Run the image
  
