@@ -10,5 +10,6 @@ export const description = {
     confine_to_icsd: "Confines the precursur library to materials in MP sourced from the Inorganic Crystal Structures Database",
     simple_precursors: "Lower order compounds are considered if greater than zero <br> (e.g. 1 means a ternary target would consider up to binaries in precusors)",
     exclude_compositions: "Materials that have these exact formulas are excluded from the precursor library",
-    confine_competing_to_icsd: "Confine competing reactions to those containing ICSD materials"
+    confine_competing_to_icsd: "Confine competing reactions to those containing ICSD materials",
+    pressure: "Sets pressure of gas phases. Can specify a constant pressure, the ambient partial pressures or a custom dictionary."
 }

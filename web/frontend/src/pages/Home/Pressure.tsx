@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, memo } from "react";
 import { useForm } from 'react-hook-form';
 import { Input } from '@toyota-research-institute/lakefront';
 import Select from 'react-select';
+import MoreInfo from './MoreInfo';
+import { description } from './description';
 import styles from './Home.module.css';
 
 interface Props {
@@ -21,6 +23,10 @@ type PressureInputs = {
     constant: number;
     O2: number;
     CO2: number;
+    N2: number;
+    H2: number;
+    H2O: number;
+    F2: number;
 }
 
 const options = [
@@ -43,7 +49,11 @@ export function Pressure(props: Props) {
         } else if (option?.value === 'custom') {
             pressure = {
                 O2: watchPressure.O2 ?? 0.01,
-                CO2: watchPressure.CO2 ?? 0.5
+                CO2: watchPressure.CO2 ?? 0.5,
+                N2: watchPressure.N2 ?? 1,
+                H2: watchPressure.H2 ?? 1,
+                H20: watchPressure.H2O ?? 1,
+                F2: watchPressure.F2 ?? 1
             };
         }
         return pressure;
@@ -60,6 +70,8 @@ export function Pressure(props: Props) {
                 onChange={setOption}
                 defaultValue={options[0]}
             />
+            <MoreInfo info={description.pressure} />
+
             <div className={styles.PressureOptions}>
                 {option?.value === 'ambient' && (
                     <p>
@@ -97,6 +109,34 @@ export function Pressure(props: Props) {
                             label="CO2"
                             defaultValue={0.5}
                             {...register('CO2', { valueAsNumber: true })}
+                        />
+                        <Input
+                            type="number"
+                            step="any"
+                            label="N2"
+                            defaultValue={1}
+                            {...register('N2', { valueAsNumber: true })}
+                        />
+                        <Input
+                            type="number"
+                            step="any"
+                            label="H2"
+                            defaultValue={1}
+                            {...register('H2', { valueAsNumber: true })}
+                        />
+                        <Input
+                            type="number"
+                            step="any"
+                            label="H2O"
+                            defaultValue={1}
+                            {...register('H2O', { valueAsNumber: true })}
+                        />
+                        <Input
+                            type="number"
+                            step="any"
+                            label="F2"
+                            defaultValue={1}
+                            {...register('F2', { valueAsNumber: true })}
                         />
                     </>
                 )}
