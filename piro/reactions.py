@@ -72,8 +72,6 @@ def get_balanced_reaction(
     effective_rank = scipy.linalg.lstsq(c.T, target_c)[2]
     if effective_rank < len(coeffs):
         # Removes under-determined reactions.
-        # print(effective_rank, precursor_formulas, \
-        # [prec_.composition.reduced_formula for prec_ in precursors],coeffs)
         raise SkipReaction('Reaction is under-determined')
 
     return BalancedReaction(
