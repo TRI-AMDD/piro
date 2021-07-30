@@ -25,6 +25,16 @@ Tutorial jupyter notebooks showing how to use _piro_ locally are provided in the
 
 ### Pymatgen API key
  - `piro` has a dependency on `pymatgen` which requires you to generate an API key.  Go [here](https://materialsproject.org/open) and follow the instructions to generate your API key.
+ - Use the API key by either
+    - A) adding the environment variable MAPI_KEY to your current environment
+    ```
+    # for example in the terminal
+    export MAPI_KEY=<your API key>
+    ```  
+    - B) using pymatgen's command line to set a global key (note: it's PMG_MAPI_KEY instead of just MAPI_KEY)
+    ```
+    pmg config --add PMG_MAPI_KEY <your API key>
+    ```
 
 ### Access to MongoDB Cached Database (optional)
  - Once you get the credential, set up the environment variable as follow:
@@ -37,90 +47,38 @@ Tutorial jupyter notebooks showing how to use _piro_ locally are provided in the
       ```
  - You will need to reactive the conda environment so the change will take effective.
 
-
-### Docker (optional)
- - If you wish to develop on and build `piro`, the easiest way to get started is Docker. If you haven't already, go [here](https://docs.docker.com/get-docker/) and follow the instructions in order to install the Docker Engine.
- - Additionally, if you would simply like to host your own local server quickly, install Docker Compose [here](https://docs.docker.com/compose/install/).
-
 ## Setup
 There are a few options to install and run `piro` on your machine:
 
-###  - Get `piro` from PyPI
+###  A) Get `piro` from PyPI
 The most recent stable version of `piro` can be installed from [PyPI](https://pypi.org/project/piro/). We recommend installing `piro` in a dedicated environment to avoid any version conflicts for its dependencies.
 ```
 pip install piro
 ```
 
-###  - Setup a `piro` Environment for Local Development
+###  B) For development, install the source from this repo in development mode
+```
+python setup.py develop
+```
 
-Using the `Dockerfile` will likely be the quickest way to get a local `piro` development environment up and running with little configuration necessary on your end.
 
- 1. Build your Docker container by running the following command from within your cloned `piro` repository, being sure to substitute your own `pymatgen` API key in place of the below `{insert key here}` portion. If you want to use the cache database, pass in the `{uri}` argument as well:
-     ```
-     docker build -t piro:v1 --build-arg PYMATGEN_API_KEY={insert key here} --build-arg MONGODB_URI={uri}.
-     ```
-
- 1. Once this command is finished executing, run:
-     ```
-     docker run -p 8888:8888 -p 8080:8080 -it piro:v1 /bin/bash
-     ```
-    You can now develop with `piro` in this container
-
-### - `piro` Local Server Hosting
- 1. Build the Docker container with Docker Compose, being sure to substitute your own `pymatgen` API key in place of the below `{insert key here}` portion. If you want to use the cache database, pass in the `{uri}` argument as well:
-
-    ```
-    docker-compose build --build-arg PYMATGEN_API_KEY={insert key here} --build-arg MONGODB_URI={uri}
-    ```
- 1. Run the `piro` server:
-    ```
-    docker-compose up
-    ```
-    And then navigate to the link output by Dash in the command line.
-
-## Usage
-
- - Rebuild the codebase:
-   - Natively:
-     ```
-     python setup.py develop
-     ```
-   - In Docker:
-     ```
-     python3.7 setup.py develop
-     ```
+## Piro Module Usage
  - Try out a Jupyter notebook:
-   - Natively:
-     ```
-     jupyter notebook
-     ```
-   - In Docker:
-     ```
-     jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
-     ```
-     And then go to the link output by the `jupyter` command in your local browser.  Once you navigate to an example `jupyter` notebook in `piro/notebooks/`, you can select one to then execute in the web browser.
-  - Run a local server:
-    - Natively:
-      ```
-      python web/app.py
-      ```
-    - In Docker:
-      ```
-      python3.7 web/app.py
-      ```
-      And then navigate to the link output by Dash in the command line.
+    ```
+    jupyter notebook
+    ```
+   See the notebooks in piro/notebooks
 
-## Debugging
-  - If you receive an error like
-    ```
-    Creating network "piro_default" with the default driver
-    ERROR: could not find an available, non-overlapping IPv4 address pool among the defaults to assign to the network
-    ```
-    when attempting to run the Dash server, you will likely need to disable any VPNs you may have running.
- - If you run into API key errors, try running the following command:
-   ```
-   pmg config --add PMG_MAPI_KEY <your API key>
-   ```
+## Web app
+
+### Docker (optional)
+ - You can run the web app locally or run docker containers.
+ - If you don't have docker, you can go [here](https://docs.docker.com/get-docker/) and follow the instructions in order to install the Docker Engine.
+ - Additionally, if you would simply like to host your own local server quickly, install Docker Compose [here](https://docs.docker.com/compose/install/).
+
+### See the corresponding README
+- [React + FastAPI](web/backend/README.md)
+- [Dash](web/dash/README.md) (old)
 
 ## Citation
 If you use `piro`, we kindly ask you to cite the following publication:

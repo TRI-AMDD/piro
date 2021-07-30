@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  dash:
+    build:
+      context: ../..
+      dockerfile: web/dash/Dockerfile
+    container_name: piro_dash
+    command: python3.7 web/dash/app.py
+    ports:
+      - "8080:8080" # For Dash

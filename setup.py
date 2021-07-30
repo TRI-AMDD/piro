@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import warnings
 
 DESCRIPTION = "piro is software designed to assist in planning of synthesis pathways for inorganics"
 
@@ -19,7 +18,7 @@ setup(
     install_requires=["matminer==0.7.3",
                       "scikit-learn==0.24.2",
                       "plotly==5.1.0",
-                      "pymongo==3.11.4"
+                      "pymongo==3.12.0"
                       ],
     classifiers=[
           "Programming Language :: Python :: 3",
@@ -27,12 +26,6 @@ setup(
           "Operating System :: OS Independent",
     ],
     extras_require={
-        "web": ["dash-core-components>=0.22.1",
-                "dash-html-components>=0.10.1",
-                "dash-renderer>=0.12.1",
-                "dash-table==4.11.3",
-                "dash==1.20.0"
-                ],
         "tests": ["pytest",
                   "pytest-cov",
                   "coveralls"

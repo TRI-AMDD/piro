@@ -1,0 +1,15 @@
+# dash app
+dash-core-components>=0.22.1
+dash-html-components>=0.10.1
+dash-renderer>=0.12.1
+dash-table==4.11.3
+dash==1.20.0
+
+# piro
+matminer==0.7.3
+scikit-learn==0.24.2
+plotly==5.1.0
+pymongo==3.11.4
+
+# for notebook code
+jupyter
