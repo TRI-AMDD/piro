@@ -20,10 +20,6 @@ from piro import RXN_FILES
 logger = logging.getLogger(__name__)
 
 
-# TODO: for elements and gases (references) - don't allow multiple entries
-# TODO: for E_d, test q = max(q_phases) - max of q, assuming that would be the limiting step
-
-
 class SynthesisRoutes:
     def __init__(
         self,
@@ -50,20 +46,23 @@ class SynthesisRoutes:
     ):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
-            and high-throughput DFT data.
-            Precursor_library, epitaxial matches and similarities are precomputed upon instantiation.
+            and high-throughput DFT data (doi: 10.1021/jacs.1c04888). After instantiation, synthesis planning plots
+            are generated using the recommend_routes method (See this method's arguments as well).
+            Precursor library, epitaxial match and similarity metrics are precomputed upon instantiation,
+            and can be cached.
         Args:
             target_entry_id (str): Materials Project entry id for target material
             confine_to_icsd (bool): Use ICSD-sourced entries to find precursors. Defaults to True.
-            confine_to_stables: Use stable entries only to find. Defaults to True.
+            confine_to_stables (bool): Use stable entries only to find. Defaults to True.
             hull_distance (float): Use entries within this distance to hull (eV/atom). Can significantly increase
                 number of possible precursors and slow down the predictions. Ignored if confine_to_stables is True.
             simple_precursors (bool or int): If True, or integer >0, precursors with fewer components will
-                be considered.
-            explicit_includes (list): list of mp-ids to explicitly include. For example, confine_to_stables may exclude
+                be considered. Defaults to False.
+            explicit_includes (list): list of MP-ids to explicitly include. For example, confine_to_stables may exclude
                 certain common precursors in some systems, if they are not on the convex-hull - this allows such
-                potential precursors to be added to the library.
-            exclude_compositions (list): list of compositions to avoid in precursor library.
+                potential precursors to be added to the library manually.
+            exclude_compositions (list): list of compositions to avoid in precursor library. All entries at this
+                composition are removed from the precursor library.
             allow_gas_release (bool): Many reactions require the release of gases like CO2, O2, etc. depending on the
                 precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
             add_elements List(str): Add elements to the chemical space of libraries that doesn't exist in the target
@@ -73,21 +72,23 @@ class SynthesisRoutes:
                 pressure. A dictionary in the form of {'O2': 0.21, 'CO2':, 0.05} can be provided to explicitly
                 specify partial pressures. If given None, a default pressure dictionary will be used pertaining to
                 open atmosphere conditions. Defaults to 1 atm.
+            flexible_competition (int): This parameter specifies the depth of the competing phase search, and can help
+                add more resolution to the phase competition axis of the recommendation plot.
+                Defaults to 0, which would include only competing phases that have the same number of elements as the
+                target. A reliable heuristic is setting it as 1, if x-axis of the plot is not informative.
             use_cache (bool): if True, caches the epitaxy and similarity information for future reuse.
             entries (list): List of Materials Project ComputedEntry objects, as can be obtained via the API. If provided
                 these entries will be used while forming the precursor library. If not provided, MP database will be
-                queried via the Rester API to get the most up-to-date entries. Defaults to None.
+                queried via their Rest API to get the most up-to-date entries. Defaults to None.
             epitaxies (dict): Dict of minimum matching areas between the target and entries, normally as computed
                 via the get_epitaxies method. Recommended use is to leave as None.
             similarities (dict): Dict of similarity quantiles between the target and entries, normally as computed
                 via the get_similarities method. Recommended use is to leave as None.
-            sigma (float): surface energy constant (eV/Ang^2) to be used in predictions. Defaults to equivalent
+            sigma (float): surface energy constant (eV/Ang^2) to be used in predictions. Defaults to equivalent of
                 2.0 J/m^2.
-            transport_constant (float): diffusion barrier coefficient (max barrier). Defaults to 10.0.
-            custom_target_entry (MP entry): custom computed entry object pymatgen
-            flexible_competition (int): whether lower order targets are allowed in competing reactions. Defaults to 0
-                which forces competing reactions to have products of the same order as target. If 1, one order smaller
-                compounds and so on.
+            transport_constant (float): diffusion barrier coefficient (max barrier). Defaults to 10.0 eV.
+            custom_target_entry (MP entry): custom ComputedEntry pymatgen object. It can be used to plan synthesis
+                of a user-supplied compound that does not have a corresponding MP entry.
             use_cache_database (bool): if True, use the cached epitaxy and similarity from the database.
         """
 
@@ -307,6 +308,39 @@ class SynthesisRoutes:
         add_pareto=False,
         custom_text="",
     ):
+        """
+        Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
+            and high-throughput DFT data (doi: 10.1021/jacs.1c04888). After instantiation, synthesis planning plots
+            are generated using this method.
+        Args:
+            temperature (float): Temperature (in Kelvin) to consider in free energy adjustments for gases.
+            pressure (dict or float): Gas pressures (in atm). If float, all gases are assumed to have the same constant
+                pressure. A dictionary in the form of {'O2': 0.21, 'CO2':, 0.05} can be provided to explicitly
+                specify partial pressures. If given None, a default pressure dictionary will be used pertaining to
+                open atmosphere conditions. Defaults to 1 atm.
+            allow_gas_release (bool): Many reactions require the release of gases like CO2, O2, etc. depending on the
+                precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
+            max_component_precursors (int): Used to limit the reactants to simpler sub-chemistries of our target to
+                obtain a more refined candidate precursor list. If set, compounds with more unique elements than this
+                limit are ignored as precursors. For example, for a ternary target compound, max_component_precursors=2
+                would limit precursors to binary compounds (add_element is ignored, i.e. carbonated versions of binary
+                compounds would also be included).
+            show_known_precursors_only (bool): applies an additional filter to the precursor list during reaction
+                generation to select only those phases text-mined by Kononova et al. (doi: 10.1038/s41597-019-0224-1)
+                as solid-state precursors. Defaults to False.
+            show_fraction_known_precursors (bool): can color-code the reactions based on what fraction of the precursors
+                are in the above text-mined dataset. Defaults to True.
+            confine_competing_to_icsd (bool): Use ICSD-sourced entries to as competing compounds. Defaults to False.
+            display_peroxides (bool): whether reactions involving peroxides are included in the plot. Defaults to True.
+            display_superoxides (bool): whether reactions involving superoxides are included in the plot.
+                Defaults to True.
+            w (int): width of the generated plot in pixels
+            h (int): height of the generated plot in pixels
+            xrange (tuple): sets the x-axis range
+            yrange (tuple): sets the y-axis range
+            add_pareto (bool): adds the Pareto front line to the plot.
+            custom_text (str): text appended to the figure title.
+        """
         if not pressure:
             pressure = self.pressure
         if not (
@@ -441,7 +475,6 @@ class SynthesisRoutes:
                     x=_x,
                     y=_y,
                     line=dict(color="firebrick", width=2)
-                    # connectgaps=True
                 )
             )
             fig.add_trace(

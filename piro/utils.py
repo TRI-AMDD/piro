@@ -72,7 +72,7 @@ def epitaxy(_parents, target):
         sa = SubstrateAnalyzer(film_max_miller=2, substrate_max_miller=2)
         gen = [g for g in sa.calculate(s, target) if g]
         if gen:
-            return min([e["match_area"] for e in gen])
+            return min([e.match_area for e in gen])
         else:
             return 1000000.0
 
