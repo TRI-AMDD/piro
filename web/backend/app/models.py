@@ -8,30 +8,30 @@ from pydantic import BaseModel, Field, NonNegativeInt, create_model
 class RecommendRoutesRequest(BaseModel):
     target_entry_id: str = Field(
         ...,
-        description="enter mp-id or formula"
+        description="Materials Project ID of the compound to synthesize"
     )
     confine_to_icsd: bool = Field(
         True,
-        description="Use ICSD-sourced entries to find precursors."
+        description="Confines the precursur library to materials in MP sourced \
+        from the Inorganic Crystal Structures Database"
     )
     confine_to_stables: bool = Field(
         True,
-        description="Use stable entries only to find."
+        description="Confines the precursur library to thermodynamically stable materials in MP"
     )
     hull_distance: Optional[float] = Field(
         None,
-        description="Use entries within this distance to hull (eV/atom). Can significantly increase \
-                number of possible precursors and slow down the predictions. Ignored if confine_to_stables is True."
+        description="Distance to Hull (eV/atom). \
+        Defines the energy range of metastable materials for inclusion in precursor library."
     )
     simple_precursors: NonNegativeInt = Field(
         0,
-        description="If > 0, precursors with fewer components will be considered."
+        description="Lower order compounds are considered if greater than zero \
+        (e.g. 1 means a ternary target would consider up to binaries in precusors)"
     )
     explicit_includes: List[str] = Field(
         [],
-        description="list of mp-ids to explicitly include. For example, confine_to_stables may exclude \
-                certain common precursors in some systems, if they are not on the convex-hull - this allows such \
-                potential precursors to be added to the library."
+        description="List of Materials Project IDs of additional materials to include in precursor list"
     )
     add_elements: List[str] = Field(
         [],
@@ -42,45 +42,51 @@ class RecommendRoutesRequest(BaseModel):
     )
     exclude_compositions: List[str] = Field(
         [],
-        description="list of compositions to avoid in precursor library."
+        description="Materials that have these exact formulas are excluded from the precursor library"
     )
     sigma: float = Field(
         2 * 6.242 * 0.01,
-        description="surface energy constant (eV/Ang^2) to be used in predictions. Defaults to equivalent \
+        description="surface energy scaling factory (eV/Ang^2) to be used in predictions. Defaults to equivalent \
                 2.0 J/m^2."
     )
     transport_constant: float = Field(
         10,
-        description="diffusion barrier coefficient (max barrier)"
+        description="Transport barrier. Diffusion barrier coefficient (max barrier)"
     )
     flexible_competition: NonNegativeInt = Field(
         0,
-        description="whether lower order targets are allowed in competing reactions. Defaults to 0 \
-                which forces competing reactions to have products of the same order as target. If 1, one order smaller \
-                compounds and so on."
+        description="This parameter can add resolution to the phase competition axis. \
+        For example, 0 includes only the competing phases that have the same number of elements as the target, \
+        whereas 1 would include phases that may also have one less element and so on. \
+        A good heuristic is 1 if more resolution is needed on x-axis."
     )
 
     temperature: float = Field(
-        1600,
+        1000,
         description="Temperature (in Kelvin) to consider in free energy adjustments for gases."
     )
-    pressure: Union[float, dict] = Field(
-        0.001,
+    pressure: Optional[Union[float, dict]] = Field(
+        1,
         description=(
-            "Gas pressures (in atm). If float, all gases are assumed to have the same constant"
-            " pressure. A dictionary in the form of {'O2': 0.21, 'CO2':, 0.05} can be provided to explicitly"
-            " specify partial pressures. If given None, a default pressure dictionary will be used pertaining to"
-            " open atmosphere conditions."
+            "Sets pressure (atm) of gas phases. Can specify a constant pressure, a custom dictionary, \
+            or None which will use the ambient partial pressures (see piro.data.DEFAULT_GAS_PRESSURES)"
         )
     )
     allow_gas_release: bool = Field(
         False,
-        description="Allow for gaseous reaction products, e.g. O2, CO2"
+        description="Allow for gaseous reaction products. \
+        Reactions are balanced such that O2, CO2 etc. can be released alongside the target"
     )
-    max_component_precursors: int = 0
+    max_component_precursors: int = Field(
+        0,
+        description="Maximum number of components in precursors. Used to limit the reactants \
+        to simpler sub-chemistries of our target to obtain a refined precursor list. \
+        For example, setting this as 2 for a ternary target compound would limit precursors to \
+        binary compounds (additional element count ignored)"
+    )
     show_fraction_known_precursors: bool = Field(
         False,
-        description="Show the fraction of known synthetic reagents in reaction"
+        description="Show the fraction of known precursors in reaction"
     )
     show_known_precursors_only: bool = Field(
         False,
@@ -88,15 +94,15 @@ class RecommendRoutesRequest(BaseModel):
     )
     confine_competing_to_icsd: bool = Field(
         False,
-        description="Confine competing reactions to those containing ICSD materials"
+        description="ICSD-based Parasitic Phases Only. Confine competing reactions to those containing ICSD materials"
     )
     display_peroxides: bool = Field(
         False,
-        description="Show reactions involving peroxide compounds"
+        description="Show reactions involving peroxides"
     )
     display_superoxides: bool = Field(
         False,
-        description="Show reactions involving superoxide compounds"
+        description="Show reactions involving superperoxides"
     )
     add_pareto: bool = Field(
         False,
