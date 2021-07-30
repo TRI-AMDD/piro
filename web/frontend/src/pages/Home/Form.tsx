@@ -1,13 +1,18 @@
+import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { UseMutationResult } from "react-query";
 import { Button, Input } from '@toyota-research-institute/lakefront';
+import ReactTooltip from 'react-tooltip';
+
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs } from './TypeProps';
-import { useState } from "react";
-import MultiSelect from "./MultiSelect";
-import AdvancedOptions from "./AdvancedOptions";
-import Pressure from "./Pressure";
+
+import MultiSelect from './MultiSelect';
+import AdvancedOptions from './AdvancedOptions';
+import Pressure from './Pressure';
+import MoreInfo from './MoreInfo'
+import { description } from './description';
 
 interface Props {
     mutation: UseMutationResult<any, unknown, void, unknown>;
@@ -36,7 +41,7 @@ export default function Form(props: Props) {
         data.add_elements = addElements.map(e => e.value);
         data.explicit_includes = explicitIncludes.map(e => e.value);
         data.exclude_compositions = excludeCompositions.map(e => e.value);
-        // get value from pressure
+        // get values from pressure
         data.pressure = pressure;
 
         // @ts-ignore
@@ -47,54 +52,70 @@ export default function Form(props: Props) {
     return (
         /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
         <form onSubmit={handleSubmit(onSubmit)} className={styles.Form}>
+            <ReactTooltip multiline />
             <div className={styles.FormGrid}>
                 <div>
-                    <Input
-                        label="Target Compound (mp-id)"
-                        placeholder="mp-9029"
-                        {...register('target_entry_id', { required: true })}
-                        error={errors.target_entry_id ? 'Formula field is required' : ''}
-                    />
+                    <MoreInfo info={description.target_entry_id}>
+                        <Input
+                            label="Target Compound (mp-id)"
+                            placeholder="mp-9029"
+                            {...register('target_entry_id', { required: true })}
+                            error={errors.target_entry_id ? 'Formula field is required' : ''}
+                        />
+                    </MoreInfo>
                     <Input
                         type="number"
                         step="any"
                         label="Temperature (K)"
-                        placeholder="1000"
+                        defaultValue={1000}
                         {...register('temperature', { valueAsNumber: true })}
                     />
-                    <Input
-                        label="Maximum number of components in precursors"
-                        {...register('max_component_precursors', { valueAsNumber: true })}
-                        defaultValue={0}
-                    />
-                    <Input
-                        label="Depth of parasitic reaction search"
-                        {...register('flexible_competition', { valueAsNumber: true })}
-                        defaultValue={0}
-                    />
-                    <Input
-                        label="Distance to Hull (eV/atom)"
-                        {...register('hull_distance', { valueAsNumber: true })}
-                        disabled={watchConfineToStables}
-                        placeholder="0.01"
-                    />
-                    <MultiSelect
-                        label="Additional element to consider"
-                        placeholder="Type element and press enter e.g. (C, H)"
-                        setValues={setAddElements}
-                    />
-                    <MultiSelect
-                        label="Explicitly include as precursor"
-                        setValues={setExplicitIncludes}
-                    />
+                    <MoreInfo info={description.max_component_precursors}>
+                        <Input
+                            label="Maximum number of components in precursors"
+                            {...register('max_component_precursors', { valueAsNumber: true })}
+                            defaultValue={0}
+                        />
+                    </MoreInfo>
+                    <MoreInfo info={description.flexible_competition}>
+                        <Input
+                            label="Depth of parasitic reaction search"
+                            {...register('flexible_competition', { valueAsNumber: true })}
+                            defaultValue={0}
+                        />
+                    </MoreInfo>
+                    <MoreInfo info={description.hull_distance}>
+                        <Input
+                            label="Distance to Hull (eV/atom)"
+                            {...register('hull_distance', { valueAsNumber: true })}
+                            disabled={watchConfineToStables}
+                            defaultValue={1000}
+                        />
+                    </MoreInfo>
+                    <MoreInfo info={description.add_elements}>
+                        <MultiSelect
+                            label="Additional element to consider"
+                            placeholder="Type element and press enter e.g. (C, H)"
+                            setValues={setAddElements}
+                        />
+                    </MoreInfo>
+                    <MoreInfo info={description.explicit_includes}>
+                        <MultiSelect
+                            label="Explicitly include as precursor"
+                            placeholder="Type mp-id and press enter"
+                            setValues={setExplicitIncludes}
+                        />
+                    </MoreInfo>
                 </div>
                 <div className={styles.Checkboxes}>
-                    <FormCheckbox
-                        name="allow_gas_release"
-                        control={control}
-                        label="Allow for gaseous reaction products"
-                        defaultValue={false}
-                    />
+                    <MoreInfo info={description.allow_gas_release} isCheckbox>
+                        <FormCheckbox
+                            name="allow_gas_release"
+                            control={control}
+                            label="Allow for gaseous reaction products"
+                            defaultValue={false}
+                        />
+                    </MoreInfo>
                     <FormCheckbox
                         name="show_fraction_known_precursors"
                         control={control}
@@ -107,18 +128,22 @@ export default function Form(props: Props) {
                         label="Show only reactions with known precursors"
                         defaultValue={false}
                     />
-                    <FormCheckbox
-                        name="confine_to_stables"
-                        control={control}
-                        label="Stable Precursors Only"
-                        defaultValue={true}
-                    />
-                    <FormCheckbox
-                        name="confine_to_icsd"
-                        control={control}
-                        label="ICSD-based Precursors Only"
-                        defaultValue={true}
-                    />
+                    <MoreInfo info={description.confine_to_stables} isCheckbox>
+                        <FormCheckbox
+                            name="confine_to_stables"
+                            control={control}
+                            label="Stable Precursors Only"
+                            defaultValue={true}
+                        />
+                    </MoreInfo>
+                    <MoreInfo info={description.confine_to_icsd} isCheckbox>
+                        <FormCheckbox
+                            name="confine_to_icsd"
+                            control={control}
+                            label="ICSD-based Precursors Only"
+                            defaultValue={true}
+                        />
+                    </MoreInfo>
                 </div>
                 <Pressure setPressure={setPressure} />
             </div>

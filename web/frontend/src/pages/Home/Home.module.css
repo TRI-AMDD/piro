@@ -27,7 +27,7 @@
 .FormGrid {
     margin-top: 16px;
     display: grid;
-    grid-template-columns: 375px 300px 300px;
+    grid-template-columns: 375px 375px 375px;
     column-gap: 24px;
 }
 .Checkboxes {
@@ -58,4 +58,13 @@
 }
 .PressureOptions {
     margin-top: 16px;
+}
+.MoreInfo {
+    display: grid;
+    grid-template-columns: 350px 16px;
+    column-gap: 8px;
+}
+.Tooltip {
+    cursor: help;
+    font-size: 12px;
 }

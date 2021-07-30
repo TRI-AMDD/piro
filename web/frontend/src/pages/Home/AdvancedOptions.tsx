@@ -3,7 +3,9 @@ import { Collapsible, Input } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs } from './TypeProps';
-import MultiSelect from "./MultiSelect";
+import MultiSelect from './MultiSelect';
+import MoreInfo from './MoreInfo';
+import { description } from './description';
 
 interface Props {
     control: Control<Inputs>;
@@ -20,36 +22,45 @@ export default function AdvancedOptions(props: Props) {
         >
             <div className={styles.FormGrid}>
                 <div>
-                    <Input
-                        type="number"
-                        step="any"
-                        label="Use Simplified Precursor Library"
-                        {...register('simple_precursors', { valueAsNumber: true })}
-                    />
+                    <MoreInfo info={description.simple_precursors}>
+                        <Input
+                            type="number"
+                            step="any"
+                            label="Use Simplified Precursor Library"
+                            defaultValue={0}
+                            {...register('simple_precursors', { valueAsNumber: true })}
+                        />
+                    </MoreInfo>
                     <Input
                         type="number"
                         step="any"
                         label="Surface energy scaling factor"
+                        defaultValue={0.12484}
                         {...register('sigma', { valueAsNumber: true })}
                     />
                     <Input
                         type="number"
                         step="any"
                         label="Transport barrier"
+                        defaultValue={10}
                         {...register('transport_constant', { valueAsNumber: true })}
                     />
-                    <MultiSelect
-                        label="Formulas to filter out"
-                        setValues={setExcludeCompositions}
-                    />
+                    <MoreInfo info={description.exclude_compositions}>
+                        <MultiSelect
+                            label="Formulas to filter out"
+                            setValues={setExcludeCompositions}
+                        />
+                    </MoreInfo>
                 </div>
                 <div className={styles.Checkboxes}>
-                    <FormCheckbox
-                        name="confine_competing_to_icsd"
-                        control={control}
-                        label="ICSD-based Parasitic Phases Only"
-                        defaultValue={false}
-                    />
+                    <MoreInfo info={description.confine_competing_to_icsd} isCheckbox>
+                        <FormCheckbox
+                            name="confine_competing_to_icsd"
+                            control={control}
+                            label="ICSD-based Parasitic Phases Only"
+                            defaultValue={false}
+                        />
+                    </MoreInfo>
                     <FormCheckbox
                         name="display_peroxides"
                         control={control}

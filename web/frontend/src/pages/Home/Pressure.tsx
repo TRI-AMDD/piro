@@ -8,6 +8,15 @@ interface Props {
     setPressure(pressure: any): void;
 }
 
+const ambientPressure = {
+    O2: 0.2095,
+    CO2: 0.000394737,
+    N2: 0.7809,
+    H2: 0.1,
+    H2O: 0.1,
+    F2: 0.1
+}
+
 type PressureInputs = {
     constant: number;
     O2: number;
@@ -28,7 +37,7 @@ export function Pressure(props: Props) {
 
     // compute the pressure based on the option selected
     const pressure = useMemo(() => {
-        let pressure = null;
+        let pressure: any = ambientPressure;
         if (option?.value === 'constant') {
             pressure = watchPressure.constant ?? 1;
         } else if (option?.value === 'custom') {
@@ -54,12 +63,12 @@ export function Pressure(props: Props) {
             <div className={styles.PressureOptions}>
                 {option?.value === 'ambient' && (
                     <p>
-                        O2: 0.2095<br />
-                        CO2: 0.000394737<br />
-                        N2: 0.7809<br />
-                        H2: 0.1<br />
-                        H2O: 0.1<br />
-                        F2: 0.1
+                        O2: {ambientPressure.O2}<br />
+                        CO2: {ambientPressure.CO2}<br />
+                        N2: {ambientPressure.N2}<br />
+                        H2: {ambientPressure.H2}<br />
+                        H2O: {ambientPressure.H2O}<br />
+                        F2: {ambientPressure.F2}
                     </p>
                 )}
 
