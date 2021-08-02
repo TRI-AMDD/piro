@@ -114,6 +114,7 @@ PlotlyFigureResponse = create_model('PlotlyFigureResponse', **Figure().to_dict()
 
 
 class RecommendRoutesTaskStatus(str, Enum):
+    PENDING = 'pending'
     INVALID = 'invalid'
     STARTED = 'started'
     FAILURE = 'failure'

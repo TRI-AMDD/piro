@@ -80,6 +80,23 @@ pip install -e .
 PYTHONPATH=web/backend python web/backend/app/main.py
 ```
 
+### Run the celery worker
+
+#### Using redis as the broker and backend, need a redis db running
+```
+docker run -d -p 6379:6379 redis
+```
+
+#### Run the worker
+```
+PYTHONPATH=web/backend celery -A app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 worker -l info -c 4 -Ofair --without-gossip --without-mingle
+```
+
+#### (optional) Run flower celery monitoring
+```
+PYTHONPATH=web/backend celery -A app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 flower 
+```
+
 ### Use the API
 
 Should be available at <http://0.0.0.0:8080>

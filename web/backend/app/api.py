@@ -1,10 +1,8 @@
-import uuid
-
 import fastapi
-from starlette.background import BackgroundTasks
 
 from app.models import RecommendRoutesRequest, PlotlyFigureResponse, RecommendRoutesTask
-from app.services import route_recommendation_service, create_route_recommendation_task, get_route_recommendation_task
+from app.services import recommend_routes_service
+from app.tasks import recommend_routes_task_start, recommend_routes_task_result
 
 router = fastapi.APIRouter()
 
@@ -16,7 +14,7 @@ router = fastapi.APIRouter()
 )
 def recommend_routes(request: RecommendRoutesRequest):
     return fastapi.responses.Response(
-        content=route_recommendation_service(request).to_json(),
+        content=recommend_routes_service(request),
         status_code=201,
         media_type='application/json',
     )
@@ -27,10 +25,8 @@ def recommend_routes(request: RecommendRoutesRequest):
     description="create background task to generate recommended routes",
     response_model=RecommendRoutesTask
 )
-def recommend_routes(request: RecommendRoutesRequest, background_tasks: BackgroundTasks) -> RecommendRoutesTask:
-    task = RecommendRoutesTask(task_id=str(uuid.uuid4()), request=request)
-    background_tasks.add_task(create_route_recommendation_task, task)
-    return task
+def recommend_routes(request: RecommendRoutesRequest) -> RecommendRoutesTask:
+    return recommend_routes_task_start(request)
 
 
 @router.get(
@@ -39,4 +35,4 @@ def recommend_routes(request: RecommendRoutesRequest, background_tasks: Backgrou
     response_model=RecommendRoutesTask
 )
 def recommend_routes(task_id: str) -> RecommendRoutesTask:
-    return get_route_recommendation_task(task_id)
+    return recommend_routes_task_result(task_id)
