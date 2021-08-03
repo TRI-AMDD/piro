@@ -31,7 +31,7 @@ function PlotResults(props: Props) {
         return null;
     }
 
-    if (data.status == "started") {
+    if (data.status == "started" || data.status == "pending") {
         return (
             <div className={styles.Loading}>
                 <Loading

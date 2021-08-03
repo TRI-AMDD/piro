@@ -71,14 +71,7 @@ python setup.py develop
 
 ## Web app
 
-### Docker (optional)
- - You can run the web app locally or run docker containers.
- - If you don't have docker, you can go [here](https://docs.docker.com/get-docker/) and follow the instructions in order to install the Docker Engine.
- - Additionally, if you would simply like to host your own local server quickly, install Docker Compose [here](https://docs.docker.com/compose/install/).
-
-### See the corresponding README
-- [React + FastAPI](web/backend/README.md)
-- [Dash](web/dash/README.md) (old)
+[README](web/README.md)
 
 ## Citation
 If you use `piro`, we kindly ask you to cite the following publication:

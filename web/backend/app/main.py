@@ -5,7 +5,7 @@ from app import api
 from app.settings import Settings
 from app.index import configure_index
 
-app = fastapi.FastAPI()
+app = fastapi.FastAPI(docs_url="/api/docs", openapi_url="/api")
 app.include_router(api.router)
 configure_index(app)
 

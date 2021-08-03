@@ -1,2 +1,4 @@
 web/frontend/build
+web/frontend/node_modules
+web/frontend/package-lock.json
 tests
