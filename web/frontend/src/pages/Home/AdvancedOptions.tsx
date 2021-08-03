@@ -1,5 +1,6 @@
 import { Control, UseFormRegister } from 'react-hook-form';
 import { Collapsible, Input } from '@toyota-research-institute/lakefront';
+import styled from '@emotion/styled'
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs } from './TypeProps';
@@ -13,11 +14,17 @@ interface Props {
     setExcludeCompositions(input: { label: string; value: string; }[]): void;
 }
 
+const StyledCollapsible = styled(Collapsible)`
+  .collapsed {
+    z-index: -1;
+  }
+`;
+
 export default function AdvancedOptions(props: Props) {
     const { control, register, setExcludeCompositions } = props;
 
     return (
-        <Collapsible
+        <StyledCollapsible
             title="Advanced Options"
         >
             <div className={styles.FormGrid}>
@@ -81,6 +88,6 @@ export default function AdvancedOptions(props: Props) {
                     />
                 </div>
             </div>
-        </Collapsible>
+        </StyledCollapsible>
     );
 }
