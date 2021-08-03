@@ -19,7 +19,7 @@ export const usePlotData = (taskId: string) => {
             const response = await fetch(`/api/recommend_routes_task/${taskId}`);
             const data = await response.json();
             // throw an error if status is started to trigger loading
-            if (data?.status === 'started') {
+            if (data?.status === 'started' || data?.status === 'pending') {
                 throw new Error("Request initiated. Loading Results...");
             }
             return data
