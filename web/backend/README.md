@@ -6,7 +6,8 @@ Built using [FastAPI](https://fastapi.tiangolo.com)
 
 See [settings code](app/settings.py) or [example dotenv file](.env-template) for environment variables that can be set.
 
-You can create a web/backend/.env file or export the environment variables in the shell
+You can create a web/backend/.env file or export the environment variables in the shell.
+See the docker commands below for how to pass them to the docker CLI.
 
 **MAPI_KEY** for the MaterialsProject API is required
 
@@ -16,7 +17,7 @@ From the root of the piro repository.
 
 ### Build the image
 ```
-docker build -t piro_backend -f web/backend/Dockerfile .
+docker build -t piro_backend -f web/backend/full.dockerfile .
 ```
 Note: If "npm run build" fails due to out of memory, you can increase Docker memory resources in Docker preferences.
 
@@ -33,7 +34,7 @@ docker run -d --name piro_backend -p 8080:8080 -p 5555:5555 --env-file=web/backe
 
 Should be available at <http://0.0.0.0:8080>
 
-Read the API docs at <http://0.0.0.0:8080/docs>
+Read the API docs at <http://0.0.0.0:8080/api/docs>
 
 Monitor celery workers with flower <http://0.0.0.0:5555/>
 
@@ -102,6 +103,6 @@ PYTHONPATH=web/backend celery -A app.tasks --broker=redis://localhost:6379/0 --r
 
 Should be available at <http://0.0.0.0:8080>
 
-Read the API docs at <http://0.0.0.0:8080/docs>
+Read the API docs at <http://0.0.0.0:8080/api/docs>
 
 Monitor celery workers with flower <http://0.0.0.0:5555/>

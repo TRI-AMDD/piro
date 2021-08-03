@@ -1,13 +1,21 @@
 import json
-
+import os
 from celery import Celery
 
-from app import celery_config
 from app.models import RecommendRoutesRequest, RecommendRoutesTask, RecommendRoutesTaskStatus
 from app.services import recommend_routes_service
 
 app = Celery(__name__)
-app.config_from_object(celery_config)
+app.conf.update(
+    broker_url=os.environ.get('CELERY_BROKER_URL', "redis://localhost:6379/0"),
+    result_backend=os.environ.get('CELERY_RESULT_BACKEND', "redis://localhost:6379/0"),
+
+    # https://medium.com/koko-networks/a-complete-guide-to-production-ready-celery-configuration-5777780b3166
+    worker_send_task_event=False,
+    task_time_limit=60 * 15,
+    task_acks_late=True,
+    worker_prefetch_multiplier=1
+)
 
 
 @app.task
