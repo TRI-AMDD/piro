@@ -1,6 +1,6 @@
 # Synthesis App
 
-We have an web application built using React and FastAPI.
+We have a web application built using React and FastAPI.
 
 ### Docker
  - If you don't have docker, you can go [here](https://docs.docker.com/get-docker/) and follow the instructions in order to install the Docker Engine.
@@ -10,7 +10,7 @@ We have an web application built using React and FastAPI.
 
 ### Environment Variables
 
-- The docker compose uses environment variables defined in backend/.env using this as an example [example dotenv file](.env-template)
+- The docker compose uses environment variables defined in backend/.env using this as an example [example dotenv file](backend/.env-template)
 - The backend requires at least the MAPI_KEY to be defined.
 
 ### Run Docker Compose
