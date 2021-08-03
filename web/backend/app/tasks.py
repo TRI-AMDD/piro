@@ -27,6 +27,10 @@ def recommend_routes_task_start(request: RecommendRoutesRequest) -> RecommendRou
 
 def recommend_routes_task_result(task_id: str) -> RecommendRoutesTask:
     celery_task = recommend_routes_task.AsyncResult(task_id)
+
+    if isinstance(celery_task.result, Exception):
+        raise celery_task.result
+
     return RecommendRoutesTask(
         task_id=celery_task.id,
         status=RecommendRoutesTaskStatus(celery_task.status.lower()),

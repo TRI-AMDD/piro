@@ -6,6 +6,7 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 # setup python and node installers
 RUN apt update
 RUN apt upgrade -y
+RUN apt install -y redis-server
 RUN python3.7 -m pip install --upgrade pip
 
 RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
@@ -38,5 +39,4 @@ RUN python3.7 -m pip install -e .
 
 # python backend api code
 COPY web/backend/app /app/app
-
-ENV PORT=8080
+COPY web/backend/prestart.sh /app/prestart.sh

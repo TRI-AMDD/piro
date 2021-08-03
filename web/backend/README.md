@@ -24,17 +24,18 @@ Note: If "npm run build" fails due to out of memory, you can increase Docker mem
  
  ```
  # pick one of the environment variable setting methods in the below command
-docker run -d --name piro_backend -p 8080:8080 -e MAPI_KEY piro_backend  # if MAPI_KEY is already in environment
-docker run -d --name piro_backend -p 8080:8080 -e MAPI_KEY={key} piro_backend  # set MAPI_KEY manually
-docker run -d --name piro_backend -p 8080:8080 --env-file=web/backend/.env piro_backend  # use dotenv file
-
+docker run -d --name piro_backend -p 8080:8080 -p 5555:5555 -e MAPI_KEY piro_backend  # if MAPI_KEY is already in environment
+docker run -d --name piro_backend -p 8080:8080 -p 5555:5555 -e MAPI_KEY={key} piro_backend  # set MAPI_KEY manually
+docker run -d --name piro_backend -p 8080:8080 -p 5555:5555 --env-file=web/backend/.env piro_backend  # use dotenv file
  ```
 
-### Use the API
+### Use the web app
 
 Should be available at <http://0.0.0.0:8080>
 
 Read the API docs at <http://0.0.0.0:8080/docs>
+
+Monitor celery workers with flower <http://0.0.0.0:5555/>
 
 
 ## Run for local development
@@ -97,8 +98,10 @@ PYTHONPATH=web/backend celery -A app.tasks --broker=redis://localhost:6379/0 --r
 PYTHONPATH=web/backend celery -A app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 flower 
 ```
 
-### Use the API
+### Use the web app
 
 Should be available at <http://0.0.0.0:8080>
 
 Read the API docs at <http://0.0.0.0:8080/docs>
+
+Monitor celery workers with flower <http://0.0.0.0:5555/>
