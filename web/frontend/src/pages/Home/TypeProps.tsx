@@ -22,3 +22,5 @@ export interface Inputs {
     display_superoxides: boolean;
     add_pareto: boolean;
 }
+
+export type Option = {label: string, value: string}

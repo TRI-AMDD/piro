@@ -13,6 +13,13 @@ import AdvancedOptions from './AdvancedOptions';
 import Pressure from './Pressure';
 import MoreInfo from './MoreInfo'
 import { description } from './description';
+import SingleSelect from "./SingleSelect";
+
+const addElementOptions = [
+    { value: '', label: 'None' },
+    { value: 'C', label: 'C' },
+    { value: 'O', label: 'O' }
+];
 
 interface Props {
     mutation: UseMutationResult<any, unknown, void, unknown>;
@@ -21,7 +28,7 @@ interface Props {
 export default function Form(props: Props) {
     const { mutation } = props;
     const [pressure, setPressure] = useState<any>(null);
-    const [addElements, setAddElements] = useState<{ label: string; value: string; }[]>([]);
+    const [addElements, setAddElements] = useState<{ label: string; value: string; }>();
     const [explicitIncludes, setExplicitIncludes] = useState<{ label: string; value: string; }[]>([]);
     const [excludeCompositions, setExcludeCompositions] = useState<{ label: string; value: string; }[]>([]);
 
@@ -38,7 +45,7 @@ export default function Form(props: Props) {
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         // set values from multi-select values
-        data.add_elements = addElements.map(e => e.value);
+        data.add_elements = addElements ? [addElements.value] : [];
         data.explicit_includes = explicitIncludes.map(e => e.value);
         data.exclude_compositions = excludeCompositions.map(e => e.value);
         // get values from pressure
@@ -93,10 +100,10 @@ export default function Form(props: Props) {
                         />
                     </MoreInfo>
                     <MoreInfo info={description.add_elements}>
-                        <MultiSelect
+                        <SingleSelect
                             label="Additional element to consider"
-                            placeholder="Type element and press enter e.g. (C, H)"
-                            setValues={setAddElements}
+                            options={addElementOptions}
+                            setValue={setAddElements}
                         />
                     </MoreInfo>
                     <MoreInfo info={description.explicit_includes}>

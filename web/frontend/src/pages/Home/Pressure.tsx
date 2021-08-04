@@ -5,6 +5,8 @@ import Select from 'react-select';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
 import styles from './Home.module.css';
+import { Option } from "./TypeProps";
+import SingleSelect from "./SingleSelect";
 
 interface Props {
     setPressure(pressure: any): void;
@@ -38,7 +40,7 @@ const options = [
 export function Pressure(props: Props) {
     const { setPressure } = props;
     const { register, watch } = useForm<PressureInputs>();
-    const [option, setOption] = useState<any>(options[0]);
+    const [option, setOption] = useState<Option>(options[0]);
     const watchPressure = watch();
 
     // compute the pressure based on the option selected
@@ -64,13 +66,13 @@ export function Pressure(props: Props) {
 
     return (
         <div>
-            <label>Pressure (atm)</label>
-            <Select
-                options={options}
-                onChange={setOption}
-                defaultValue={options[0]}
-            />
-            <MoreInfo info={description.pressure} />
+            <MoreInfo info={description.pressure}>
+                <SingleSelect
+                    label="Pressure (atm)"
+                    options={options}
+                    setValue={setOption}
+                />
+            </MoreInfo>
 
             <div className={styles.PressureOptions}>
                 {option?.value === 'ambient' && (
