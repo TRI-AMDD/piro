@@ -125,4 +125,5 @@ class RecommendRoutesTask(BaseModel):
     task_id: Optional[str] = None
     request: Optional[RecommendRoutesRequest] = None
     status: RecommendRoutesTaskStatus = RecommendRoutesTaskStatus.INVALID
+    error_message: Optional[str] = None
     result: Optional[PlotlyFigureResponse] = None

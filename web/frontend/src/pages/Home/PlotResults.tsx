@@ -45,7 +45,7 @@ function PlotResults(props: Props) {
     }
 
     if (data.status == "failure") {
-        return <ErrorMessage error="Failure encountered processing formula." />;
+        return <ErrorMessage error={data.error_message}/>;
     }
 
     if (data.status == "invalid") {

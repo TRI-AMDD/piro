@@ -10,6 +10,8 @@ RUN npm install
 WORKDIR /app
 COPY . /app
 
+RUN npm run build
+
 # production environment
 FROM nginx
 COPY --from=build /app/build /usr/share/nginx/html
