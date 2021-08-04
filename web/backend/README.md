@@ -76,7 +76,7 @@ pip install -e .
 
 ### Run the app 
 ```
-# set environment variables if not already done previously or in a web/backend/.env 
+# set environment variables if not already done previously 
 # export MAPI_KEY={key}
 
 PYTHONPATH=web/backend python web/backend/app/main.py
