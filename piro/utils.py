@@ -99,6 +99,14 @@ def similarity(_parents, target):
         ]
     )
 
+    # HACK celery doesn't work with multiprocessing (used by matminer)
+    try:
+        from celery import current_task
+        if current_task:
+            featurizer.set_n_jobs(1)
+    except ImportError:
+        pass
+
     x_target = pd.DataFrame.from_records(
         [featurizer.featurize(target)], columns=featurizer.feature_labels()
     )

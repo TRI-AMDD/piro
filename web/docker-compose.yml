@@ -23,6 +23,8 @@ services:
       - backend/.env
     depends_on:
       - redis
+    volumes:
+      - ../piro/files:/app/piro/files
 
   flower:
     build:
@@ -47,3 +49,5 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:
       - redis
+    volumes:
+      - ../piro/files:/app/piro/files
