@@ -24,6 +24,6 @@ export const usePlotData = (taskId: string) => {
             }
             return data
         },
-        { enabled: !!taskId }
+        { enabled: !!taskId, retry: true }
     );
 }
