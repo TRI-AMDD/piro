@@ -24,6 +24,10 @@ export const usePlotData = (taskId: string) => {
             }
             return data
         },
-        { enabled: !!taskId, retry: true }
+        {
+            enabled: !!taskId,
+            refetchOnWindowFocus: false,
+            retry: true
+        }
     );
 }
