@@ -16,3 +16,9 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.app {
+    background-color: rgb(246, 246, 248);
+    min-height: 100%;
+    padding: 12px;
+}

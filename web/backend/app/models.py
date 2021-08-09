@@ -1,54 +1,38 @@
-from typing import List, Union
+from enum import Enum
+from typing import List, Union, Optional
 
-from pydantic import BaseModel, Field
-
-
-class SynthesisBoolOptions(BaseModel):
-    allow_gas_release: bool = Field(
-        False,
-        description="Allow for gaseous reaction products, e.g. O2, CO2"
-    )
-    show_fraction_known_precursors: bool = Field(
-        False,
-        description="Show the fraction of known synthetic reagents in reaction"
-    )
-    show_known_precursors_only: bool = Field(
-        False,
-        description="Show only reactions with known precursors"
-    )
-    confine_competing_to_icsd: bool = Field(
-        False,
-        description="Confine competing reactions to those containing ICSD materials"
-    )
-    display_peroxides: bool = Field(
-        False,
-        description="Show reactions involving peroxide compounds"
-    )
-    add_pareto: bool = Field(
-        False,
-        description="Show the Pareto front on the reaction analysis diagram"
-    )
+from plotly.graph_objs import Figure
+from pydantic import BaseModel, Field, NonNegativeInt, create_model
 
 
-class RecommendRoutesForm(BaseModel):
-    mp_id: str = Field(
+class RecommendRoutesRequest(BaseModel):
+    target_entry_id: str = Field(
         ...,
-        description="enter mp-id or formula"
+        description="Materials Project ID of the compound to synthesize"
     )
-    temperature: float = Field(
-        298,
-        description="Temperature (in Kelvin) to consider in free energy adjustments for gases."
+    confine_to_icsd: bool = Field(
+        True,
+        description="Confines the precursur library to materials in MP sourced \
+        from the Inorganic Crystal Structures Database"
     )
-    pressure: Union[float, dict] = Field(
-        1,
-        description=(
-            "Gas pressures (in atm). If float, all gases are assumed to have the same constant"
-            " pressure. A dictionary in the form of {'O2': 0.21, 'CO2':, 0.05} can be provided to explicitly"
-            " specify partial pressures. If given None, a default pressure dictionary will be used pertaining to"
-            " open atmosphere conditions."
-        )
+    confine_to_stables: bool = Field(
+        True,
+        description="Confines the precursur library to thermodynamically stable materials in MP"
     )
-    max_component_precursors: int = 0
+    hull_distance: Optional[float] = Field(
+        None,
+        description="Distance to Hull (eV/atom). \
+        Defines the energy range of metastable materials for inclusion in precursor library."
+    )
+    simple_precursors: NonNegativeInt = Field(
+        0,
+        description="Lower order compounds are considered if greater than zero \
+        (e.g. 1 means a ternary target would consider up to binaries in precusors)"
+    )
+    explicit_includes: List[str] = Field(
+        [],
+        description="List of Materials Project IDs of additional materials to include in precursor list"
+    )
     add_elements: List[str] = Field(
         [],
         description=(
@@ -56,6 +40,90 @@ class RecommendRoutesForm(BaseModel):
             " material. Best example is 'C', which would allow carbonates to be added to the precursor library."
         )
     )
-    synthesis_bool_options: SynthesisBoolOptions = SynthesisBoolOptions()
+    exclude_compositions: List[str] = Field(
+        [],
+        description="Materials that have these exact formulas are excluded from the precursor library"
+    )
+    sigma: float = Field(
+        2 * 6.242 * 0.01,
+        description="surface energy scaling factory (eV/Ang^2) to be used in predictions. Defaults to equivalent \
+                2.0 J/m^2."
+    )
+    transport_constant: float = Field(
+        10,
+        description="Transport barrier. Diffusion barrier coefficient (max barrier)"
+    )
+    flexible_competition: NonNegativeInt = Field(
+        0,
+        description="This parameter can add resolution to the phase competition axis. \
+        For example, 0 includes only the competing phases that have the same number of elements as the target, \
+        whereas 1 would include phases that may also have one less element and so on. \
+        A good heuristic is 1 if more resolution is needed on x-axis."
+    )
+
+    temperature: float = Field(
+        1000,
+        description="Temperature (in Kelvin) to consider in free energy adjustments for gases."
+    )
+    pressure: Optional[Union[float, dict]] = Field(
+        1,
+        description=(
+            "Sets pressure (atm) of gas phases. Can specify a constant pressure, a custom dictionary, \
+            or None which will use the ambient partial pressures (see piro.data.DEFAULT_GAS_PRESSURES)"
+        )
+    )
+    allow_gas_release: bool = Field(
+        False,
+        description="Allow for gaseous reaction products. \
+        Reactions are balanced such that O2, CO2 etc. can be released alongside the target"
+    )
+    max_component_precursors: int = Field(
+        0,
+        description="Maximum number of components in precursors. Used to limit the reactants \
+        to simpler sub-chemistries of our target to obtain a refined precursor list. \
+        For example, setting this as 2 for a ternary target compound would limit precursors to \
+        binary compounds (additional element count ignored)"
+    )
+    show_fraction_known_precursors: bool = Field(
+        False,
+        description="Show the fraction of known precursors in reaction"
+    )
+    show_known_precursors_only: bool = Field(
+        False,
+        description="Show only reactions with known precursors"
+    )
+    confine_competing_to_icsd: bool = Field(
+        False,
+        description="ICSD-based Parasitic Phases Only. Confine competing reactions to those containing ICSD materials"
+    )
+    display_peroxides: bool = Field(
+        False,
+        description="Show reactions involving peroxides"
+    )
+    display_superoxides: bool = Field(
+        False,
+        description="Show reactions involving superperoxides"
+    )
+    add_pareto: bool = Field(
+        False,
+        description="Show the Pareto front on the reaction analysis diagram"
+    )
 
 
+PlotlyFigureResponse = create_model('PlotlyFigureResponse', **Figure().to_dict())
+
+
+class RecommendRoutesTaskStatus(str, Enum):
+    PENDING = 'pending'
+    INVALID = 'invalid'
+    STARTED = 'started'
+    FAILURE = 'failure'
+    SUCCESS = 'success'
+
+
+class RecommendRoutesTask(BaseModel):
+    task_id: Optional[str] = None
+    request: Optional[RecommendRoutesRequest] = None
+    status: RecommendRoutesTaskStatus = RecommendRoutesTaskStatus.INVALID
+    error_message: Optional[str] = None
+    result: Optional[PlotlyFigureResponse] = None

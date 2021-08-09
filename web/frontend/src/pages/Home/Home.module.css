@@ -1,18 +1,6 @@
-.App {
-    background-color: rgb(246, 246, 248);
-    min-height: 100%;
-    padding: 12px;
-}
-
-.AppHeader h1 {
-    color: #2c2c35;
-    font-size: 30px;
-}
-
 .AppLink {
     color: #61dafb;
 }
-
 .Form {
     border: solid 1px #c6c6d1;
     background-color: #ffffff;
@@ -25,9 +13,10 @@
     margin: 3px;
 }
 .FormGrid {
+    margin-top: 16px;
     display: grid;
-    grid-template-columns: 350px 1fr;
-    column-gap: 16px;
+    grid-template-columns: 375px 375px 375px;
+    column-gap: 24px;
 }
 .Checkboxes {
     padding-top: 12px;
@@ -54,4 +43,16 @@
 }
 .Multi {
     margin-bottom: 16px;
+}
+.PressureOptions {
+    margin-top: 16px;
+}
+.MoreInfo {
+    display: grid;
+    grid-template-columns: 350px 16px;
+    column-gap: 8px;
+}
+.Tooltip {
+    cursor: help;
+    font-size: 12px;
 }

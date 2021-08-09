@@ -39,6 +39,9 @@ def get_v(c: Composition, elts: Tuple[str]) -> np.array:
 
 
 def through_cache(_parents, target, type="epitaxy"):
+    if not os.path.exists(RXN_FILES):
+        os.mkdir(RXN_FILES)
+
     cache_path = os.path.join(RXN_FILES, "_" + type + "_cache.json")
     if os.path.isfile(cache_path):
         with open(os.path.join(RXN_FILES, "_" + type + "_cache.json"), "r") as f:
@@ -95,6 +98,14 @@ def similarity(_parents, target):
             StructureComposition(IonProperty(fast=True)),
         ]
     )
+
+    # HACK celery doesn't work with multiprocessing (used by matminer)
+    try:
+        from celery import current_task
+        if current_task:
+            featurizer.set_n_jobs(1)
+    except ImportError:
+        pass
 
     x_target = pd.DataFrame.from_records(
         [featurizer.featurize(target)], columns=featurizer.feature_labels()

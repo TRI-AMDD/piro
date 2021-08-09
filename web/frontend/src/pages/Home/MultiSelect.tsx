@@ -2,7 +2,7 @@ import CreatableSelect from 'react-select/creatable';
 import styles from './Home.module.css';
 
 interface Props {
-    placeholder: string;
+    placeholder?: string;
     label: string;
     setValues(value: any): void;
 }

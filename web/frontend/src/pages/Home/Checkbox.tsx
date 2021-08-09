@@ -6,11 +6,14 @@ import { Inputs } from './TypeProps';
 export interface CheckboxProps {
     label: string;
     name:
+        | 'confine_to_icsd'
+        | 'confine_to_stables'
         | 'allow_gas_release'
         | 'show_fraction_known_precursors'
         | 'show_known_precursors_only'
         | 'confine_competing_to_icsd'
         | 'display_peroxides'
+        | 'display_superoxides'
         | 'add_pareto';
     control: Control<Inputs>;
     defaultValue: boolean;
@@ -19,7 +22,7 @@ export interface CheckboxProps {
 const FormCheckbox: FC<CheckboxProps> = ({ name, control, label , defaultValue}) => (
     <div>
         <Controller
-            name={`synthesis_bool_options.${name}`}
+            name={`${name}`}
             control={control}
             defaultValue={defaultValue}
             render={({ field }) => (
