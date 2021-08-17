@@ -7,14 +7,14 @@ import os
 import json
 
 from pymatgen.core import Composition
-from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
+from piro.mprester import get_mprester
 from piro.reactions import generate_reactions
+from piro.settings import settings
 from piro.utils import epitaxy, similarity, through_cache
 from piro.mongodb import query_epitaxies, query_similarities
-from piro import RXN_FILES
 
 
 logger = logging.getLogger(__name__)
@@ -115,7 +115,7 @@ class SynthesisRoutes:
         self.reactions = {}
         if not entries:
             if not custom_target_entry:
-                with MPRester() as mpr:
+                with get_mprester() as mpr:
                     _e = mpr.get_entry_by_material_id(self.target_entry_id)
             else:
                 _e = custom_target_entry
@@ -139,7 +139,7 @@ class SynthesisRoutes:
             self.similarities = similarities if similarities else self.get_similarities()
 
     def get_mp_entries(self):
-        with MPRester() as mpr:
+        with get_mprester() as mpr:
             self.entries = mpr.get_entries_in_chemsys(
                 self.elts,
                 inc_structure="final",
@@ -525,7 +525,7 @@ class SynthesisRoutes:
 
     def check_if_known_precursors(self):
         with open(
-            os.path.join(RXN_FILES, "experimental_precursors_KononovaSciData.json"), "r"
+            os.path.join(settings.rxn_files, "experimental_precursors_KononovaSciData.json"), "r"
         ) as f:
             exp_precursors = set(json.load(f))
         exp_precursors = exp_precursors.union(set(self.explicit_includes))
@@ -594,7 +594,7 @@ class SynthesisRoutes:
 
     @staticmethod
     def get_material_id_from_formula(formula_str: str) -> str:
-        with MPRester() as mpr:
+        with get_mprester() as mpr:
             options = mpr.query(
                 {"pretty_formula": Composition(formula_str).reduced_formula},
                 ["material_id", "e_above_hull"]

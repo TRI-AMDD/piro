@@ -30,7 +30,7 @@ from sklearn.linear_model import LinearRegression
 from joblib import Parallel, delayed
 
 from piro.data import ST
-from piro import RXN_FILES
+from piro.settings import settings
 
 
 def get_v(c: Composition, elts: Tuple[str]) -> np.array:
@@ -39,12 +39,13 @@ def get_v(c: Composition, elts: Tuple[str]) -> np.array:
 
 
 def through_cache(_parents, target, type="epitaxy"):
-    if not os.path.exists(RXN_FILES):
-        os.mkdir(RXN_FILES)
 
-    cache_path = os.path.join(RXN_FILES, "_" + type + "_cache.json")
+    if not os.path.exists(settings.rxn_files):
+        os.mkdir(settings.rxn_files)
+
+    cache_path = os.path.join(settings.rxn_files, "_" + type + "_cache.json")
     if os.path.isfile(cache_path):
-        with open(os.path.join(RXN_FILES, "_" + type + "_cache.json"), "r") as f:
+        with open(cache_path, "r") as f:
             db = json.load(f)
     else:
         db = {}
@@ -65,7 +66,7 @@ def through_cache(_parents, target, type="epitaxy"):
             results.append(_res[indices_compt.index(ordered_pairs.index(i))])
             db[i] = _res[indices_compt.index(ordered_pairs.index(i))]
 
-    with open(os.path.join(RXN_FILES, "_" + type + "_cache.json"), "w") as f:
+    with open(cache_path, "w") as f:
         json.dump(db, f)
     return results
 
@@ -120,9 +121,9 @@ def similarity(_parents, target):
     x_target = x_target.reindex(sorted(x_target.columns), axis=1)
     x_parent = x_parent.reindex(sorted(x_parent.columns), axis=1)
 
-    with open(os.path.join(RXN_FILES, "scaler2.pickle"), "rb") as f:
+    with open(os.path.join(settings.rxn_files, "scaler2.pickle"), "rb") as f:
         scaler = pickle.load(f)
-    with open(os.path.join(RXN_FILES, "quantiles.pickle"), "rb") as f:
+    with open(os.path.join(settings.rxn_files, "quantiles.pickle"), "rb") as f:
         quantiles = pickle.load(f)
 
     X = scaler.transform(x_parent.append(x_target))

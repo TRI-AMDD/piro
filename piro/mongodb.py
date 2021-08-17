@@ -1,6 +1,6 @@
-from piro import MONGODB_URI
 from pymongo import MongoClient
 
+from piro.settings import settings
 
 _client = None
 
@@ -8,7 +8,7 @@ _client = None
 def _init_mongo_client():
     global _client
     if _client is None:
-        _client = MongoClient(MONGODB_URI)
+        _client = MongoClient(settings.mongodb_uri)
     return _client
 
 
