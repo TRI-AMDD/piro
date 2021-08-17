@@ -29,7 +29,11 @@ class RoutesTest(unittest.TestCase):
 
     def test_basic_route(self):
         # BaTiO3 example
-        route = SynthesisRoutes("mp-5020")
+        route = SynthesisRoutes(
+            "mp-5020",
+            epitaxies={k.replace('mp-5020', '').strip('_'): v for k, v in loadfn(TEST_FILES / "_epitaxy_cache.json").items()},
+            similarities={k.replace('mp-5020', '').strip('_'): v for k, v in loadfn(TEST_FILES / "_epitaxy_cache.json").items()}
+        )
         route.recommend_routes(temperature=298)
 
     def tearDown(self) -> None:
