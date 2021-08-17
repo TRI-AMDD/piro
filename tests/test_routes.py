@@ -32,6 +32,9 @@ class RoutesTest(unittest.TestCase):
         route = SynthesisRoutes("mp-5020")
         route.recommend_routes(temperature=298)
 
+    def tearDown(self) -> None:
+        self.monkeypatch.undo()
+
 
 def dump_tdata():
     """Quick helper function to dump data for future reference"""
