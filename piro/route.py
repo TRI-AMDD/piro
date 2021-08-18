@@ -7,14 +7,13 @@ import os
 import json
 
 from pymatgen.core import Composition
-from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
+from piro.mprester import get_mprester
 from piro.reactions import generate_reactions
-from piro.utils import epitaxy, similarity, through_cache
-from piro.mongodb import query_epitaxies, query_similarities
-from piro import RXN_FILES
+from piro.settings import settings
+from piro.utils import get_epitaxies, get_similarities
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +32,6 @@ class SynthesisRoutes:
         add_elements=None,
         temperature=298,
         pressure=1,
-        use_cache=True,
         exclude_compositions=None,
         entries=None,
         epitaxies=None,
@@ -41,8 +39,7 @@ class SynthesisRoutes:
         sigma=None,
         transport_constant=None,
         custom_target_entry=None,
-        flexible_competition=None,
-        use_cache_database=False
+        flexible_competition=None
     ):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
@@ -103,7 +100,6 @@ class SynthesisRoutes:
         self.add_elements = add_elements if add_elements else []
         self.entries = entries
         self.hull_distance = hull_distance
-        self.use_cache = use_cache
         self.confine_competing_to_icsd = False
         self.exclude_compositions = exclude_compositions
         self.custom_target_entry = custom_target_entry
@@ -115,7 +111,7 @@ class SynthesisRoutes:
         self.reactions = {}
         if not entries:
             if not custom_target_entry:
-                with MPRester() as mpr:
+                with get_mprester() as mpr:
                     _e = mpr.get_entry_by_material_id(self.target_entry_id)
             else:
                 _e = custom_target_entry
@@ -128,18 +124,15 @@ class SynthesisRoutes:
 
         self.get_precursor_library()
         print("Precursor library ready.")
-        if use_cache_database:
-            precursor_set = set([s.entry_id for s in self.precursor_library])
-            self.epitaxies = epitaxies if epitaxies else query_epitaxies(precursor_set, self.target_entry.entry_id)
-            self.similarities = (
-                similarities if similarities else query_similarities(precursor_set, self.target_entry_id)
-            )
-        else:
-            self.epitaxies = epitaxies if epitaxies else self.get_epitaxies()
-            self.similarities = similarities if similarities else self.get_similarities()
+        self.epitaxies = epitaxies if epitaxies else get_epitaxies(
+            self.precursor_library, self.target_entry
+        )
+        self.similarities = similarities if similarities else get_similarities(
+            self.precursor_library, self.target_entry
+        )
 
     def get_mp_entries(self):
-        with MPRester() as mpr:
+        with get_mprester() as mpr:
             self.entries = mpr.get_entries_in_chemsys(
                 self.elts,
                 inc_structure="final",
@@ -209,42 +202,6 @@ class SynthesisRoutes:
             len(precursor_library),
         )
         return self.precursor_library
-
-    def get_similarities(self):
-        if self.use_cache:
-            _similarities = through_cache(
-                [s.structure for s in self.precursor_library],
-                self.target_entry.structure,
-                type="similarity",
-            )
-        else:
-            _similarities = similarity(
-                [s.structure for s in self.precursor_library],
-                self.target_entry.structure,
-            )
-        self.similarities = dict(
-            zip([i.entry_id for i in self.precursor_library], _similarities)
-        )
-        print("Similarity matrix ready")
-        return self.similarities
-
-    def get_epitaxies(self):
-        if self.use_cache:
-            _epitaxies = through_cache(
-                [s.structure for s in self.precursor_library],
-                self.target_entry.structure,
-                type="epitaxy",
-            )
-        else:
-            _epitaxies = epitaxy(
-                [s.structure for s in self.precursor_library],
-                self.target_entry.structure,
-            )
-        self.epitaxies = dict(
-            zip([i.entry_id for i in self.precursor_library], _epitaxies)
-        )
-        print("Epitaxies ready")
-        return self.epitaxies
 
     @property
     def sigma(self):
@@ -525,7 +482,7 @@ class SynthesisRoutes:
 
     def check_if_known_precursors(self):
         with open(
-            os.path.join(RXN_FILES, "experimental_precursors_KononovaSciData.json"), "r"
+            os.path.join(settings.rxn_files, "experimental_precursors_KononovaSciData.json"), "r"
         ) as f:
             exp_precursors = set(json.load(f))
         exp_precursors = exp_precursors.union(set(self.explicit_includes))
@@ -594,7 +551,7 @@ class SynthesisRoutes:
 
     @staticmethod
     def get_material_id_from_formula(formula_str: str) -> str:
-        with MPRester() as mpr:
+        with get_mprester() as mpr:
             options = mpr.query(
                 {"pretty_formula": Composition(formula_str).reduced_formula},
                 ["material_id", "e_above_hull"]

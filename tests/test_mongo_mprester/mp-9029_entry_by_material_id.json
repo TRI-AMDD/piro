@@ -1,0 +1,62 @@
+{
+  "@module": "pymatgen.entries.computed_entries",
+  "@class": "ComputedEntry",
+  "energy": -95.07177656,
+  "composition": {
+    "Ca": 6.0,
+    "V": 2.0,
+    "N": 6.0
+  },
+  "entry_id": "mp-9029",
+  "correction": -2.166,
+  "energy_adjustments": [
+    {
+      "@module": "pymatgen.entries.computed_entries",
+      "@class": "CompositionEnergyAdjustment",
+      "@version": null,
+      "adj_per_atom": -0.361,
+      "n_atoms": 6.0,
+      "uncertainty_per_atom": 0.0093,
+      "name": "MP2020 anion correction (N)",
+      "cls": {
+        "@module": "pymatgen.entries.compatibility",
+        "@class": "MaterialsProject2020Compatibility",
+        "@version": null,
+        "compat_type": "Advanced",
+        "correct_peroxide": true,
+        "check_potcar_hash": false,
+        "config_file": null
+      },
+      "description": "Composition-based energy adjustment"
+    }
+  ],
+  "parameters": {
+    "run_type": "GGA",
+    "is_hubbard": false,
+    "pseudo_potential": {
+      "functional": "PBE",
+      "labels": [
+        "Ca_sv",
+        "V_pv",
+        "N"
+      ],
+      "pot_type": "paw"
+    },
+    "hubbards": {},
+    "potcar_symbols": [
+      "PBE Ca_sv",
+      "PBE V_pv",
+      "PBE N"
+    ],
+    "oxide_type": "None"
+  },
+  "data": {
+    "oxide_type": "None",
+    "oxidation_states": {
+      "Ca": 2.0,
+      "V": 3.0,
+      "N": -3.0
+    }
+  },
+  "@version": null
+}

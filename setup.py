@@ -18,7 +18,8 @@ setup(
     install_requires=["matminer==0.7.4",
                       "scikit-learn==0.24.2",
                       "plotly==5.1.0",
-                      "pymongo==3.12.0"
+                      "pymongo==3.12.0",
+                      "pydantic==1.8.2"
                       ],
     classifiers=[
           "Programming Language :: Python :: 3",

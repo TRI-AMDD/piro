@@ -4,7 +4,7 @@ Built using [FastAPI](https://fastapi.tiangolo.com)
 
 ## Environment variables
 
-See [settings code](app/settings.py) or [example dotenv file](.env-template) for environment variables that can be set.
+See [example dotenv file](.env-template) for environment variables that can be set.
 
 You can create a web/backend/.env file or export the environment variables in the shell.
 See the docker commands below for how to pass them to the docker CLI.
