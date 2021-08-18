@@ -124,8 +124,12 @@ class SynthesisRoutes:
 
         self.get_precursor_library()
         print("Precursor library ready.")
-        self.epitaxies = epitaxies if epitaxies else get_epitaxies(self.precursor_library, self.target_entry)
-        self.similarities = similarities if similarities else get_similarities(self.precursor_library, self.target_entry)
+        self.epitaxies = epitaxies if epitaxies else get_epitaxies(
+            self.precursor_library, self.target_entry
+        )
+        self.similarities = similarities if similarities else get_similarities(
+            self.precursor_library, self.target_entry
+        )
 
     def get_mp_entries(self):
         with get_mprester() as mpr:
