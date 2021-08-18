@@ -2,7 +2,7 @@ import os
 import unittest
 import warnings
 from pathlib import Path
-from pymatgen.ext.matproj import MPRester
+from pymatgen.ext.matproj import MPRester, MPRestError
 from pymatgen.core import SETTINGS
 from _pytest.monkeypatch import MonkeyPatch
 from monty.serialization import loadfn, dumpfn
@@ -14,12 +14,16 @@ TEST_FILES = Path(__file__).absolute().parent / "test_files"
 class RoutesTest(unittest.TestCase):
     def setUp(self):
         # Monkeypatch if MAPI key not detected
-        if not SETTINGS.get("PMG_MAPI_KEY"):
+        self.monkeypatch = MonkeyPatch()
+
+        try:
+            MPRester().get_entry_by_material_id('mp-5020')
+        except MPRestError:
             warnings.warn("Using mock MPRester response")
-            self.monkeypatch = MonkeyPatch()
 
             def get_entries_in_chemsys(*args, **kwargs):
                 return loadfn(TEST_FILES / "ba-o-ti.json")
+
             def get_entry_by_material_id(*args, **kwargs):
                 return loadfn(TEST_FILES / "ba-o-ti.json")[74]
             self.monkeypatch.setattr(
