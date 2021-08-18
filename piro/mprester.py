@@ -45,7 +45,6 @@ class MongoMPRester(MPRester):
         """
         Arguments are the same as superclass. See the superclass's docs for info.
 
-        TODO is this a correct assumption?
         Our mongo db only has 'material_id' so 'task_id' will just be copied over.
 
         :param criteria: converted to a mongo query for mongo find()
