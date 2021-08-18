@@ -10,7 +10,7 @@ def test_defaults():
 
     assert s.dict() == {
         'cache_type': CacheType.FILE_CACHE,
-        'mapi_key': None,
+        'mapi_key': '',
         'mongodb_uri': None,
         'rxn_files': s.rxn_files,  # TODO mock this
         'use_mapi_db': False

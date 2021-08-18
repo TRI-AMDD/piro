@@ -12,7 +12,7 @@ class CacheType(str, Enum):
 
 class Settings(BaseSettings):
     mongodb_uri: Optional[str] = None
-    mapi_key: Optional[str] = None
+    mapi_key: str = ''
     rxn_files: str = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
         'files'
