@@ -35,5 +35,8 @@ class Settings(BaseSettings):
                 raise ValueError('MONGODB_URI must be provided when using mapi DB.')
         return v
 
+    class Config:
+        allow_mutation = False
+
 
 settings = Settings()
