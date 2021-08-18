@@ -39,5 +39,4 @@ class Settings(BaseSettings):
         allow_mutation = False
 
 
-
 settings = Settings()
