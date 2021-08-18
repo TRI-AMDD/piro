@@ -1,11 +1,14 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import pandas as pd
 import os
 import pickle
 import numpy as np
 import json
-from functools import lru_cache
+from functools import lru_cache, wraps
+
+from pymatgen.entries.computed_entries import ComputedStructureEntry
+from pymongo import MongoClient
 from scipy.interpolate import interp1d
 from pymatgen.core.composition import Composition
 from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
@@ -30,7 +33,7 @@ from sklearn.linear_model import LinearRegression
 from joblib import Parallel, delayed
 
 from piro.data import ST
-from piro.settings import settings
+from piro.settings import settings, CacheType
 
 
 def get_v(c: Composition, elts: Tuple[str]) -> np.array:
@@ -38,12 +41,73 @@ def get_v(c: Composition, elts: Tuple[str]) -> np.array:
     return np.array([c_dict[el] for el in elts])
 
 
-def through_cache(_parents, target, type="epitaxy"):
+def get_epitaxies(precursor_library: List[ComputedStructureEntry], target: ComputedStructureEntry):
+    if settings.cache_type == CacheType.MONGO_CACHE:
+        precursor_set = set([s.entry_id for s in precursor_library])
+        epitaxies = {}
+        for e in mongo_results_generator(target, 'epitaxies'):
+            for material_id in e["material_ids"]:
+                if material_id in precursor_set:
+                    # If "min_epitaxy" is not in the cached entry, most likely the epitaxy calculation failed.
+                    # Assign the high value so they will get discounted.
+                    epitaxies[material_id] = float(e.get("min_epitaxy", 1000000.0))
+
+    else:
+        precursor_structures = [s.structure for s in precursor_library]
+        target_structure = target.structure
+        results = epitaxy(precursor_structures, target_structure)
+        epitaxies = dict(
+            zip([i.entry_id for i in precursor_library], results)
+        )
+        print("Epitaxies ready")
+
+    return epitaxies
+
+
+def get_similarities(precursor_library: List[ComputedStructureEntry], target: ComputedStructureEntry):
+    if settings.cache_type == CacheType.MONGO_CACHE:
+        precursor_set = set([s.entry_id for s in precursor_library])
+        similarities = {}
+        for s in mongo_results_generator(target, 'similarity'):
+            if "similarity" not in s.keys():
+                print(f"Missing 'similarity' at:\n {s}")
+                continue
+            for material_id in s["material_ids"]:
+                if material_id in precursor_set:
+                    similarities[material_id] = s["similarity"]
+
+    else:
+        precursor_structures = [s.structure for s in precursor_library]
+        target_structure = target.structure
+        results = similarity(precursor_structures, target_structure)
+        similarities = dict(zip([i.entry_id for i in precursor_library], results))
+        print("similarity matrix ready")
+
+    return similarities
+
+
+def mongo_results_generator(target: ComputedStructureEntry, collection_name: str):
+    with MongoClient(settings.mongodb_uri) as mongo_client:
+        for result in mongo_client.piro[collection_name].find({"material_ids": target.entry_id}):
+            yield result
+
+
+def through_cache_if_enabled(func):
+    @wraps(func)
+    def wrapper(_parents, target):
+        if settings.cache_type == CacheType.FILE_CACHE:
+            return through_cache(_parents, target, func)
+        else:
+            return func(_parents, target)
+    return wrapper
+
+
+def through_cache(_parents, target, func):
 
     if not os.path.exists(settings.rxn_files):
         os.mkdir(settings.rxn_files)
 
-    cache_path = os.path.join(settings.rxn_files, "_" + type + "_cache.json")
+    cache_path = os.path.join(settings.rxn_files, "_" + func.__name__ + "_cache.json")
     if os.path.isfile(cache_path):
         with open(cache_path, "r") as f:
             db = json.load(f)
@@ -52,10 +116,8 @@ def through_cache(_parents, target, type="epitaxy"):
     ordered_pairs = ["_".join(sorted([target.entry_id, i.entry_id])) for i in _parents]
     indices_compt = [i for i in range(len(ordered_pairs)) if ordered_pairs[i] not in db]
 
-    if type == "epitaxy" and indices_compt:
-        _res = epitaxy(np.array(_parents)[indices_compt].tolist(), target)
-    elif type == "similarity" and indices_compt:
-        _res = similarity(np.array(_parents)[indices_compt].tolist(), target)
+    if indices_compt:
+        _res = func(np.array(_parents)[indices_compt].tolist(), target)
     else:
         _res = []
     results = []
@@ -71,6 +133,7 @@ def through_cache(_parents, target, type="epitaxy"):
     return results
 
 
+@through_cache_if_enabled
 def epitaxy(_parents, target):
     def _func(s, target):
         sa = SubstrateAnalyzer(film_max_miller=2, substrate_max_miller=2)
@@ -85,6 +148,7 @@ def epitaxy(_parents, target):
     return Parallel(n_jobs=-1, verbose=1)(delayed(_func)(s, target) for s in _parents)
 
 
+@through_cache_if_enabled
 def similarity(_parents, target):
     featurizer = MultipleFeaturizer(
         [
