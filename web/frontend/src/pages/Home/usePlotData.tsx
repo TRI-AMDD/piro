@@ -12,7 +12,19 @@ export const useSubmitTask = () => {
     }));
 }
 
-export const usePlotData = (taskId: string) => {
+export const useNormalPlotData = () => {
+    return useMutation('submitRoute', (newRequest) => fetch('/api/recommend_routes', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newRequest)
+    }).then(function(response) {
+        return response.json();
+    }));
+}
+
+export const useTaskPlotData = (taskId: string) => {
     return useQuery(
         ["getPlotData", taskId],
         async () => {

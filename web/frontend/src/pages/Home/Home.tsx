@@ -1,15 +1,13 @@
 import Form from './Form';
 import SynthesisPlot from "./SynthesisPlot";
-import { useSubmitTask } from "./usePlotData";
+import { ApiModeProvider } from './apiModeContext';
 
 function Home() {
-    const mutation = useSubmitTask();
-
     return (
-        <>
-            <Form mutation={mutation} />
-            <SynthesisPlot mutation={mutation} />
-        </>
+        <ApiModeProvider>
+            <Form />
+            <SynthesisPlot />
+        </ApiModeProvider>
     );
 }
 

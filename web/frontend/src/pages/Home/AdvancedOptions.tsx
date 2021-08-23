@@ -1,5 +1,5 @@
 import { Control, UseFormRegister } from 'react-hook-form';
-import { Collapsible, Input } from '@toyota-research-institute/lakefront';
+import { Collapsible, Input, Toggle } from '@toyota-research-institute/lakefront';
 import styled from '@emotion/styled'
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
@@ -7,6 +7,7 @@ import { Inputs } from './TypeProps';
 import MultiSelect from './MultiSelect';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
+import { useApiMode } from './apiModeContext';
 
 interface Props {
     control: Control<Inputs>;
@@ -20,8 +21,14 @@ const StyledCollapsible = styled(Collapsible)`
   }
 `;
 
+const toggleOptions = [
+    { label: 'Task Route', value: 'task' },
+    { label: 'Normal Route', value: 'normal' }
+]
+
 export default function AdvancedOptions(props: Props) {
     const { control, register, setExcludeCompositions } = props;
+    const { apiMode, setApiMode } = useApiMode();
 
     return (
         <StyledCollapsible
@@ -29,6 +36,7 @@ export default function AdvancedOptions(props: Props) {
         >
             <div className={styles.FormGrid}>
                 <div>
+                    <Toggle options={toggleOptions} onChange={setApiMode} value={apiMode} />
                     <MoreInfo info={description.simple_precursors}>
                         <Input
                             type="number"

@@ -58,6 +58,11 @@
             "prettier --write"
         ]
     },
+    "eslintConfig": {
+        "extends": [
+            "react-app"
+        ]
+    },
     "devDependencies": {
         "@types/react-plotly.js": "^2.5.0",
         "@types/react-router-dom": "^5.1.7",

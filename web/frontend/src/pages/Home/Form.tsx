@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { UseMutationResult } from "react-query";
 import { Button, Input } from '@toyota-research-institute/lakefront';
 import ReactTooltip from 'react-tooltip';
 
@@ -14,6 +13,7 @@ import Pressure from './Pressure';
 import MoreInfo from './MoreInfo'
 import { description } from './description';
 import SingleSelect from "./SingleSelect";
+import { useApiMode } from "./apiModeContext";
 
 const addElementOptions = [
     { value: '', label: 'None' },
@@ -21,12 +21,8 @@ const addElementOptions = [
     { value: 'O', label: 'O' }
 ];
 
-interface Props {
-    mutation: UseMutationResult<any, unknown, void, unknown>;
-}
-
-export default function Form(props: Props) {
-    const { mutation } = props;
+export default function Form() {
+    const { mutation } = useApiMode();
     const [pressure, setPressure] = useState<any>(null);
     const [addElements, setAddElements] = useState<{ label: string; value: string; }>();
     const [explicitIncludes, setExplicitIncludes] = useState<{ label: string; value: string; }[]>([]);

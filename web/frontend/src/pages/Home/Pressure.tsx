@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, memo } from "react";
 import { useForm } from 'react-hook-form';
 import { Input } from '@toyota-research-institute/lakefront';
-import Select from 'react-select';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
 import styles from './Home.module.css';
