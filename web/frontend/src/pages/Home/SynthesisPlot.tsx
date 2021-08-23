@@ -1,15 +1,12 @@
-import { UseMutationResult } from "react-query";
 import { Loading } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import ErrorMessage from "./ErrorMessage";
 import PlotResults from './PlotResults';
+import { useApiMode } from "./apiModeContext";
+import TaskPlot from "./TaskPlot";
 
-interface Props {
-    mutation: UseMutationResult<any, unknown, void, unknown>;
-}
-
-function SynthesisPlot(props: Props) {
-    const { mutation } = props;
+function SynthesisPlot() {
+    const { mutation, apiMode } = useApiMode();
     const { data, error, isLoading } = mutation;
 
     if (isLoading) return (
@@ -37,11 +34,17 @@ function SynthesisPlot(props: Props) {
 
     if (data.error_message) {
         return <ErrorMessage error={data.error_message} />;
-    }    
-    
+    }
+
+    if (apiMode === 'task') {
+        return (
+            <TaskPlot key={data.task_id} taskId={data.task_id} />
+        );
+    }
+
     return (
-        <PlotResults key={data.task_id} taskId={data.task_id} />
-    );    
+        <PlotResults result={data} />
+    );
 }
 
 export default SynthesisPlot;

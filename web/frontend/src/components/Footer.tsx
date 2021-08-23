@@ -8,7 +8,7 @@ export default function Footer() {
         <footer className={styles.Footer}>
             <p>© Copyright Toyota Research Institute {year}</p>
             <p><Link to="/about">About</Link></p>
-            <p><a href="https://www.tri.global/privacy-policy/" target="_blank">Privacy Policy</a></p>
+            <p><a href="https://www.tri.global/privacy-policy/" target="_blank" rel="noreferrer">Privacy Policy</a></p>
         </footer>
     );
 }
