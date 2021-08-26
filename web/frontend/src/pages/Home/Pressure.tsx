@@ -89,7 +89,7 @@ export function Pressure(props: Props) {
                     <Input
                         type="number"
                         step="any"
-                        label="Constant Pressue"
+                        label="Constant Pressure"
                         defaultValue={1}
                         {...register('constant', { valueAsNumber: true })}
                     />
