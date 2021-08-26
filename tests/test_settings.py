@@ -1,7 +1,5 @@
-from pathlib import Path
-
+import os
 import pytest
-
 from piro.settings import Settings, CacheType
 
 
@@ -11,8 +9,10 @@ def no_env_variables_for_settings(monkeypatch):
     monkeypatch.delenv("CACHE_TYPE", raising=False)
     monkeypatch.delenv("MAPI_KEY", raising=False)
     monkeypatch.delenv("MONGODB_URI", raising=False)
-    monkeypatch.delenv("RXN_FILES", raising=False)
     monkeypatch.delenv("USE_MAPI_DB", raising=False)
+
+    # hard to mock/test the default because windows/unix have different case sensitivity
+    monkeypatch.setenv("RXN_FILES", 'rxn_files_path')
 
 
 def test_defaults(no_env_variables_for_settings):
@@ -22,7 +22,7 @@ def test_defaults(no_env_variables_for_settings):
         'cache_type': CacheType.FILE_CACHE,
         'mapi_key': '',
         'mongodb_uri': None,
-        'rxn_files': str(Path(__file__).parent.parent / 'piro' / 'files'),
+        'rxn_files': 'rxn_files_path',
         'use_mapi_db': False
     }
 
