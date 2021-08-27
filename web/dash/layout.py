@@ -172,13 +172,17 @@ def layout_func(app):
             router = SynthesisRoutes(
                 value,
                 add_elements=[add_element] if add_element else None,
-                use_cache_database=False
+                allow_gas_release=synthesis_bool_options['allow_gas_release'],
+                confine_competing_to_icsd=synthesis_bool_options['confine_competing_to_icsd'],
             )
             fig = router.recommend_routes(
                 temperature=temperature,
                 pressure=pressure,
                 max_component_precursors=max_component_precursors,
-                **synthesis_bool_options
+                show_fraction_known_precursors=synthesis_bool_options['show_fraction_known_precursors'],
+                show_known_precursors_only=synthesis_bool_options['show_known_precursors_only'],
+                display_peroxides=synthesis_bool_options['display_peroxides'],
+                add_pareto=synthesis_bool_options['add_pareto'],
             )
             return dcc.Graph(figure=fig)
         except Exception as e:
