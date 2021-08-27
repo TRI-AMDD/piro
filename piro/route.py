@@ -11,7 +11,7 @@ from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.mprester import get_mprester
-from piro.reactions import generate_reactions
+from piro.reactions import get_reactions
 from piro.settings import settings
 from piro.utils import get_epitaxies, get_similarities
 
@@ -28,18 +28,17 @@ class SynthesisRoutes:
         hull_distance=None,
         simple_precursors=False,
         explicit_includes=None,
+        exclude_compositions=None,
         allow_gas_release=False,
         add_elements=None,
-        temperature=298,
-        pressure=1,
-        exclude_compositions=None,
+        flexible_competition=0,
         entries=None,
         epitaxies=None,
         similarities=None,
-        sigma=None,
-        transport_constant=None,
+        sigma=2 * 6.242 * 0.01,
+        transport_constant=10.0,
         custom_target_entry=None,
-        flexible_competition=None
+        confine_competing_to_icsd=False
     ):
         """
         Synthesis reaction route recommendations, derived semi-empirically using the Classical Nucleation Theory
@@ -64,16 +63,10 @@ class SynthesisRoutes:
                 precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
             add_elements List(str): Add elements to the chemical space of libraries that doesn't exist in the target
                 material. Best example is 'C', which would allow carbonates to be added to the precursor library.
-            temperature (float): Temperature (in Kelvin) to consider in free energy adjustments for gases.
-            pressure (dict or float): Gas pressures (in atm). If float, all gases are assumed to have the same constant
-                pressure. A dictionary in the form of {'O2': 0.21, 'CO2':, 0.05} can be provided to explicitly
-                specify partial pressures. If given None, a default pressure dictionary will be used pertaining to
-                open atmosphere conditions. Defaults to 1 atm.
             flexible_competition (int): This parameter specifies the depth of the competing phase search, and can help
                 add more resolution to the phase competition axis of the recommendation plot.
                 Defaults to 0, which would include only competing phases that have the same number of elements as the
                 target. A reliable heuristic is setting it as 1, if x-axis of the plot is not informative.
-            use_cache (bool): if True, caches the epitaxy and similarity information for future reuse.
             entries (list): List of Materials Project ComputedEntry objects, as can be obtained via the API. If provided
                 these entries will be used while forming the precursor library. If not provided, MP database will be
                 queried via their Rest API to get the most up-to-date entries. Defaults to None.
@@ -86,7 +79,9 @@ class SynthesisRoutes:
             transport_constant (float): diffusion barrier coefficient (max barrier). Defaults to 10.0 eV.
             custom_target_entry (MP entry): custom ComputedEntry pymatgen object. It can be used to plan synthesis
                 of a user-supplied compound that does not have a corresponding MP entry.
-            use_cache_database (bool): if True, use the cached epitaxy and similarity from the database.
+            allow_gas_release (bool): Many reactions require the release of gases like CO2, O2, etc. depending on the
+                precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
+            confine_competing_to_icsd (bool): Use ICSD-sourced entries to as competing compounds. Defaults to False.
         """
 
         self.target_entry_id = target_entry_id
@@ -95,17 +90,17 @@ class SynthesisRoutes:
         self.simple_precursors = simple_precursors
         self.explicit_includes = explicit_includes if explicit_includes else []
         self.allow_gas_release = allow_gas_release
-        self.temperature = temperature
-        self.pressure = pressure if pressure else DEFAULT_GAS_PRESSURES
+        self.temperature = None
+        self.pressure = None
         self.add_elements = add_elements if add_elements else []
         self.entries = entries
         self.hull_distance = hull_distance
-        self.confine_competing_to_icsd = False
+        self.confine_competing_to_icsd = confine_competing_to_icsd
         self.exclude_compositions = exclude_compositions
         self.custom_target_entry = custom_target_entry
-        self.flexible_competition = flexible_competition if flexible_competition else 0
-        self._sigma = sigma if sigma else 2 * 6.242 * 0.01
-        self._transport_constant = transport_constant if transport_constant else 10.0
+        self.flexible_competition = flexible_competition if flexible_competition is not None else 0
+        self._sigma = sigma if sigma is not None else 2 * 6.242 * 0.01
+        self._transport_constant = transport_constant if transport_constant is not None else 10.0
 
         self.plot_data = None
         self.reactions = {}
@@ -130,6 +125,20 @@ class SynthesisRoutes:
         self.similarities = similarities if similarities else get_similarities(
             self.precursor_library, self.target_entry
         )
+
+        self._reactions_objs = None
+
+    @property
+    def reactions_objs(self):
+        if not self._reactions_objs:
+            self._reactions_objs = get_reactions(
+                self.target_entry,
+                self.elts,
+                self.precursor_library,
+                self.allow_gas_release
+            )
+            logger.info(f"Total # of balanced reactions obtained: {len(self.reactions)}")
+        return self._reactions_objs
 
     def get_mp_entries(self):
         with get_mprester() as mpr:
@@ -211,30 +220,24 @@ class SynthesisRoutes:
     def transport_constant(self):
         return self._transport_constant
 
-    def get_reactions(self):
-
-        reactions = {}
-        for reaction_result in generate_reactions(
-                self.target_entry,
-                self.elts,
-                self.precursor_library,
-                self.allow_gas_release
-        ):
-            if reaction_result.label in reactions:
+    def get_reactions_with_energies(self):
+        reactions_dict = {}
+        for r in self.reactions_objs:
+            if r.label in reactions_dict:
                 continue
             else:
-                reaction_result.update_reaction_energy(
+                r.update_reaction_energy(
                     self.temperature,
                     self.pressure
                 )
-                reaction_result.update_nucleation_barrier(
+                r.update_nucleation_barrier(
                     self.epitaxies,
                     self.similarities,
                     self.sigma,
                     self.transport_constant
                 )
-                reaction_result.update_reaction_summary()
-                reaction_result.update_competing_phases(
+                r.update_reaction_summary()
+                r.update_competing_phases(
                     self.entries,
                     self.confine_competing_to_icsd,
                     self.flexible_competition,
@@ -242,20 +245,17 @@ class SynthesisRoutes:
                     self.temperature,
                     self.pressure
                 )
-                reactions[reaction_result.label] = reaction_result.as_dict()
+                reactions_dict[r.label] = r.as_dict()
 
-        logger.info(f"Total # of balanced reactions obtained: {len(reactions)}")
-        return reactions
+        return reactions_dict
 
     def recommend_routes(
         self,
-        temperature=298,
-        pressure=None,
-        allow_gas_release=False,
+        temperature=298.0,
+        pressure=DEFAULT_GAS_PRESSURES,
         max_component_precursors=0,
         show_fraction_known_precursors=True,
         show_known_precursors_only=False,
-        confine_competing_to_icsd=True,
         display_peroxides=True,
         display_superoxides=True,
         w=None,
@@ -273,10 +273,8 @@ class SynthesisRoutes:
             temperature (float): Temperature (in Kelvin) to consider in free energy adjustments for gases.
             pressure (dict or float): Gas pressures (in atm). If float, all gases are assumed to have the same constant
                 pressure. A dictionary in the form of {'O2': 0.21, 'CO2':, 0.05} can be provided to explicitly
-                specify partial pressures. If given None, a default pressure dictionary will be used pertaining to
-                open atmosphere conditions. Defaults to 1 atm.
-            allow_gas_release (bool): Many reactions require the release of gases like CO2, O2, etc. depending on the
-                precursors, which requires explicitly considering them in balancing the reactions. Defaults to False.
+                specify partial pressures. Defaults to a default pressure dictionary pertaining to
+                open atmosphere conditions.
             max_component_precursors (int): Used to limit the reactants to simpler sub-chemistries of our target to
                 obtain a more refined candidate precursor list. If set, compounds with more unique elements than this
                 limit are ignored as precursors. For example, for a ternary target compound, max_component_precursors=2
@@ -287,7 +285,6 @@ class SynthesisRoutes:
                 as solid-state precursors. Defaults to False.
             show_fraction_known_precursors (bool): can color-code the reactions based on what fraction of the precursors
                 are in the above text-mined dataset. Defaults to True.
-            confine_competing_to_icsd (bool): Use ICSD-sourced entries to as competing compounds. Defaults to False.
             display_peroxides (bool): whether reactions involving peroxides are included in the plot. Defaults to True.
             display_superoxides (bool): whether reactions involving superoxides are included in the plot.
                 Defaults to True.
@@ -298,21 +295,12 @@ class SynthesisRoutes:
             add_pareto (bool): adds the Pareto front line to the plot.
             custom_text (str): text appended to the figure title.
         """
-        if not pressure:
-            pressure = self.pressure
-        if not (
-            self.temperature == temperature
-            and self.pressure == pressure
-            and self.allow_gas_release == allow_gas_release
-            and self.confine_competing_to_icsd == confine_competing_to_icsd
-            and self.reactions
-        ):
-            self.temperature = temperature
-            self.pressure = pressure if pressure else self.pressure
-            self.allow_gas_release = allow_gas_release
-            self.confine_competing_to_icsd = confine_competing_to_icsd
-            self.reactions = self.get_reactions()
-            self.check_if_known_precursors()
+        if not (self.pressure == pressure and self.temperature == temperature):
+            self.temperature = temperature if temperature is not None else 298.0
+            self.pressure = pressure if pressure is not None else DEFAULT_GAS_PRESSURES
+            self.reactions = self.get_reactions_with_energies()
+
+        self.check_if_known_precursors()
 
         self.plot_data = pd.DataFrame.from_dict(self.reactions, orient="index")[
             [

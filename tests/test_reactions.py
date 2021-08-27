@@ -1,10 +1,11 @@
 from collections import defaultdict
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 from numpy import nan, array
 from pandas._testing import assert_frame_equal
 from pymatgen.entries.computed_entries import ComputedStructureEntry
+from piro import reactions
 
 import pandas as pd
 
@@ -1725,7 +1726,8 @@ EXPECTED_PLOT_DATA = [
 def mp9029_router():
     router = SynthesisRoutes(
         'mp-9029',
-        pressure=0.001,
+        allow_gas_release=False,
+        confine_competing_to_icsd=False,
 
         # avoids cache and calculations
         epitaxies=EPITAXIES,
@@ -1745,11 +1747,10 @@ class TestGetReactions:
         # mimics the jupyter notebook
         mp9029_router.recommend_routes(
             temperature=1600,
-            allow_gas_release=False,
+            pressure=0.001,
             max_component_precursors=2,
             show_fraction_known_precursors=False,
             show_known_precursors_only=False,
-            confine_competing_to_icsd=False,
             display_peroxides=True,
             custom_text=' - 1600K, 10<sup>-3</sup> atm, standard reactants',
             w=640, h=480,
@@ -1777,20 +1778,25 @@ class TestGetReactions:
         )
 
     def test_recommend_routes_does_not_recompute_with_same_parameters(self, mp9029_router, monkeypatch):
-        get_reactions_mock = Mock()
-
         mp9029_router.recommend_routes(temperature=1600, pressure=0.001)
 
-        monkeypatch.setattr(mp9029_router, 'get_reactions', get_reactions_mock)
-        mp9029_router.recommend_routes(temperature=1600, pressure=0.001)
+        with patch(f'{SynthesisRoutes.__module__}.get_reactions') as get_reactions_mock:
+            get_reactions_energies_mock = Mock()
+            monkeypatch.setattr(mp9029_router, 'get_reactions_with_energies', get_reactions_energies_mock)
 
-        assert get_reactions_mock.call_count == 0
+            mp9029_router.recommend_routes(temperature=1600, pressure=0.001)
 
-    def test_recommend_routes_does_recompute_with_different_parameters(self, mp9029_router, monkeypatch):
+            assert get_reactions_mock.call_count == 0
+            assert get_reactions_energies_mock.call_count == 0
+
+    def test_recommend_routes_recomputes_energies_but_not_reactions(self, mp9029_router, monkeypatch):
         mp9029_router.recommend_routes(temperature=1600, pressure=0.001)
         reactions_energies1 = {k: {'energy': v['energy']} for k, v in mp9029_router.reactions.items()}
 
-        mp9029_router.recommend_routes(temperature=1600, pressure=1)
-        reactions_energies2 = {k: {'energy': v['energy']} for k, v in mp9029_router.reactions.items()}
+        with patch(f'{SynthesisRoutes.__module__}.get_reactions') as get_reactions_mock:
 
-        assert reactions_energies1 != reactions_energies2
+            mp9029_router.recommend_routes(temperature=1600, pressure=1)
+            reactions_energies2 = {k: {'energy': v['energy']} for k, v in mp9029_router.reactions.items()}
+
+            assert get_reactions_mock.call_count == 0
+            assert reactions_energies1 != reactions_energies2

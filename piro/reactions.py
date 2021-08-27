@@ -383,7 +383,7 @@ class Reaction:
         return self.n_competing
 
 
-def generate_reactions(
+def get_reactions(
     target_entry: ComputedStructureEntry,
     elements: List[str],
     precursor_library: List[ComputedStructureEntry],
@@ -394,6 +394,8 @@ def generate_reactions(
     cache_common_calculations(target_entry, tuple(elements), precursor_library, v_elements_key)
     balanced_reaction_by_reduced_formulas = dict()
     skipped = set()
+
+    reactions = []
 
     for sorted_precursors in tqdm(
             itertools.combinations(sorted(precursor_library, key=lambda p: p.data['reduced_formula']), len(elements)),
@@ -420,8 +422,9 @@ def generate_reactions(
 
         balanced_reaction = balanced_reaction_by_reduced_formulas[reduced_formulas]
         reaction = Reaction(sorted_precursors, balanced_reaction)
+        reactions.append(reaction)
 
-        yield reaction
+    return reactions
 
 
 def cache_common_calculations(
