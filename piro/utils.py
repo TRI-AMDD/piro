@@ -36,9 +36,8 @@ from piro.data import ST
 from piro.settings import settings, CacheType
 
 
-def get_v(c: Composition, elts: Tuple[str]) -> np.array:
-    c_dict = c.as_dict()
-    return np.array([c_dict[el] for el in elts])
+def get_v(composition_as_dict: dict, elts: Tuple[str]) -> np.array:
+    return np.array([composition_as_dict[el] for el in elts])
 
 
 def get_epitaxies(precursor_library: List[ComputedStructureEntry], target: ComputedStructureEntry):
