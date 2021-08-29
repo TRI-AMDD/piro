@@ -1,5 +1,5 @@
 from piro.route import SynthesisRoutes
-from app.models import RecommendRoutesRequest
+from .models import RecommendRoutesRequest
 import inspect
 
 
