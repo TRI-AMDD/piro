@@ -79,7 +79,7 @@ pip install -e .
 # set environment variables if not already done previously 
 # export MAPI_KEY={key}
 
-PYTHONPATH=web/backend python web/backend/app/main.py
+python -m web.backend.app.main
 ```
 
 ### Run the celery worker
@@ -91,12 +91,12 @@ docker run -d -p 6379:6379 redis
 
 #### Run the worker
 ```
-PYTHONPATH=web/backend celery -A app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 worker -l info -c 4 -Ofair --without-gossip --without-mingle
+celery -A web.backend.app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 worker -l info -c 4 -Ofair --without-gossip --without-mingle
 ```
 
 #### (optional) Run flower celery monitoring
 ```
-PYTHONPATH=web/backend celery -A app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 flower 
+celery -A web.backend.app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 flower 
 ```
 
 ### Use the web app

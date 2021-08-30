@@ -1,8 +1,8 @@
 import fastapi
 
-from app.models import RecommendRoutesRequest, PlotlyFigureResponse, RecommendRoutesTask
-from app.services import recommend_routes_service
-from app.tasks import recommend_routes_task_start, recommend_routes_task_result
+from .models import RecommendRoutesRequest, PlotlyFigureResponse, RecommendRoutesTask
+from .services import recommend_routes_service
+from .tasks import recommend_routes_task_start, recommend_routes_task_result
 
 router = fastapi.APIRouter()
 

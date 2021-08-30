@@ -1,9 +1,9 @@
 import uvicorn
 import fastapi
 
-from app import api
-from app.settings import Settings
-from app.index import configure_index
+from . import api
+from .settings import Settings
+from .index import configure_index
 
 app = fastapi.FastAPI(docs_url="/api/docs", openapi_url="/api")
 app.include_router(api.router)
