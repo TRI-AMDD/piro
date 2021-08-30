@@ -1,5 +1,6 @@
 import itertools
 from dataclasses import dataclass
+from functools import lru_cache
 
 import scipy
 from pymatgen.core import Composition
@@ -169,7 +170,7 @@ class Reaction:
                 formation_energy_per_atom_list.append(
                     H.get(c, 0.0)
                     - get_ST(c, temperature)
-                    + 8.6173324e-5 * temperature * np.log(pp) / Composition(c).num_atoms
+                    + 8.6173324e-5 * temperature * np.log(pp) / num_atoms_for_reduced_formula(c)
                 )
                 enthalpy_list.append(H.get(c, 0.0))
             else:
@@ -284,7 +285,7 @@ class Reaction:
                 elts_precs.add(k)
         sorted_elts_precs = sorted(str(s) for s in elts_precs)
         c = [
-            get_v(e.composition.fractional_composition, tuple(sorted_elts_precs))
+            get_v(e.composition.fractional_composition.as_dict(), tuple(sorted_elts_precs))
             for e in self.precursors
         ]
 
@@ -321,17 +322,22 @@ class Reaction:
                 # print(entry.composition)
                 continue
 
+            if 'fractional_composition_dict' not in competing_target_entry.data:
+                competing_target_entry.data['fractional_composition_dict'] = \
+                    competing_target_entry.composition.fractional_composition.as_dict()
+
             target_c = get_v(
-                competing_target_entry.composition.fractional_composition,
+                competing_target_entry.data['fractional_composition_dict'],
                 tuple(sorted_elts_precs),
             )
 
             # trying to solve for compound fractions.
+            np_vstack_c__t = np.vstack(c).T
             try:
-                coeffs = np.linalg.solve(np.vstack(c).T, target_c)
+                coeffs = np.linalg.solve(np_vstack_c__t, target_c)
             except:
                 try:
-                    x = scipy.sparse.linalg.lsqr(np.vstack(c).T, target_c)
+                    x = scipy.sparse.linalg.lsqr(np_vstack_c__t, target_c)
                     coeffs = x[0]
                     if x[1] != 1:
                         continue
@@ -341,8 +347,9 @@ class Reaction:
                         competing_target_entry.composition.reduced_formula,
                         precursor_formulas,
                     )
-                    print(np.vstack(c).T, target_c)
+                    print(np_vstack_c__t, target_c)
                     continue
+
             if np.any(coeffs < 0.0):
                 if not allow_gas_release:
                     continue
@@ -357,7 +364,7 @@ class Reaction:
                     coeffs = np.delete(coeffs, i)
 
             try:
-                effective_rank = scipy.linalg.lstsq(np.vstack(c).T, target_c)[2]
+                effective_rank = scipy.linalg.lstsq(np_vstack_c__t, target_c)[2]
                 if effective_rank < len(coeffs):
                     # print(precursor_formulas, coeffs)
                     # Removes under-determined reactions.
@@ -433,12 +440,17 @@ def cache_common_calculations(
     precursor_library: List[ComputedStructureEntry],
     v_elements_key: str
 ):
-    target_entry.data[v_elements_key] = get_v(target_entry.composition.fractional_composition, elements)
+    target_entry.data[v_elements_key] = get_v(target_entry.composition.fractional_composition.as_dict(), elements)
     target_entry.data['composition_keys'] = set(target_entry.composition.as_dict().keys())
     target_entry.data['reduced_composition_sum'] = sum(target_entry.composition.reduced_composition.as_dict().values())
 
     for p in precursor_library:
-        p.data[v_elements_key] = get_v(p.composition.fractional_composition, elements)
+        p.data[v_elements_key] = get_v(p.composition.fractional_composition.as_dict(), elements)
         p.data['reduced_formula'] = p.composition.reduced_formula
         p.data['composition_keys'] = set(p.composition.as_dict().keys())
         p.data['reduced_composition_sum'] = sum(p.composition.reduced_composition.as_dict().values())
+
+
+@lru_cache()
+def num_atoms_for_reduced_formula(c):
+    return Composition(c).num_atoms
