@@ -8,6 +8,7 @@ services:
       - 8080:80
     depends_on:
       - backend
+      - flower
 
   redis:
     image: redis
@@ -31,6 +32,7 @@ services:
       context: ../
       dockerfile: web/backend/api_only.dockerfile
     command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 flower
+    command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 flower --url_prefix=flower
     env_file:
       - backend/.env
     ports:
