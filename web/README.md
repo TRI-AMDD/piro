@@ -21,11 +21,11 @@ docker-compose up
 
 ### Use the web app
 
-Should be available at <http://localhost:8080>
+Should be available at <http://localhost>
 
-Read the API docs at <http://localhost:8080/api/docs>
+Read the API docs at <http://localhost/api/docs>
 
-Monitor celery workers with flower <http://localhost:5555/>
+Monitor celery workers with flower <http://localhost/flower/dashboard>
 
 
 ## Run as single Docker Container on locally on one machine
