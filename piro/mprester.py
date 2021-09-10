@@ -27,7 +27,7 @@ class MongoMPRester(MPRester):
 
         :param mongodb_uri: the uri has this format: mongodb://{username}:{password}@{host}:{port}/{database}
         """
-        super().__init__()
+        super().__init__(notify_db_version=False)
         self.client = MongoClient(mongodb_uri)
 
     def __exit__(self, exc_type, exc_val, exc_tb):

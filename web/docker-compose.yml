@@ -5,9 +5,10 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - 8080:80
+      - 80:80
     depends_on:
       - backend
+      - flower
 
   redis:
     image: redis
@@ -18,7 +19,7 @@ services:
     build:
       context: ../
       dockerfile: web/backend/api_only.dockerfile
-    command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 worker -l info -c 4 -Ofair --without-gossip --without-mingle
+    command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 worker -l info --autoscale=10,4 -Ofair --without-gossip --without-mingle
     env_file:
       - backend/.env
     depends_on:
@@ -30,7 +31,7 @@ services:
     build:
       context: ../
       dockerfile: web/backend/api_only.dockerfile
-    command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 flower
+    command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 flower --url_prefix=flower
     env_file:
       - backend/.env
     ports:
