@@ -1,0 +1,341 @@
+{
+  "Ca3VN3": {
+    "target_entry_id": "mp-9029",
+    "temperature": 1600.0,
+    "pressure": 0.001,
+    "max_component_precursors": 2,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "display_peroxides": true,
+    "add_pareto": true
+  },
+  "BaTiO3": {
+    "target_entry_id": "mp-5986",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-3943",
+      "mp-1203",
+      "mp-2657",
+      "mp-4559"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "exclude_compositions": [
+      "BaTiO3"
+    ],
+    "temperature": 1400.0,
+    "allow_gas_release": true,
+    "max_component_precursors": 2,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": true,
+    "add_pareto": true
+  },
+  "RuSr2GdCu2O8": {
+    "target_entry_id": "mp-1104173",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-1079192"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "exclude_compositions": [
+      "SrCu",
+      "SrCu5",
+      "GdCu",
+      "GdCu2",
+      "GdCu5",
+      "GdRu2",
+      "RuO4"
+    ],
+    "flexible_competition": 1,
+    "temperature": 900.0,
+    "pressure": 10.0,
+    "allow_gas_release": true,
+    "max_component_precursors": 4,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "Ba2Ti9O20": {
+    "target_entry_id": "mp-560731",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-2657",
+      "mp-27790",
+      "mp-3175",
+      "mp-5986"
+    ],
+    "temperature": 1300.0,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_known_precursors_only": true,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false
+  },
+  "Ba2YTaO6": {
+    "target_entry_id": "mp-6613",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-10390"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "exclude_compositions": [
+      "Y4C5",
+      "Y3C4",
+      "Y2C",
+      "Y4C7",
+      "TaC",
+      "Ta2C"
+    ],
+    "flexible_competition": 1,
+    "temperature": 1600.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "BaV10O15": {
+    "target_entry_id": "mp-19458",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-19184",
+      "mp-19365",
+      "mp-18937"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "flexible_competition": 1,
+    "temperature": 1800.0,
+    "pressure": 0.1,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "Ca2CrSbO6": {
+    "target_entry_id": "mp-1189906",
+    "temperature": 1400.0,
+    "pressure": null,
+    "max_component_precursors": 2,
+    "show_fraction_known_precursors": false,
+    "display_peroxides": true,
+    "add_pareto": true
+  },
+  "CaSnSiO5": {
+    "target_entry_id": "mp-6809",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-4438",
+      "mp-7000",
+      "mp-6945"
+    ],
+    "flexible_competition": 0,
+    "temperature": 1600.0,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "K2Mo9S11": {
+    "target_entry_id": "mp-29784",
+    "confine_to_icsd": true,
+    "confine_to_stables": false,
+    "hull_distance": 0.0,
+    "flexible_competition": 1,
+    "temperature": 1500.0,
+    "pressure": 1e-08,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "K2V3P4O17": {
+    "target_entry_id": "mp-29784",
+    "explicit_includes": [
+      "mp-557105",
+      "mp-21579",
+      "mp-19094"
+    ],
+    "temperature": 900.0,
+    "pressure": null,
+    "allow_gas_release": false,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": true,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "K3Y_VO4_2": {
+    "target_entry_id": "mp-1105034",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "flexible_competition": 1,
+    "temperature": 1300.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": true,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": true,
+    "display_superoxides": true,
+    "add_pareto": true
+  },
+  "LiNa5Mo9O30": {
+    "target_entry_id": "mp-1195001",
+    "explicit_includes": [
+      "mp-18050"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "temperature": 1100.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": true,
+    "add_pareto": true
+  },
+  "RbFe_MoO4_2": {
+    "target_entry_id": "mp-18868",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-1193851",
+      "mp-704851",
+      "mp-1394"
+    ],
+    "flexible_competition": 1,
+    "temperature": 900.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "Sr2CoMoO6": {
+    "target_entry_id": "mp-510546",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-17289",
+      "mp-18748"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "flexible_competition": 1,
+    "temperature": 1400.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": true,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "Sr2FeO3F": {
+    "target_entry_id": "mp-19293",
+    "explicit_includes": [
+      "mp-19770"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "temperature": 1500.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 2,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "add_pareto": true
+  },
+  "Sr2NiWO6": {
+    "target_entry_id": "mp-20794",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "add_elements": [
+      "C"
+    ],
+    "flexible_competition": 1,
+    "temperature": 1700.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  },
+  "SrNbO3": {
+    "target_entry_id": "mp-10339",
+    "confine_to_icsd": true,
+    "confine_to_stables": true,
+    "explicit_includes": [
+      "mp-561133"
+    ],
+    "add_elements": [
+      "C"
+    ],
+    "flexible_competition": 0,
+    "temperature": 1800.0,
+    "pressure": null,
+    "allow_gas_release": true,
+    "max_component_precursors": 3,
+    "show_fraction_known_precursors": false,
+    "show_known_precursors_only": false,
+    "confine_competing_to_icsd": false,
+    "display_peroxides": false,
+    "display_superoxides": false,
+    "add_pareto": true
+  }
+}
