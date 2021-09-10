@@ -16,6 +16,9 @@ class SynthesisAppUser(HttpUser):
 
     # async only
     locust --tag async -H http://localhost -f locustfile.py -u 1 -r 1 --autostart
+
+    # view results
+    http://0.0.0.0:8089
     """
 
     @tag('sync')

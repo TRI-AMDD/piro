@@ -21,7 +21,6 @@ def ensure_results_dir():
 
 @pytest.mark.parametrize("compound", requests.keys())
 def test_recommend_routes(ensure_results_dir, compound):
-    #  maybe there's a better way. pull out the corresponding args from the full request
     args_dict = requests[compound]
     synthesis_args = inspect.getfullargspec(SynthesisRoutes).args
     synthesis_args_dict = {k: v for k, v in args_dict.items() if k in synthesis_args}
