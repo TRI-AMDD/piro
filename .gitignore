@@ -18,3 +18,5 @@ web/frontend/coverage
 web/frontend/build
 
 .env
+
+*.prof
