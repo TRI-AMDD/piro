@@ -17,6 +17,6 @@ def configure_index(app: fastapi.FastAPI):
 
     else:
         def redirect_docs():
-            return fastapi.responses.RedirectResponse('/docs')
+            return fastapi.responses.RedirectResponse('/api/docs')
 
-        app.add_api_route("/", redirect_docs, methods=['GET'], description='React demo page', include_in_schema=False)
+        app.add_api_route("/", redirect_docs, methods=['GET'], include_in_schema=False)

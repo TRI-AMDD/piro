@@ -1,3 +1,14 @@
+x-app: &python-backend
+  build:
+    context: ../
+    dockerfile: web/backend/api_only.dockerfile
+  env_file:
+    - backend/.env
+  depends_on:
+    - redis
+  volumes:
+    - ../piro/files:/app/piro/files
+
 version: '3.7'
 services:
   frontend:
@@ -16,39 +27,17 @@ services:
       - 6379:6379
 
   worker:
-    build:
-      context: ../
-      dockerfile: web/backend/api_only.dockerfile
+    <<: *python-backend
     command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 worker -l info --autoscale=10,4 -Ofair --without-gossip --without-mingle
-    env_file:
-      - backend/.env
-    depends_on:
-      - redis
-    volumes:
-      - ../piro/files:/app/piro/files
 
   flower:
-    build:
-      context: ../
-      dockerfile: web/backend/api_only.dockerfile
+    <<: *python-backend
     command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 flower --url_prefix=flower
-    env_file:
-      - backend/.env
     ports:
         - 5555:5555
-    depends_on:
-      - redis
 
   backend:
-    build:
-      context: ../
-      dockerfile: web/backend/api_only.dockerfile
-    env_file:
-      - backend/.env
+    <<: *python-backend
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - redis
-    volumes:
-      - ../piro/files:/app/piro/files
