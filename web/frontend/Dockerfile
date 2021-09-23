@@ -1,14 +1,17 @@
 # build environment
 FROM node as build
 
-COPY package.json /package.json
+WORKDIR /app
+
+COPY package.json /app/package.json
 
 ENV NODE_PATH=/node_modules
 ENV PATH=$PATH:/node_modules/.bin
 RUN npm install
 
-WORKDIR /app
-COPY . /app
+
+COPY public /app/public
+COPY src /app/src
 
 RUN npm run build
 
