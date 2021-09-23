@@ -21,4 +21,3 @@ RUN python3.7 -m pip install -e .
 # python backend api code
 COPY web/backend/app /app/app
 
-ENV ENABLE_REACT=0
