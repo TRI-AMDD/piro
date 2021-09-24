@@ -28,16 +28,13 @@ services:
 
   worker:
     <<: *python-backend
-    command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 worker -l info --autoscale=10,4 -Ofair --without-gossip --without-mingle
+    command: sh -c 'celery -A app.tasks --broker=$$CELERY_BROKER_URL --result-backend=$$CELERY_RESULT_BACKEND worker -l info --autoscale=10,4 -Ofair --without-gossip --without-mingle'
 
   flower:
     <<: *python-backend
-    command: celery -A app.tasks --broker=redis://redis:6379/0 --result-backend=redis://redis:6379/0 flower --url_prefix=flower
+    command: sh -c 'celery -A app.tasks --broker=$$CELERY_BROKER_URL --result-backend=$$CELERY_RESULT_BACKEND flower --url_prefix=flower'
     ports:
         - 5555:5555
 
   backend:
     <<: *python-backend
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
