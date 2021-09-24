@@ -9,10 +9,10 @@ server {
     }
 
     location /api {
-	    proxy_pass http://backend:8080/api;
+	    proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT}/api;
 	}
 
 	location /flower {
-	    proxy_pass http://flower:5555/flower;
+	    proxy_pass http://${FLOWER_HOST}:${FLOWER_PORT}/flower;
 	}
 }

@@ -20,6 +20,11 @@ services:
     depends_on:
       - backend
       - flower
+    environment:
+      - BACKEND_HOST=backend
+      - BACKEND_PORT=$PORT
+      - FLOWER_HOST=flower
+      - FLOWER_PORT=5555
 
   redis:
     image: redis
