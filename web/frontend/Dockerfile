@@ -16,8 +16,8 @@ COPY src /app/src
 RUN npm run build
 
 # production environment
-FROM nginx
+FROM nginx:latest
 COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx/nginx.conf.template $NGINX_ENVSUBST_TEMPLATE_DIR
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 
 CMD ["nginx", "-g", "daemon off;"]
