@@ -4,6 +4,10 @@ x-app: &python-backend
     dockerfile: web/backend/api_only.dockerfile
   env_file:
     - backend/.env
+  environment:
+    - PORT=8080
+    - CELERY_BROKER_URL=redis://redis:6379/0
+    - CELERY_RESULT_BACKEND=redis://redis:6379/0
   depends_on:
     - redis
   volumes:
@@ -22,7 +26,7 @@ services:
       - flower
     environment:
       - BACKEND_HOST=backend
-      - BACKEND_PORT=$PORT
+      - BACKEND_PORT=8080
       - FLOWER_HOST=flower
       - FLOWER_PORT=5555
 
