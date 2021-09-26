@@ -8,11 +8,19 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
+    location = /api {
+        proxy_pass ${SYNC_API_ROOT}/api;
+    }
+
+    location = /api/recommend_routes {
+        proxy_pass ${SYNC_API_ROOT}/api/recommend_routes;
+    }
+
     location /api {
-	    proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT}/api;
+	    proxy_pass ${BACKEND_ROOT}/api;
 	}
 
 	location /flower {
-	    proxy_pass http://${FLOWER_HOST}:${FLOWER_PORT}/flower;
+	    proxy_pass ${FLOWER_ROOT}/flower;
 	}
 }

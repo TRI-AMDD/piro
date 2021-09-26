@@ -26,10 +26,9 @@ services:
       - backend
       - flower
     environment:
-      - BACKEND_HOST=backend
-      - BACKEND_PORT=8080
-      - FLOWER_HOST=flower
-      - FLOWER_PORT=5555
+      - SYNC_API_ROOT=https://496tupf6zh.execute-api.us-east-1.amazonaws.com/dev
+      - BACKEND_ROOT=http://backend:8080
+      - FLOWER_ROOT=http://flower:5555
 
   redis:
     image: redis
