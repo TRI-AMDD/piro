@@ -8,6 +8,10 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
+    location = /api/recommend_routes {
+        proxy_pass ${SYNC_API_ROOT}/api/recommend_routes;
+    }
+
     location /api {
 	    proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT}/api;
 	}
