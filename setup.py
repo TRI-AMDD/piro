@@ -16,7 +16,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     install_requires=["matminer==0.7.4",
-                      "scikit-learn==0.24.2",
+                      "scikit-learn==1.0",
                       "plotly==5.2.1",
                       "pymongo==3.12.0",
                       "pydantic==1.8.2"
