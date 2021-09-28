@@ -1,6 +1,9 @@
 server {
     listen 80;
     server_name localhost;
+    proxy_read_timeout ${SYNC_API_TIMEOUT};
+    proxy_connect_timeout ${SYNC_API_TIMEOUT};
+    proxy_send_timeout ${SYNC_API_TIMEOUT};
 
     location / {
         root   /usr/share/nginx/html;
