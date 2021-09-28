@@ -30,6 +30,7 @@ RUN npm install
 COPY web/frontend /app/web/frontend
 RUN npm run build
 ENV REACT_BUILD_DIR='web/frontend/build'
+ENV ENABLE_REACT=1
 
 # python piro module
 COPY setup.py /app/setup.py

@@ -5,6 +5,7 @@ export const useSubmitTask = () => {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip',
         },
         body: JSON.stringify(newRequest)
     }).then(function(response) {
@@ -17,6 +18,7 @@ export const useNormalPlotData = () => {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip',
         },
         body: JSON.stringify(newRequest)
     }).then(function(response) {
@@ -28,7 +30,11 @@ export const useTaskPlotData = (taskId: string) => {
     return useQuery(
         ["getPlotData", taskId],
         async () => {
-            const response = await fetch(`/api/recommend_routes_task/${taskId}`);
+            const response = await fetch(`/api/recommend_routes_task/${taskId}`, {
+                headers: {
+                    'Accept-Encoding': 'gzip',
+                },
+            });
             const data = await response.json();
             // throw an error if status is started to trigger loading
             if (data?.status === 'started' || data?.status === 'pending') {
