@@ -25,14 +25,13 @@ services:
       - backend
       - flower
     environment:
+      - SYNC_API_TIMEOUT=900
       - SYNC_API_ROOT=http://backend:8080
       - BACKEND_ROOT=http://backend:8080
       - FLOWER_ROOT=http://flower:5555
 
   redis:
     image: redis
-    ports:
-      - 6379:6379
 
   worker:
     <<: *python-backend
@@ -41,8 +40,6 @@ services:
   flower:
     <<: *python-backend
     command: sh -c 'celery -A app.tasks --broker=$$CELERY_BROKER_URL --result-backend=$$CELERY_RESULT_BACKEND flower --url_prefix=flower'
-    ports:
-        - 5555:5555
 
   backend:
     <<: *python-backend
