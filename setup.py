@@ -32,6 +32,9 @@ setup(
                   "coveralls"
                   ]
     },
+    package_data={
+        "piro": ["*.pickle", "*.json"]
+    },
     include_package_data=True,
     author="AMDD - Toyota Research Institute",
     author_email="murat.aykol@tri.global",
