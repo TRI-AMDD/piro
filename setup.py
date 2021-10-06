@@ -10,7 +10,7 @@ specific inorganic materials.
 
 setup(
     name="piro",
-    version="2021.10.6-post0",
+    version="2021.10.6-post1",
     packages=find_packages(),
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
@@ -33,7 +33,7 @@ setup(
                   ]
     },
     package_data={
-        "piro": ["*.pickle", "*.json"]
+        "piro.files": ["*.pickle", "*.json"]
     },
     include_package_data=True,
     author="AMDD - Toyota Research Institute",
