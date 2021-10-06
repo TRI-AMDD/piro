@@ -35,11 +35,11 @@ services:
 
   worker:
     <<: *python-backend
-    command: sh -c 'celery -A app.tasks --broker=$$CELERY_BROKER_URL --result-backend=$$CELERY_RESULT_BACKEND worker -l info --autoscale=10,4 -Ofair --without-gossip --without-mingle'
+    command: sh -c 'celery -A app.tasks worker -l info -Ofair --without-gossip --without-mingle'
 
   flower:
     <<: *python-backend
-    command: sh -c 'celery -A app.tasks --broker=$$CELERY_BROKER_URL --result-backend=$$CELERY_RESULT_BACKEND flower --url_prefix=flower'
+    command: sh -c 'celery -A app.tasks flower --url_prefix=flower'
 
   backend:
     <<: *python-backend
