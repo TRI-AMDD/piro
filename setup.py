@@ -10,7 +10,7 @@ specific inorganic materials.
 
 setup(
     name="piro",
-    version="2021.6.24",
+    version="2021.10.6",
     packages=find_packages(),
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
@@ -35,8 +35,8 @@ setup(
     include_package_data=True,
     author="AMDD - Toyota Research Institute",
     author_email="murat.aykol@tri.global",
-    maintainer="Murat Aykol",
-    maintainer_email="murat.aykol@tri.global",
+    maintainer="Joseph Montoya",
+    maintainer_email="joseph.montoya@tri.global",
     # license="Apache",
     keywords=[
         "materials", "battery", "chemistry", "science",
