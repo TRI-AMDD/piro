@@ -17,7 +17,8 @@ From the root of the piro repository.
 
 ### Build the image
 ```
-docker build -t piro_backend -f web/backend/full.dockerfile .
+# can use --target to select stages (api|api-react|api-react-redis-celery)
+docker build --target api -t piro_backend -f web/backend/Dockerfile .
 ```
 Note: If "npm run build" fails due to out of memory, you can increase Docker memory resources in Docker preferences.
 
@@ -25,18 +26,21 @@ Note: If "npm run build" fails due to out of memory, you can increase Docker mem
  
  ```
  # pick one of the environment variable setting methods in the below command
-docker run -d --name piro_backend -p 8080:8080 -p 5555:5555 -e MAPI_KEY piro_backend  # if MAPI_KEY is already in environment
-docker run -d --name piro_backend -p 8080:8080 -p 5555:5555 -e MAPI_KEY={key} piro_backend  # set MAPI_KEY manually
-docker run -d --name piro_backend -p 8080:8080 -p 5555:5555 --env-file=web/backend/.env piro_backend  # use dotenv file
+docker run -d --name piro_backend -p 80:80 -p 5555:5555 -e MAPI_KEY piro_backend  # if MAPI_KEY is already in environment
+docker run -d --name piro_backend -p 80:80 -p 5555:5555 -e MAPI_KEY={key} piro_backend  # set MAPI_KEY manually
+docker run -d --name piro_backend -p 80:80 -p 5555:5555 --env-file=web/backend/.env piro_backend  # use dotenv file
  ```
 
 ### Use the web app
 
-Should be available at <http://0.0.0.0:8080>
+(stage: api)
+Read the API docs at <http://localhost/api/docs>
 
-Read the API docs at <http://0.0.0.0:8080/api/docs>
+(stage: api-react)
+React UI should be available at <http://localhost>
 
-Monitor celery workers with flower <http://0.0.0.0:5555/>
+(stage: api-react-redis-celery)
+Monitor celery workers with flower <http://localhost:5555/>
 
 
 ## Run for local development

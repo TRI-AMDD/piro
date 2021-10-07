@@ -1,7 +1,8 @@
 x-app: &python-backend
   build:
     context: ../
-    dockerfile: web/backend/api_only.dockerfile
+    dockerfile: web/backend/Dockerfile
+    target: api
   env_file:
     - backend/.env
   environment:
