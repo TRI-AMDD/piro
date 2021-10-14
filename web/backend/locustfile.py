@@ -1,7 +1,7 @@
 import time
 import random
 
-from locust import HttpUser, task, tag, events
+from locust import HttpUser, task, tag, events, between
 
 from app.models import RecommendRoutesTaskStatus
 from example_requests import requests
@@ -20,6 +20,7 @@ class SynthesisAppUser(HttpUser):
     # view results
     http://0.0.0.0:8089
     """
+    wait_time = between(10, 30)
 
     @tag('sync')
     @task

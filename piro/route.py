@@ -207,7 +207,7 @@ class SynthesisRoutes:
         self.precursor_library = precursor_library
 
         print(
-            "Total # of precusors materials obeying the provided filters: ",
+            "Total # of precursors materials obeying the provided filters: ",
             len(precursor_library),
         )
         return self.precursor_library
