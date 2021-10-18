@@ -1,6 +1,7 @@
-import React, { FC, createContext, useContext, useState, useMemo } from 'react';
-import { useSubmitTask, useNormalPlotData } from './usePlotData';
+import React, { FC, createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { UseMutationResult } from 'react-query';
+import { Auth } from 'aws-amplify';
+import { useSubmitTask, useNormalPlotData } from './usePlotData';
 
 type ContextProps = {
     apiMode: string;
@@ -11,12 +12,17 @@ type ContextProps = {
 
 const PlotDataContext = createContext({} as ContextProps);
 
-interface Props {
-    token: string
-}
-
-const PlotDataProvider: FC<Props> = ({ token, children }) => {
+const PlotDataProvider: FC = ({ children }) => {
     const [apiMode, setApiMode] = useState('task');
+    const [token, setToken] = useState('');
+
+    // fetch the token to be used for api calls
+    useEffect(() => {
+        Auth.currentSession()
+            .then((session) => { setToken(session.getIdToken().getJwtToken()) })
+            .catch(() => {})
+    }, []);
+
     const taskMutation = useSubmitTask(token);
     const normalMutation = useNormalPlotData(token);
 
@@ -24,7 +30,7 @@ const PlotDataProvider: FC<Props> = ({ token, children }) => {
         apiMode,
         setApiMode,
         token,
-        mutation: apiMode === 'task' ? taskMutation : normalMutation
+        mutation: apiMode === 'task' ? taskMutation : normalMutation,
     }), [apiMode, taskMutation, normalMutation, token]);
     return <PlotDataContext.Provider value={value}>{children}</PlotDataContext.Provider>;
 };
