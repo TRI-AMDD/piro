@@ -29,6 +29,8 @@
 }
 .Plot > div {
     border: solid 1px #c6c6d1;
+    width: 1080px;
+    height: 720px;
 }
 .Loading {
     display: flex;

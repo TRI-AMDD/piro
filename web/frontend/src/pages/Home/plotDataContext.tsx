@@ -4,31 +4,37 @@ import { UseMutationResult } from 'react-query';
 
 type ContextProps = {
     apiMode: string;
+    token: string;
     setApiMode: (v: string) => void;
     mutation: UseMutationResult<any, unknown, void, unknown>;
 };
 
-const ApiModeContext = createContext({} as ContextProps);
+const PlotDataContext = createContext({} as ContextProps);
 
-const ApiModeProvider: FC = ({ children }) => {
+interface Props {
+    token: string
+}
+
+const PlotDataProvider: FC<Props> = ({ token, children }) => {
     const [apiMode, setApiMode] = useState('task');
-    const taskMutation = useSubmitTask();
-    const normalMutation = useNormalPlotData();
+    const taskMutation = useSubmitTask(token);
+    const normalMutation = useNormalPlotData(token);
 
     const value = useMemo(() => ({
         apiMode,
         setApiMode,
+        token,
         mutation: apiMode === 'task' ? taskMutation : normalMutation
-    }), [apiMode, taskMutation, normalMutation]);
-    return <ApiModeContext.Provider value={value}>{children}</ApiModeContext.Provider>;
+    }), [apiMode, taskMutation, normalMutation, token]);
+    return <PlotDataContext.Provider value={value}>{children}</PlotDataContext.Provider>;
 };
 
-function useApiMode() {
-    const context = useContext(ApiModeContext);
+function usePlotData() {
+    const context = useContext(PlotDataContext);
     if (context === undefined) {
         throw new Error('useApiModeContext must be used within a ApiModeProvider');
     }
     return context;
 }
 
-export { ApiModeProvider, useApiMode };
+export { PlotDataProvider, usePlotData };

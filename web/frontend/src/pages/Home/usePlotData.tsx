@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from "react-query";
 
-export const useSubmitTask = () => {
+export const useSubmitTask = (token: string) => {
     return useMutation('submitTask', (newRequest) => fetch('/api/recommend_routes_task', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'gzip',
+            Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(newRequest)
     }).then(function(response) {
@@ -13,12 +14,13 @@ export const useSubmitTask = () => {
     }));
 }
 
-export const useNormalPlotData = () => {
+export const useNormalPlotData = (token: string) => {
     return useMutation('submitRoute', (newRequest) => fetch('/api/recommend_routes', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'gzip',
+            Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(newRequest)
     }).then(function(response) {
@@ -26,13 +28,14 @@ export const useNormalPlotData = () => {
     }));
 }
 
-export const useTaskPlotData = (taskId: string) => {
+export const useTaskPlotData = (taskId: string, token: string) => {
     return useQuery(
         ["getPlotData", taskId],
         async () => {
             const response = await fetch(`/api/recommend_routes_task/${taskId}`, {
                 headers: {
                     'Accept-Encoding': 'gzip',
+                    Authorization: `Bearer ${token}`
                 },
             });
             const data = await response.json();

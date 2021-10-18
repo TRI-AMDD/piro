@@ -2,11 +2,11 @@ import { Loading } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import ErrorMessage from "./ErrorMessage";
 import PlotResults from './PlotResults';
-import { useApiMode } from "./apiModeContext";
+import { usePlotData } from "./plotDataContext";
 import TaskPlot from "./TaskPlot";
 
 function SynthesisPlot() {
-    const { mutation, apiMode } = useApiMode();
+    const { mutation, apiMode } = usePlotData();
     const { data, error, isLoading } = mutation;
 
     if (isLoading) return (

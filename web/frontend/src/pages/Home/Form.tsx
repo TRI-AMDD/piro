@@ -13,7 +13,7 @@ import Pressure from './Pressure';
 import MoreInfo from './MoreInfo'
 import { description } from './description';
 import SingleSelect from "./SingleSelect";
-import { useApiMode } from "./apiModeContext";
+import { usePlotData } from "./plotDataContext";
 
 const addElementOptions = [
     { value: '', label: 'None' },
@@ -22,7 +22,7 @@ const addElementOptions = [
 ];
 
 export default function Form() {
-    const { mutation } = useApiMode();
+    const { mutation } = usePlotData();
     const [pressure, setPressure] = useState<any>(null);
     const [addElements, setAddElements] = useState<{ label: string; value: string; }>();
     const [explicitIncludes, setExplicitIncludes] = useState<{ label: string; value: string; }[]>([]);

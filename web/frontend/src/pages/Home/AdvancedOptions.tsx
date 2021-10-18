@@ -7,7 +7,7 @@ import { Inputs } from './TypeProps';
 import MultiSelect from './MultiSelect';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
-import { useApiMode } from './apiModeContext';
+import { usePlotData } from './plotDataContext';
 
 interface Props {
     control: Control<Inputs>;
@@ -28,7 +28,7 @@ const toggleOptions = [
 
 export default function AdvancedOptions(props: Props) {
     const { control, register, setExcludeCompositions } = props;
-    const { apiMode, setApiMode } = useApiMode();
+    const { apiMode, setApiMode } = usePlotData();
 
     return (
         <StyledCollapsible
