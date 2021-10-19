@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "react-query";
 
 export const useSubmitTask = (token: string) => {
-    return useMutation('submitTask', (newRequest) => fetch('/api/recommend_routes_task', {
+    return useMutation('submitTask', (newRequest) => fetch(`${API_BASE_URL}/api/recommend_routes_task`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ export const useSubmitTask = (token: string) => {
 }
 
 export const useNormalPlotData = (token: string) => {
-    return useMutation('submitRoute', (newRequest) => fetch('/api/recommend_routes', {
+    return useMutation('submitRoute', (newRequest) => fetch(`${API_BASE_URL}/api/recommend_routes`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export const useTaskPlotData = (taskId: string, token: string) => {
     return useQuery(
         ["getPlotData", taskId],
         async () => {
-            const response = await fetch(`/api/recommend_routes_task/${taskId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/recommend_routes_task/${taskId}`, {
                 headers: {
                     'Accept-Encoding': 'gzip',
                     Authorization: `Bearer ${token}`

@@ -49,3 +49,5 @@ var AWS_CONFIG = {
         */
     }
 };
+
+var API_BASE_URL = ""
