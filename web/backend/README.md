@@ -116,7 +116,7 @@ Monitor celery workers with flower <http://0.0.0.0:5555/>
 # from piro repo root directory
 
 # build and run
-docker build --target lambda-api -f web/backend/Dockerfile .
+docker build --target lambda-api -t synthesis-app-lambda -f web/backend/Dockerfile .
 docker run -d --name synthesis-app-lambda -p 9000:8080 --env-file=web/backend/.env synthesis-app-lambda
 
 # try it out
