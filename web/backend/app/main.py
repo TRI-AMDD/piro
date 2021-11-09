@@ -1,5 +1,6 @@
 import uvicorn
 import fastapi
+from fastapi import Request
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
@@ -17,6 +18,15 @@ app.add_middleware(
 )
 app.include_router(api.router)
 configure_index(app)
+
+
+@app.middleware("http")
+async def no_cache(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Expires"] = "0"
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 
 @app.exception_handler(Exception)
