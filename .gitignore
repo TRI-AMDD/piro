@@ -20,3 +20,7 @@ web/frontend/build
 .env
 
 *.prof
+
+.idea/*
+
+venv/*

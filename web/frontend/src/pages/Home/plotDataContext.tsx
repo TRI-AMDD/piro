@@ -1,4 +1,4 @@
-import React, { FC, createContext, useContext, useState, useMemo, useEffect } from 'react';
+import { FC, createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { UseMutationResult } from 'react-query';
 import { Auth, Hub } from 'aws-amplify';
 import { useSubmitTask, useNormalPlotData } from './usePlotData';

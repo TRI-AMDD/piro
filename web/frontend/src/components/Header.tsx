@@ -5,7 +5,7 @@ export default function Header() {
     return (
         <header className={styles.AppHeader}>
             <h1>Synthesis Analyzer</h1>
-            <AmplifySignOut />
+            {AMPLIFY_ENABLED && <AmplifySignOut />}
         </header>
     );
 }
