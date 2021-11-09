@@ -5,13 +5,13 @@ var AWS_CONFIG = {
         // identityPoolId: 'XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab',
 
         // REQUIRED - Amazon Cognito Region
-        region: 'us-east-1',
+        region: 'FILL_IN',
 
         // OPTIONAL - Amazon Cognito User Pool ID
-        userPoolId: 'us-east-1_mpF3DtfUs',
+        userPoolId: 'FILL_IN',
 
         // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-        userPoolWebClientId: 'dqpt7org9j4h4hqlgn47ts07g',
+        userPoolWebClientId: 'FILL_IN',
 
         // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
         mandatorySignIn: false,
@@ -49,5 +49,8 @@ var AWS_CONFIG = {
         */
     }
 };
+// base url prepend for all api calls
+var API_BASE_URL = "FILL_IN";
 
-var API_BASE_URL = ""
+// boolean flag to set amplify on/off for user authentication support
+var AMPLIFY_ENABLED = false;
