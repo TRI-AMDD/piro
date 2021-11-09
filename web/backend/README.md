@@ -110,3 +110,22 @@ Should be available at <http://0.0.0.0:8080>
 Read the API docs at <http://0.0.0.0:8080/api/docs>
 
 Monitor celery workers with flower <http://0.0.0.0:5555/>
+
+## commands to create Lambda docker image
+```
+# from piro repo root directory
+
+# build and run
+docker build --target lambda-api -t synthesis-app-lambda -f web/backend/Dockerfile .
+docker run -d --name synthesis-app-lambda -p 9000:8080 --env-file=web/backend/.env synthesis-app-lambda
+
+# try it out
+curl -X POST "http://localhost:9000/2015-03-31/functions/function/invocations" -d @web/backend/lambda_request.json
+
+# commit the image and push to ECR
+docker commit synthesis-app-lambda
+# follow ECR push instructions from AWS
+# add AWS env variables, and run aws login command
+# docker tag <the previously committed image> <ecr image url>
+# docker push <ecr image url>
+```
