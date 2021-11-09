@@ -21,7 +21,8 @@
       "X-Amz-Cf-Id": "pn-PWIJc6thYnZm5P0NMgOUglL1DYtl0gdeJky8tqsg8iS_sgsKD1A==",
       "X-Forwarded-For": "54.240.196.186, 54.182.214.83",
       "X-Forwarded-Port": "443",
-      "X-Forwarded-Proto": "https"
+      "X-Forwarded-Proto": "https",
+      "Origin": "http://localhost:3000"
     },
     "multiValueHeaders":{
       "Accept":[
@@ -83,7 +84,8 @@
       ],
       "X-Forwarded-Proto":[
         "https"
-      ]
+      ],
+      "Origin": ["http://localhost:3000"]
     },
     "queryStringParameters": {
     },

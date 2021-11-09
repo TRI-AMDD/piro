@@ -1,5 +1,6 @@
 import uvicorn
 import fastapi
+from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
 from . import api
@@ -8,6 +9,12 @@ from .index import configure_index
 
 app = fastapi.FastAPI(docs_url="/api/docs", openapi_url="/api")
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(api.router)
 configure_index(app)
 
