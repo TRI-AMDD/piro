@@ -50,7 +50,7 @@ var AWS_CONFIG = {
     }
 };
 // base url prepend for all api calls
-var API_BASE_URL = "FILL_IN";
+var API_BASE_URL = "";
 
 // boolean flag to set amplify on/off for user authentication support
 var AMPLIFY_ENABLED = false;
