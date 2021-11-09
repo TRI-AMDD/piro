@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import AmplifySetup from 'components/AmplifySetup';
+import AmplifySetup from './components/AmplifySetup';
 
 const queryClient = new QueryClient();
 const Home = lazy(() => import('./pages/Home/Home'));
