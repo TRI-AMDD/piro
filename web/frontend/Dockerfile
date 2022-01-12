@@ -1,5 +1,5 @@
 # build environment
-FROM node as build
+FROM node:16 as build
 
 WORKDIR /app
 

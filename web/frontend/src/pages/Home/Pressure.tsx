@@ -61,7 +61,7 @@ export function Pressure(props: Props) {
     }, [watchPressure, option]);
 
     // trigger a pressure update when pressure has changed
-    useEffect(() => { setPressure(pressure); }, [pressure])
+    useEffect(() => { setPressure(pressure); }, [pressure, setPressure])
 
     return (
         <div>

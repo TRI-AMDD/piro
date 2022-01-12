@@ -3,6 +3,7 @@ import { useTaskPlotData } from "./usePlotData";
 import styles from './Home.module.css';
 import ErrorMessage from './ErrorMessage';
 import PlotResults from './PlotResults';
+import { usePlotData } from './plotDataContext';
 
 interface Props {
     taskId: string;
@@ -10,7 +11,8 @@ interface Props {
 
 function TaskPlot(props: Props) {
     const { taskId } = props;
-    const { data, error, isLoading } = useTaskPlotData(taskId);
+    const { token } = usePlotData();
+    const { data, error, isLoading } = useTaskPlotData(taskId, token);
 
     if (isLoading) return (
         <div className={styles.Loading}>

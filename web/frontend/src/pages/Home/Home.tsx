@@ -1,13 +1,13 @@
 import Form from './Form';
-import SynthesisPlot from "./SynthesisPlot";
-import { ApiModeProvider } from './apiModeContext';
+import SynthesisPlot from './SynthesisPlot';
+import { PlotDataProvider } from './plotDataContext';
 
 function Home() {
     return (
-        <ApiModeProvider>
+        <PlotDataProvider>
             <Form />
             <SynthesisPlot />
-        </ApiModeProvider>
+        </PlotDataProvider>
     );
 }
 
