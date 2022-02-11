@@ -9,6 +9,8 @@ import json
 from pymatgen.core import Composition
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from pymatgen.util.string import latexify
+from tqdm import tqdm
+
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.mprester import get_mprester
 from piro.reactions import get_reactions
@@ -137,7 +139,7 @@ class SynthesisRoutes:
                 self.precursor_library,
                 self.allow_gas_release
             )
-            logger.info(f"Total # of balanced reactions obtained: {len(self.reactions)}")
+            logger.info(f"Total # of balanced reactions obtained: {len(self.reactions_objs)}")
         return self._reactions_objs
 
     def get_mp_entries(self):
@@ -222,7 +224,11 @@ class SynthesisRoutes:
 
     def get_reactions_with_energies(self):
         reactions_dict = {}
-        for r in self.reactions_objs:
+        for r in tqdm(
+            self.reactions_objs,
+            desc='Calculating reaction results',
+            total=len(self._reactions_objs)
+        ):
             if r.label in reactions_dict:
                 continue
             else:
