@@ -405,8 +405,9 @@ def get_reactions(
     reactions = []
 
     for sorted_precursors in tqdm(
-            itertools.combinations(sorted(precursor_library, key=lambda p: p.data['reduced_formula']), len(elements)),
-            total=comb(len(precursor_library), len(elements)),
+        itertools.combinations(sorted(precursor_library, key=lambda p: p.data['reduced_formula']), len(elements)),
+        desc="balancing reactions",
+        total=comb(len(precursor_library), len(elements)),
     ):
         reduced_formulas = tuple([str(p.data['reduced_formula']) for p in sorted_precursors])
 
