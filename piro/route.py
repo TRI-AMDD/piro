@@ -425,7 +425,8 @@ class SynthesisRoutes:
                 go.Scatter(
                     x=_x,
                     y=_y,
-                    line=dict(color="firebrick", width=2)
+                    line=dict(color="firebrick", width=2),
+                    hoverinfo='skip'
                 )
             )
             fig.add_trace(
@@ -434,6 +435,7 @@ class SynthesisRoutes:
                     y=[_y[0], self.topsis()["barrier"].max(), None, _y[-1], _y[-1]],
                     line=dict(color="firebrick", width=2, dash="dash"),
                     connectgaps=False,
+                    hoverinfo='skip'
                 )
             )
 
