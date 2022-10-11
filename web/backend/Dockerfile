@@ -59,7 +59,7 @@ COPY web/backend/prestart.sh /app/prestart.sh
 # MULTI-STAGE deploying api to aws-lambda
 #--------------------------------------------------------------
 FROM api as lambda-build
-ARG FUNCTION_DIR
+ARG FUNCTION_DIR="/app"
 
 # Install awslambdaric dependencies
 RUN apt-get update && apt-get install -y \
@@ -75,7 +75,7 @@ RUN pip3 install --no-cache-dir --target ${FUNCTION_DIR} awslambdaric
 
 # add another stage to try to reduce file size
 FROM python:3.9-slim as lambda-api
-ARG FUNCTION_DIR
+ARG FUNCTION_DIR="/app"
 WORKDIR ${FUNCTION_DIR}
 COPY --from=lambda-build ${FUNCTION_DIR} ${FUNCTION_DIR}
 
