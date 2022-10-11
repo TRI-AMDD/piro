@@ -37,7 +37,8 @@ RUN npm install
 COPY web/frontend/public /app/public
 COPY web/frontend/src /app/src
 
-RUN npm run build
+RUN export NODE_OPTIONS=--openssl-legacy-provider && \
+    npm run build
 
 FROM api as api-react
 
