@@ -110,6 +110,8 @@ class SynthesisRoutes:
             if not custom_target_entry:
                 with get_mprester() as mpr:
                     _e = mpr.get_entry_by_material_id(self.target_entry_id)
+                    if isinstance(_e, list):
+                        _e = _e[0]
             else:
                 _e = custom_target_entry
             self.elts = list(_e.composition.as_dict().keys())
@@ -144,11 +146,25 @@ class SynthesisRoutes:
 
     def get_mp_entries(self):
         with get_mprester() as mpr:
-            self.entries = mpr.get_entries_in_chemsys(
-                self.elts,
-                inc_structure="final",
-                property_data=["icsd_ids", "formation_energy_per_atom"],
-            )
+            if len(mpr.api_key) == 32:
+                self.entries = mpr.get_entries_in_chemsys(
+                    self.elts,
+                    inc_structure="final",
+                    property_data=["material_id", "formation_energy_per_atom"],
+                )
+                mp_ids = [ent.data['material_id'] for ent in self.entries]
+                provs = mpr.provenance.search(mp_ids, fields=['material_id', 'database_IDs'])
+                from emmet.core.provenance import Database
+                mp_to_icsd = {str(doc.material_id): doc.database_IDs.get(Database.ICSD)
+                              for doc in provs}
+                for entry in self.entries:
+                    entry.data.update({"icsd_ids": mp_to_icsd.get(entry.data['material_id'])})
+            else:
+                self.entries = mpr.get_entries_in_chemsys(
+                    self.elts,
+                    inc_structure="final",
+                    property_data=["icsd_ids", "formation_energy_per_atom"],
+                )
         for entry in self.entries:
             entry.structure.entry_id = entry.entry_id
         print("Total # of entries found in this chemistry: ", len(self.entries))
