@@ -13,7 +13,7 @@ jobs:
           macos-latest,
           windows-latest
         ]
-        python-version: [3.7]
+        python-version: [3.9]
 
     runs-on: ${{ matrix.os }}
 
@@ -30,7 +30,7 @@ jobs:
     - name: pytest
       env:
         MPLBACKEND: "Agg"
-        MAPI_KEY: ${{ secrets.MAPI_KEY }}
+        PMG_MAPI_KEY: ${{ secrets.PMG_MAPI_KEY }}
       run: |
         pytest tests/unit_tests  --color=yes --cov=piro --cov-report html:coverage_reports
     - name: Coveralls
