@@ -18,7 +18,7 @@ class RoutesTest(unittest.TestCase):
 
         try:
             MPRester().get_entry_by_material_id('mp-5020')
-        except MPRestError:
+        except (MPRestError, ValueError):
             warnings.warn("Using mock MPRester response")
 
             def get_entries_in_chemsys(*args, **kwargs):
