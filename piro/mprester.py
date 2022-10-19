@@ -1,7 +1,7 @@
 import contextlib
 
 from pymatgen.core import Structure
-from pymatgen.ext.matproj import MPRester
+from pymatgen.ext.matproj import _MPResterLegacy as MPRester
 from pymongo import MongoClient
 
 from piro.settings import settings
