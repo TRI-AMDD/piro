@@ -30,18 +30,12 @@ class RoutesTest(unittest.TestCase):
             def get_database_version(*args, **kwargs):
                 return None
 
-            # This is crude - eventually we'll just switch to new mprester
-            def new_mprester(*args, **kwargs):
-                return _MPResterLegacy(api_key="")
-
             self.monkeypatch.setattr(
                 _MPResterLegacy, "get_entries_in_chemsys", get_entries_in_chemsys)
             self.monkeypatch.setattr(
                 _MPResterLegacy, "get_entry_by_material_id", get_entry_by_material_id)
             self.monkeypatch.setattr(
                 _MPResterLegacy, "get_database_version", get_database_version)
-            self.monkeypatch.setattr(
-                MPRester, "__new__", new_mprester)
 
     def test_basic_route(self):
         # BaTiO3 example
