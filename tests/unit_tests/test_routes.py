@@ -2,7 +2,7 @@ import os
 import unittest
 import warnings
 from pathlib import Path
-from pymatgen.ext.matproj import MPRester, MPRestError
+from pymatgen.ext.matproj import MPRester, MPRestError, _MPResterLegacy
 from pymatgen.core import SETTINGS
 from _pytest.monkeypatch import MonkeyPatch
 from monty.serialization import loadfn, dumpfn
@@ -15,12 +15,10 @@ class RoutesTest(unittest.TestCase):
     def setUp(self):
         # Monkeypatch if MAPI key not detected
         self.monkeypatch = MonkeyPatch()
-        from pymatgen.core import SETTINGS
-        assert SETTINGS.get("PMG_MAPI_KEY") is not None
 
         try:
             MPRester().get_entry_by_material_id('mp-5020')
-        except MPRestError:
+        except (MPRestError, ValueError):
             warnings.warn("Using mock MPRester response")
 
             def get_entries_in_chemsys(*args, **kwargs):
@@ -28,10 +26,22 @@ class RoutesTest(unittest.TestCase):
 
             def get_entry_by_material_id(*args, **kwargs):
                 return loadfn(TEST_FILES / "ba-o-ti.json")[74]
+
+            def get_database_version(*args, **kwargs):
+                return None
+
+            # This is crude - eventually we'll just switch to new mprester
+            def new_mprester(*args, **kwargs):
+                return _MPResterLegacy(api_key="")
+
             self.monkeypatch.setattr(
-                MPRester, "get_entries_in_chemsys", get_entries_in_chemsys)
+                _MPResterLegacy, "get_entries_in_chemsys", get_entries_in_chemsys)
             self.monkeypatch.setattr(
-                MPRester, "get_entry_by_material_id", get_entry_by_material_id)
+                _MPResterLegacy, "get_entry_by_material_id", get_entry_by_material_id)
+            self.monkeypatch.setattr(
+                _MPResterLegacy, "get_database_version", get_database_version)
+            self.monkeypatch.setattr(
+                MPRester, "__new__", new_mprester)
 
     def test_basic_route(self):
         # BaTiO3 example

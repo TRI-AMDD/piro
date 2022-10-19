@@ -1,7 +1,7 @@
 import contextlib
 
 from pymatgen.core import Structure
-from pymatgen.ext.matproj import MPRester
+from pymatgen.ext.matproj import _MPResterLegacy, MPRester
 from pymongo import MongoClient
 
 from piro.settings import settings
@@ -17,7 +17,7 @@ def get_mprester():
             yield mpr
 
 
-class MongoMPRester(MPRester):
+class MongoMPRester(_MPResterLegacy):
     """
     this subclass of pymatgen.ext.matproj.MPRester class queries a MongoDB instead of Materials Project API
     """

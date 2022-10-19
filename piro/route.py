@@ -48,6 +48,7 @@ class SynthesisRoutes:
             are generated using the recommend_routes method (See this method's arguments as well).
             Precursor library, epitaxial match and similarity metrics are precomputed upon instantiation,
             and can be cached.
+
         Args:
             target_entry_id (str): Materials Project entry id for target material
             confine_to_icsd (bool): Use ICSD-sourced entries to find precursors. Defaults to True.
@@ -153,10 +154,10 @@ class SynthesisRoutes:
                     property_data=["material_id", "formation_energy_per_atom"],
                 )
                 mp_ids = [ent.data['material_id'] for ent in self.entries]
-                provs = mpr.provenance.search(mp_ids, fields=['material_id', 'database_IDs'])
+                provs = mpr.provenance.search(mp_ids, fields=['material_id', 'database_IDs', 'theoretical'])
                 from emmet.core.provenance import Database
                 mp_to_icsd = {str(doc.material_id): doc.database_IDs.get(Database.ICSD)
-                              for doc in provs}
+                              for doc in provs if not doc.theoretical}
                 for entry in self.entries:
                     entry.data.update({"icsd_ids": mp_to_icsd.get(entry.data['material_id'])})
             else:
@@ -188,6 +189,7 @@ class SynthesisRoutes:
             ]
         else:
             precursor_library = [e for e in self.entries]
+
         if self.confine_to_icsd:
             precursor_library = [i for i in precursor_library if i.data["icsd_ids"]]
 
