@@ -15,6 +15,8 @@ class RoutesTest(unittest.TestCase):
     def setUp(self):
         # Monkeypatch if MAPI key not detected
         self.monkeypatch = MonkeyPatch()
+        from pymatgen.core import SETTINGS
+        assert SETTINGS.get("PMG_MAPI_KEY") is not None
 
         try:
             MPRester().get_entry_by_material_id('mp-5020')
