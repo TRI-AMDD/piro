@@ -16,7 +16,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     install_requires=["matminer==0.7.8",
-                      "plotly==5.6.0",
+                      "plotly==5.10.0",
                       "pymongo==4.3.2",
                       ],
     classifiers=[
