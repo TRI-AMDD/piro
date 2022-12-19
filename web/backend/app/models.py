@@ -117,7 +117,7 @@ class RecommendRoutesRequest(BaseModel):
         description="Show the Pareto front on the reaction analysis diagram"
     )
 
-    @validator('custom_entry_cif')
+    @validator('custom_entry_cif_string')
     def one_and_only_one_entry(cls, v, values):
         if v and values['target_entry_id']:
             raise ValueError('Must provide only one of either target_entry_id or custom_entry_cif')
