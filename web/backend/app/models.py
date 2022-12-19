@@ -2,13 +2,21 @@ from enum import Enum
 from typing import List, Union, Optional
 
 from plotly.graph_objs import Figure
-from pydantic import BaseModel, Field, NonNegativeInt, create_model
+from pydantic import BaseModel, Field, NonNegativeInt, create_model, validator
 
 
 class RecommendRoutesRequest(BaseModel):
-    target_entry_id: str = Field(
-        ...,
-        description="Materials Project ID of the compound to synthesize"
+    target_entry_id: Optional[str] = Field(
+        None,
+        description="Materials Project ID of the compound to synthesize."
+    )
+    custom_entry_cif_string: Optional[str] = Field(
+        None,
+        description="String contents of a .cif file containing structure information for a user-specified custom entry."
+    )
+    custom_entry_formation_energy_per_atom: Optional[float] = Field(
+        None,
+        description="Formation energy per atom for the user-specified custom entry."
     )
     confine_to_icsd: bool = Field(
         True,
@@ -108,6 +116,14 @@ class RecommendRoutesRequest(BaseModel):
         False,
         description="Show the Pareto front on the reaction analysis diagram"
     )
+
+    @validator('custom_entry_cif')
+    def one_and_only_one_entry(cls, v, values):
+        if v and values['target_entry_id']:
+            raise ValueError('Must provide only one of either target_entry_id or custom_entry_cif')
+        if not v and not values['target_entry_id']:
+            raise ValueError('Must provide one of either target_entry_id or custom_entry_cif')
+        return v
 
 
 PlotlyFigureResponse = create_model('PlotlyFigureResponse', **Figure().to_dict())

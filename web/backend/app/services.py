@@ -15,6 +15,15 @@ def recommend_routes_service(request: RecommendRoutesRequest) -> str:
     recommend_routes_args = inspect.getfullargspec(SynthesisRoutes.recommend_routes).args
     recommend_routes_dict = {k: v for k, v in args_dict.items() if k in recommend_routes_args}
 
-    router = SynthesisRoutes(**synthesis_args_dict)
+    # handle custom entry
+    custom_entry = None
+    if request.custom_entry_cif_string is not None:
+        custom_entry = create_custom_entry(
+            request.custom_entry_cif_string,
+            request.custom_entry_formation_energy_per_atom
+        )
+        request.target_entry_id = custom_entry.entry_id
+
+    router = SynthesisRoutes(**synthesis_args_dict, custom_target_entry=custom_entry)
     fig = router.recommend_routes(**recommend_routes_dict)
     return fig.to_json()
