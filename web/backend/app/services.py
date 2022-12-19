@@ -1,5 +1,6 @@
 from piro.route import SynthesisRoutes
-from .models import RecommendRoutesRequest
+from app.custom_entry import create_custom_entry
+from app.models import RecommendRoutesRequest
 import inspect
 
 

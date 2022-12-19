@@ -4,9 +4,9 @@ from fastapi import Request
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
-from . import api
-from .settings import Settings
-from .index import configure_index
+from app import api
+from app.settings import Settings
+from app.index import configure_index
 
 app = fastapi.FastAPI(docs_url="/api/docs", openapi_url="/api")
 app.add_middleware(GZipMiddleware, minimum_size=1000)

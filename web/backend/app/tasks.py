@@ -2,8 +2,8 @@ import json
 import os
 from celery import Celery
 
-from .models import RecommendRoutesRequest, RecommendRoutesTask, RecommendRoutesTaskStatus
-from .services import recommend_routes_service
+from app.models import RecommendRoutesRequest, RecommendRoutesTask, RecommendRoutesTaskStatus
+from app.services import recommend_routes_service
 
 app = Celery(__name__)
 app.conf.update(

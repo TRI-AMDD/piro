@@ -53,7 +53,7 @@ Requires npm binary
 ```
 cd web/frontend
 npm install
-npm run build
+npm start
 ```
 
 Should have a web/frontend/build directory
@@ -83,7 +83,8 @@ pip install -e .
 # set environment variables if not already done previously 
 # export MAPI_KEY={key}
 
-python -m web.backend.app.main
+cd web/backend
+python -m app.main
 ```
 
 ### Run the celery worker
@@ -95,12 +96,14 @@ docker run -d -p 6379:6379 redis
 
 #### Run the worker
 ```
-celery -A web.backend.app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 worker -l info -c 4 -Ofair --without-gossip --without-mingle
+cd web/backend
+celery -A app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 worker -l info -c 4 -Ofair --without-gossip --without-mingle
 ```
 
 #### (optional) Run flower celery monitoring
 ```
-celery -A web.backend.app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 flower 
+cd web/backend
+celery -A app.tasks --broker=redis://localhost:6379/0 --result-backend=redis://localhost:6379/0 flower 
 ```
 
 ### Use the web app

@@ -3,7 +3,7 @@ import os
 import fastapi
 from starlette.staticfiles import StaticFiles
 
-from .settings import Settings
+from app.settings import Settings
 
 
 def configure_index(app: fastapi.FastAPI):
