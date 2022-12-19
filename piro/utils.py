@@ -5,8 +5,9 @@ import os
 import pickle
 import numpy as np
 import json
-from functools import lru_cache, wraps
+from functools import lru_cache
 
+from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymongo import MongoClient
 from scipy.interpolate import interp1d
@@ -40,8 +41,12 @@ def get_v(composition_as_dict: dict, elts: Tuple[str]) -> np.array:
     return np.array([composition_as_dict[el] for el in elts])
 
 
-def get_epitaxies(precursor_library: List[ComputedStructureEntry], target: ComputedStructureEntry):
-    if settings.cache_type == CacheType.MONGO_CACHE:
+def get_epitaxies(
+    precursor_library: List[ComputedStructureEntry],
+    target: ComputedStructureEntry,
+    cache_type: CacheType
+):
+    if cache_type == CacheType.MONGO_CACHE:
         precursor_set = set([s.entry_id for s in precursor_library])
         epitaxies = {}
         for e in mongo_results_generator(target, 'epitaxies'):
@@ -54,7 +59,10 @@ def get_epitaxies(precursor_library: List[ComputedStructureEntry], target: Compu
     else:
         precursor_structures = [s.structure for s in precursor_library]
         target_structure = target.structure
-        results = epitaxy(precursor_structures, target_structure)
+        if cache_type == CacheType.FILE_CACHE:
+            results = through_cache(precursor_structures, target_structure, epitaxy)
+        else:
+            results = epitaxy(precursor_structures, target_structure)
         epitaxies = dict(
             zip([i.entry_id for i in precursor_library], results)
         )
@@ -63,7 +71,11 @@ def get_epitaxies(precursor_library: List[ComputedStructureEntry], target: Compu
     return epitaxies
 
 
-def get_similarities(precursor_library: List[ComputedStructureEntry], target: ComputedStructureEntry):
+def get_similarities(
+    precursor_library: List[ComputedStructureEntry],
+    target: ComputedStructureEntry,
+    cache_type: CacheType
+ ):
     if settings.cache_type == CacheType.MONGO_CACHE:
         precursor_set = set([s.entry_id for s in precursor_library])
         similarities = {}
@@ -78,7 +90,11 @@ def get_similarities(precursor_library: List[ComputedStructureEntry], target: Co
     else:
         precursor_structures = [s.structure for s in precursor_library]
         target_structure = target.structure
-        results = similarity(precursor_structures, target_structure)
+        if cache_type == CacheType.FILE_CACHE:
+            results = through_cache(precursor_structures, target_structure, similarity)
+        else:
+            results = similarity(precursor_structures, target_structure)
+
         similarities = dict(zip([i.entry_id for i in precursor_library], results))
         print("similarity matrix ready")
 
@@ -91,17 +107,7 @@ def mongo_results_generator(target: ComputedStructureEntry, collection_name: str
             yield result
 
 
-def through_cache_if_enabled(func):
-    @wraps(func)
-    def wrapper(_parents, target):
-        if settings.cache_type == CacheType.FILE_CACHE:
-            return through_cache(_parents, target, func)
-        else:
-            return func(_parents, target)
-    return wrapper
-
-
-def through_cache(_parents, target, func):
+def through_cache(_parents: List[Structure], target: Structure, func):
 
     if not os.path.exists(settings.rxn_files):
         os.mkdir(settings.rxn_files)
@@ -132,8 +138,7 @@ def through_cache(_parents, target, func):
     return results
 
 
-@through_cache_if_enabled
-def epitaxy(_parents, target):
+def epitaxy(_parents: List[Structure], target: Structure):
     def _func(s, target):
         sa = SubstrateAnalyzer(film_max_miller=2, substrate_max_miller=2)
         gen = [g for g in sa.calculate(s, target) if g]
@@ -147,8 +152,7 @@ def epitaxy(_parents, target):
     return Parallel(n_jobs=-1, verbose=1)(delayed(_func)(s, target) for s in _parents)
 
 
-@through_cache_if_enabled
-def similarity(_parents, target):
+def similarity(_parents: List[Structure], target: Structure):
     featurizer = MultipleFeaturizer(
         [
             SiteStatsFingerprint.from_preset("CoordinationNumber_ward-prb-2017"),

@@ -14,7 +14,7 @@ from tqdm import tqdm
 from piro.data import GASES, GAS_RELEASE, DEFAULT_GAS_PRESSURES
 from piro.mprester import get_mprester
 from piro.reactions import get_reactions
-from piro.settings import settings
+from piro.settings import CacheType, settings
 from piro.utils import get_epitaxies, get_similarities
 
 
@@ -124,11 +124,16 @@ class SynthesisRoutes:
 
         self.get_precursor_library()
         print("Precursor library ready.")
+        cache_type = CacheType.NO_CACHE if self.custom_target_entry else settings.cache_type
         self.epitaxies = epitaxies if epitaxies else get_epitaxies(
-            self.precursor_library, self.target_entry
+            self.precursor_library,
+            self.target_entry,
+            cache_type
         )
         self.similarities = similarities if similarities else get_similarities(
-            self.precursor_library, self.target_entry
+            self.precursor_library,
+            self.target_entry,
+            cache_type
         )
 
         self._reactions_objs = None
