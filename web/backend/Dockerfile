@@ -13,7 +13,7 @@ RUN pip3 install --no-cache-dir -r /app/web/backend/requirements.txt
 COPY setup.py /app/setup.py
 COPY piro /app/piro
 WORKDIR /app
-RUN pip3 install --no-cache-dir -e .
+RUN pip3 install --no-cache-dir -e .[m3gnet]
 
 # python backend api code
 COPY web/backend/app /app/app

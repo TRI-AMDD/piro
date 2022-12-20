@@ -28,7 +28,8 @@ setup(
         "tests": ["pytest",
                   "pytest-cov",
                   "coveralls"
-                  ]
+                  ],
+        "m3gnet": ["m3gnet==0.2.4"]
     },
     package_data={
         "piro": ["*.pickle", "*.json"]

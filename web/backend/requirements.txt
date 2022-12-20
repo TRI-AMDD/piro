@@ -2,7 +2,6 @@
 fastapi
 uvicorn
 pydantic[dotenv]
-m3gnet==0.2.4
 
 # for serving react
 aiofiles  # static files

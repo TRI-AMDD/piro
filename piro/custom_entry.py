@@ -1,7 +1,6 @@
 import re
 from typing import Optional
 
-from m3gnet.models import Relaxer
 from pymatgen.core import Composition, Structure
 from pymatgen.entries.compatibility import MaterialsProjectCompatibility
 from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
@@ -182,6 +181,11 @@ def create_custom_entry(
     structure.entry_id = entry_id or "custom_entry"
 
     if formation_energy_per_atom is None:
+        try:
+            from m3gnet.models import Relaxer
+        except ImportError:
+            raise ImportError('m3gnet is required to calculate formation energy for custom entry, when no formation '
+                              'energy is provided. Run "pip install piro[m3gnet]".')
         relaxer = Relaxer()
         trajectory = relaxer.relax(structure)["trajectory"]
         energy = trajectory.energies[-1].flatten()[0]
