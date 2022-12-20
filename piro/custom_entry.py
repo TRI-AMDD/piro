@@ -184,8 +184,10 @@ def create_custom_entry(
         try:
             from m3gnet.models import Relaxer
         except ImportError:
-            raise ImportError('m3gnet is required to calculate formation energy for custom entry, when no formation '
-                              'energy is provided. Run "pip install piro[m3gnet]".')
+            raise ImportError(
+                "m3gnet is required to calculate formation energy for custom entry, when no formation "
+                'energy is provided. Run "pip install piro[m3gnet]".'
+            )
         relaxer = Relaxer()
         trajectory = relaxer.relax(structure)["trajectory"]
         energy = trajectory.energies[-1].flatten()[0]

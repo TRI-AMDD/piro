@@ -1,7 +1,9 @@
-from piro.route import SynthesisRoutes
-from piro.custom_entry import create_custom_entry
-from app.models import RecommendRoutesRequest
 import inspect
+
+from app.models import RecommendRoutesRequest
+
+from piro.custom_entry import create_custom_entry
+from piro.route import SynthesisRoutes
 
 
 def recommend_routes_service(request: RecommendRoutesRequest) -> str:
@@ -9,8 +11,7 @@ def recommend_routes_service(request: RecommendRoutesRequest) -> str:
     custom_entry = None
     if request.custom_entry_cif_string:
         custom_entry = create_custom_entry(
-            request.custom_entry_cif_string,
-            request.custom_entry_formation_energy_per_atom
+            request.custom_entry_cif_string, request.custom_entry_formation_energy_per_atom
         )
         request.target_entry_id = custom_entry.entry_id
 

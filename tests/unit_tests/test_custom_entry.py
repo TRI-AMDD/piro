@@ -52,14 +52,11 @@ loop_
 """
 
 
-@pytest.mark.parametrize("formation_energy,entry_id", [
-    (None, None),
-    (1.2, "my_id")
-])
+@pytest.mark.parametrize("formation_energy,entry_id", [(None, None), (1.2, "my_id")])
 def test_create_custom_entry_default(formation_energy, entry_id):
     # when
     custom_entry = create_custom_entry(custom_entry_cif_string, formation_energy, entry_id)
 
     # then
     assert custom_entry.entry_id == (entry_id or "custom_entry")
-    assert round(custom_entry.data['formation_energy_per_atom'], 1) == (formation_energy or -1.9)
+    assert round(custom_entry.data["formation_energy_per_atom"], 1) == (formation_energy or -1.9)
