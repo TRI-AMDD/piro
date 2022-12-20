@@ -5,7 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
 from app import api
-from app.settings import Settings
+from app.settings import settings
 from app.index import configure_index
 
 app = fastapi.FastAPI(docs_url="/api/docs", openapi_url="/api")
@@ -35,5 +35,4 @@ def http_exception_handler(request, exc):
 
 
 if __name__ == '__main__':
-    settings = Settings()
     uvicorn.run(app, port=settings.port, host=settings.host)

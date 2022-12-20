@@ -125,6 +125,7 @@ class SynthesisRoutes:
         self.get_precursor_library()
         print("Precursor library ready.")
         cache_type = CacheType.NO_CACHE if self.custom_target_entry else settings.cache_type
+        print("Epitaxy and Similarity cache type: ", cache_type)
         self.epitaxies = epitaxies if epitaxies else get_epitaxies(
             self.precursor_library,
             self.target_entry,

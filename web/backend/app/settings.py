@@ -11,3 +11,8 @@ class Settings(piro.settings.Settings):
 
     class Config:
         env_file = str((pathlib.Path(__file__).parent.parent / '.env').resolve())
+
+
+settings = Settings()
+piro.settings.settings = settings
+

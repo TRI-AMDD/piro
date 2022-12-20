@@ -3,11 +3,10 @@ import os
 import fastapi
 from starlette.staticfiles import StaticFiles
 
-from app.settings import Settings
+from app.settings import settings
 
 
 def configure_index(app: fastapi.FastAPI):
-    settings = Settings()
     if settings.enable_react:
         react_dir = settings.react_build_dir
 
