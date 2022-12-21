@@ -21,6 +21,12 @@ class Settings(BaseSettings):
     cache_type: CacheType = CacheType.FILE_CACHE
     use_mapi_db: bool = False
 
+    @validator('mapi_key')
+    def update_env_with_mapi_key(cls, v):
+        if v and not os.environ.get('MAPI_KEY'):
+            os.environ['MAPI_KEY'] = v
+        return v
+
     @validator('cache_type')
     def check_cache_type(cls, v, values):
         if v == CacheType.MONGO_CACHE:
