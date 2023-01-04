@@ -56,7 +56,7 @@ RUN apt-get update && apt-get install -y redis-server && rm -rf /var/lib/apt/lis
 COPY web/backend/prestart.sh /app/prestart.sh
 
 #--------------------------------------------------------------
-# MULTI-STAGE deploying api to aws-lambda
+# MULTI-STAGE build aws-lambdaric
 #--------------------------------------------------------------
 FROM api as lambda-build
 ARG FUNCTION_DIR="/app"
@@ -70,15 +70,17 @@ RUN apt-get update && apt-get install -y \
   libcurl4-openssl-dev
 
 # Install the function's dependencies
-RUN pip3 install --no-cache-dir mangum
 RUN pip3 install --no-cache-dir --target ${FUNCTION_DIR} awslambdaric
 
-# add another stage to try to reduce file size
-FROM python:3.9-slim as lambda-api
+#--------------------------------------------------------------
+# MULTI-STAGE add aws-lambdaric and other lambda dependencies
+#--------------------------------------------------------------
+FROM api as lambda-api
 ARG FUNCTION_DIR="/app"
 WORKDIR ${FUNCTION_DIR}
 COPY --from=lambda-build ${FUNCTION_DIR} ${FUNCTION_DIR}
 
+RUN pip3 install --no-cache-dir mangum
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
 COPY web/backend/lambda_entry.sh /entry.sh
 RUN chmod 755 /usr/bin/aws-lambda-rie /entry.sh
