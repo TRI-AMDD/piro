@@ -55,12 +55,15 @@ export default function Form() {
         data.pressure = pressure;
 
         if (compoundMode === 'cif') {
+            data.target_entry_id = null;
             if (cifString) {
                 data.custom_entry_cif_string = cifString;
             } else {
                 // prevent submission, cif string is required
                 return;
             }
+        } else {
+            data.custom_entry_cif_string = null;
         }
 
         // @ts-ignore
@@ -81,7 +84,9 @@ export default function Form() {
                 }
             }
     
-            fileReader.readAsText(file);    
+            if (typeof(file)) {
+                fileReader.readAsText(file);    
+            }
         } 
     }
 
@@ -108,6 +113,7 @@ export default function Form() {
                                     label="cif File"
                                     type="file"
                                     accept=".cif"
+                                    name="cifFile"
                                     required={true}
                                     onChange={handleCIFLoad}
                                     className={styles.FileUpload}

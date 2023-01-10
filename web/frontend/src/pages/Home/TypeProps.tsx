@@ -1,6 +1,6 @@
 export interface Inputs {
-    target_entry_id: string;
-    custom_entry_cif_string: string;
+    target_entry_id: string | null;
+    custom_entry_cif_string: string | null;
     custom_entry_formation_energy_per_atom: number;
     confine_to_icsd: boolean;
     confine_to_stables: boolean;
