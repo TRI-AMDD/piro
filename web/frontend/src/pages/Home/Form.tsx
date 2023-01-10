@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Button, Input } from '@toyota-research-institute/lakefront';
+import { Button, Input, Toggle } from '@toyota-research-institute/lakefront';
 import ReactTooltip from 'react-tooltip';
 
 import styles from './Home.module.css';
@@ -21,12 +21,19 @@ const addElementOptions = [
     { value: 'O', label: 'O' }
 ];
 
+const toggleOptions = [
+    { label: 'Target Compound', value: 'compound' },
+    { label: '.cif File Upload', value: 'cif' }
+];
+
 export default function Form() {
     const { mutation } = usePlotData();
     const [pressure, setPressure] = useState<any>(null);
     const [addElements, setAddElements] = useState<{ label: string; value: string; }>();
     const [explicitIncludes, setExplicitIncludes] = useState<{ label: string; value: string; }[]>([]);
     const [excludeCompositions, setExcludeCompositions] = useState<{ label: string; value: string; }[]>([]);
+    const [compoundMode, setCompoundMode] = useState('compound');
+    const [cifString, setCifString] = useState<string>('');
 
     const {
         control,
@@ -47,10 +54,36 @@ export default function Form() {
         // get values from pressure
         data.pressure = pressure;
 
+        if (compoundMode === 'cif') {
+            if (cifString) {
+                data.custom_entry_cif_string = cifString;
+            } else {
+                // prevent submission, cif string is required
+                return;
+            }
+        }
+
         // @ts-ignore
         // set the form request to trigger an api call
         mutation.mutate(data);
     };
+
+    // store the contents of the cif file into a string for later use
+    const handleCIFLoad = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            const file = event.target.files[0];
+            const fileReader = new FileReader();
+    
+            fileReader.onload = function(e) {
+                const content = fileReader.result;
+                if (content && typeof(content) === 'string') {
+                    setCifString(content);
+                }
+            }
+    
+            fileReader.readAsText(file);    
+        } 
+    }
 
     return (
         /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
@@ -58,14 +91,38 @@ export default function Form() {
             <ReactTooltip multiline />
             <div className={styles.FormGrid}>
                 <div>
-                    <MoreInfo info={description.target_entry_id}>
+                    <Toggle options={toggleOptions} onChange={setCompoundMode} value={compoundMode} />
+                    {compoundMode === "compound" ? (
+                        <MoreInfo info={description.target_entry_id}>
                         <Input
                             label="Target Compound (mp-id)"
                             placeholder="mp-9029"
-                            {...register('target_entry_id', { required: true })}
-                            error={errors.target_entry_id ? 'Formula field is required' : ''}
+                            {...register("target_entry_id", { required: true })}
+                            error={errors.target_entry_id ? "Formula field is required" : ""}
                         />
-                    </MoreInfo>
+                        </MoreInfo>
+                    ) : (
+                        <>
+                            <div className={styles.FileUpload}>
+                                <Input
+                                    label="cif File"
+                                    type="file"
+                                    accept=".cif"
+                                    required={true}
+                                    onChange={handleCIFLoad}
+                                    className={styles.FileUpload}
+                                />
+                            </div>
+                            <Input
+                                type="number"
+                                step="any"
+                                label="Formation Energy Per Atom"
+                                {...register('custom_entry_formation_energy_per_atom', { valueAsNumber: true })}
+                            />
+                        </>
+                        
+                    )}
+                    
                     <Input
                         type="number"
                         step="any"
@@ -150,7 +207,13 @@ export default function Form() {
                 </div>
                 <Pressure setPressure={setPressure} />
             </div>
-            <AdvancedOptions control={control} register={register} setExcludeCompositions={setExcludeCompositions} />
+
+            <AdvancedOptions
+                control={control}
+                compoundMode={compoundMode}
+                register={register}
+                setExcludeCompositions={setExcludeCompositions}
+            />
 
             <Button type="submit">Run</Button>
         </form>

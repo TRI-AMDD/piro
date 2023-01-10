@@ -84,5 +84,5 @@
         "msw": "^0.29.0",
         "prettier": "^2.3.0"
     },
-    "proxy": "http://localhost:8080"
+    "proxy": "http://localhost:80"
 }

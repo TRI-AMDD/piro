@@ -58,3 +58,6 @@
     cursor: help;
     font-size: 12px;
 }
+.FileUpload input {
+    border: none;
+}
