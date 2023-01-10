@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Control, UseFormRegister } from 'react-hook-form';
 import { Collapsible, Input, Toggle } from '@toyota-research-institute/lakefront';
 import styled from '@emotion/styled'
@@ -11,6 +12,7 @@ import { usePlotData } from './plotDataContext';
 
 interface Props {
     control: Control<Inputs>;
+    compoundMode: string;
     register: UseFormRegister<Inputs>;
     setExcludeCompositions(input: { label: string; value: string; }[]): void;
 }
@@ -27,8 +29,14 @@ const toggleOptions = [
 ]
 
 export default function AdvancedOptions(props: Props) {
-    const { control, register, setExcludeCompositions } = props;
+    const { control, register, setExcludeCompositions, compoundMode } = props;
     const { apiMode, setApiMode } = usePlotData();
+
+    useEffect(() => {
+        if (compoundMode === 'cif') {
+            setApiMode('task');
+        }
+    }, [compoundMode, setApiMode])
 
     return (
         <StyledCollapsible
@@ -36,7 +44,9 @@ export default function AdvancedOptions(props: Props) {
         >
             <div className={styles.FormGrid}>
                 <div>
-                    <Toggle options={toggleOptions} onChange={setApiMode} value={apiMode} />
+                    {compoundMode === 'compound' && (
+                        <Toggle options={toggleOptions} onChange={setApiMode} value={apiMode} />
+                    )}
                     <MoreInfo info={description.simple_precursors}>
                         <Input
                             type="number"

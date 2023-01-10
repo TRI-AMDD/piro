@@ -13,3 +13,6 @@
     padding: 0 8px;
     border-right: solid 1px #c6c6d1;
 }
+.Footer p:last-child {
+    border-right: none;
+}
