@@ -14,6 +14,7 @@ const AmplifySetup: FC = ({ children }) => {
             <AmplifySignIn
                 headerText="Sign In To Synthesis Analyzer"
                 slot="sign-in"
+                hideSignUp={true}
             />
             <AmplifySignUp
                 headerText="Sign Up for Synthesis Analyzer"
