@@ -194,7 +194,7 @@ def similarity(_parents: List[Structure], target: Structure):
     with open(os.path.join(settings.rxn_files, "quantiles.pickle"), "rb") as f:
         quantiles = pickle.load(f)
 
-    X = scaler.transform(pd.concat([x_parent, x_target], axis=1))
+    X = scaler.transform(pd.concat([x_parent, x_target], axis=0))
 
     D = [pairwise_distances(np.array([row, X[-1]]))[0, 1] for row in X[:-1]]
 
