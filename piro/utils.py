@@ -122,7 +122,8 @@ def through_cache(_parents: List[Structure], target: Structure, func):
     indices_compt = [i for i in range(len(ordered_pairs)) if ordered_pairs[i] not in db]
 
     if indices_compt:
-        _res = func(np.array(_parents)[indices_compt].tolist(), target)
+        # Don't use numpy here because structures is iterable
+        _res = func([_parents[i] for i in indices_compt], target)
     else:
         _res = []
     results = []
@@ -193,7 +194,7 @@ def similarity(_parents: List[Structure], target: Structure):
     with open(os.path.join(settings.rxn_files, "quantiles.pickle"), "rb") as f:
         quantiles = pickle.load(f)
 
-    X = scaler.transform(x_parent.append(x_target))
+    X = scaler.transform(pd.concat([x_parent, x_target], axis=0))
 
     D = [pairwise_distances(np.array([row, X[-1]]))[0, 1] for row in X[:-1]]
 

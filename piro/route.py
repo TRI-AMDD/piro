@@ -159,6 +159,9 @@ class SynthesisRoutes:
                     inc_structure="final",
                     property_data=["material_id", "formation_energy_per_atom"],
                 )
+                # Hack to fix MP append
+                for entry in self.entries:
+                    entry.entry_id = entry.entry_id.replace("-GGA", "")
                 mp_ids = [ent.data['material_id'] for ent in self.entries]
                 provs = mpr.provenance.search(mp_ids, fields=['material_id', 'database_IDs', 'theoretical'])
                 from emmet.core.provenance import Database
