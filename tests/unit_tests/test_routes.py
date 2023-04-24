@@ -49,8 +49,8 @@ class RoutesTest(unittest.TestCase):
     def test_explicit_includes(self):
         route = SynthesisRoutes(
             "mp-5020",
-            epitaxies={k.replace('mp-5020', '').strip('_'): v for k, v in loadfn(TEST_FILES / "_epitaxy_cache.json").items()},
-            similarities={k.replace('mp-5020', '').strip('_'): v for k, v in loadfn(TEST_FILES / "_epitaxy_cache.json").items()},
+            # epitaxies={k.replace('mp-5020', '').strip('_'): v for k, v in loadfn(TEST_FILES / "_epitaxy_cache.json").items()},
+            # similarities={k.replace('mp-5020', '').strip('_'): v for k, v in loadfn(TEST_FILES / "_epitaxy_cache.json").items()},
             explicit_includes=["mp-2657"],
         )
         route.recommend_routes(temperature=298)
