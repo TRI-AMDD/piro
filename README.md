@@ -20,8 +20,8 @@ Tutorial jupyter notebooks showing how to use _piro_ locally are provided in the
 
 ## Prerequisites
 
-### Python 3.7
- - `piro` uses Python 3.7.  If you wish to develop or run a local server, we recommend following the Docker instructions below to create your own `piro` container instead of configuring your local environment.
+### Python 3.9
+ - `piro` uses Python 3.9.  If you wish to develop or run a local server, you can also following the Docker instructions below to create your own `piro` container instead of configuring your local environment.
 
 ### Pymatgen API key
  - `piro` has a dependency on `pymatgen` which requires you to generate an API key.  Go [here](https://materialsproject.org/open) and follow the instructions to generate your API key.
