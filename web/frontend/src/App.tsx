@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import AmplifySetup from './components/AmplifySetup';
+import CognitoProvider from './CognitoHosted';
 
 const queryClient = new QueryClient();
 const Home = lazy(() => import('./pages/Home/Home'));
@@ -12,7 +12,7 @@ const About = lazy(() => import('./pages/About/About'));
 const App = () => (
     <QueryClientProvider client={queryClient}>
         <Router>
-            <AmplifySetup>
+            <CognitoProvider>
                 <div className="app">
                     <Header />
                         <Suspense fallback={<div>Loading...</div>}>
@@ -23,7 +23,7 @@ const App = () => (
                         </Suspense>
                     <Footer />
                 </div>
-            </AmplifySetup>
+            </CognitoProvider>
         </Router>
     </QueryClientProvider>
 );
