@@ -64,7 +64,7 @@ export default function CognitoProvider({ children }) {
     if (token === '') {
         return (
             <div className={styles.app}>
-                You have to login to use the Phase Mapper app.
+                You have to login to use Synthesis App (Piro).
                 <button className={styles.login} onClick={() => Auth.federatedSignIn()}>
                     Login
                 </button>
