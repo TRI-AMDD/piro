@@ -13,16 +13,16 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
         <Router>
             <CognitoProvider>
-                <div className="app">
                     <Header />
+                    <div className="app">
                         <Suspense fallback={<div>Loading...</div>}>
                             <Switch>
                                 <Route exact path="/" component={Home} />
                                 <Route exact path="/about" component={About} />
                             </Switch>
                         </Suspense>
+                        </div>
                     <Footer />
-                </div>
             </CognitoProvider>
         </Router>
     </QueryClientProvider>
