@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Header from './components/Header';
@@ -9,7 +9,13 @@ const queryClient = new QueryClient();
 const Home = lazy(() => import('./pages/Home/Home'));
 const About = lazy(() => import('./pages/About/About'));
 
-const App = () => (
+
+const App: React.FC = () => {
+    const [highlightedParagraph, setHighlightedParagraph] = useState<string | null>(null);
+    const highlight =(id: string | null) =>{
+            setHighlightedParagraph(id);
+        }
+    return(
     <QueryClientProvider client={queryClient}>
         <Router>
             <CognitoProvider>
@@ -18,14 +24,17 @@ const App = () => (
                         <Suspense fallback={<div>Loading...</div>}>
                             <Switch>
                                 <Route exact path="/" component={Home} />
-                                <Route exact path="/about" component={About} />
+                                <Route exact path="/about">
+                                    <About highlightedParagraph={highlightedParagraph} highlight={highlight}/>
+                                </Route>
                             </Switch>
                         </Suspense>
                         </div>
-                    <Footer />
+                    <Footer highlight={highlight} />
             </CognitoProvider>
         </Router>
     </QueryClientProvider>
-);
+    );
+};
 
 export default App;
