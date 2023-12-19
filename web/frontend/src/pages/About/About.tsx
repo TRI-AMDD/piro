@@ -46,7 +46,7 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
         <article className={styles.PageContent}>
             <p><Link to="/">Back to Main</Link></p>
             <h2 className={styles.AboutHeader}>About</h2>
-            <p className={styles.AboutContent}>
+            <div id="" className={styles.contents}><p className={styles.AboutContent}>
                     Piro is an application that assists with rational planning of solid-state synthesis routes for inorganics.
                     It is a recommendation system for navigation and planning of synthesis of inorganic materials based on classical
                     nucleation theory and semi-empirical, data-driven approximations to its parts. Currently it works with Materials Project data via its Rester API.
@@ -57,21 +57,21 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
                     nucleation barrier and phase-selection. It allows retrosynthetic analysis of target inorganic materials
                     to generate a synthesis reaction tree. (i.e. laying out the reaction pathways necessary to arrive at the
                     target from practical/purchasable reagents/starting materials)
-            </p>
-            <div id="contact"><h4 className={styles.Titles}>Contact</h4>
+            </p></div>
+            <div id="contact" className={styles.contents}><h4 className={styles.Titles}>Contact</h4>
             <p className={styles.TitlesContent}>
                     The piro platform is developed by a team of researchers and software developers at Toyota Research Institute: Murat Aykol,
                     Joseph Montoya, Jens Hummelshøj, Chris Fajardo, Michael Puzon, and Reko Ong.
                     If you have any questions or feedback, please reach out to us at <a href="mailto:em-piro@tri.global">em-piro@tri.global</a>
             </p></div>
-            <div id="code"><h4 className={styles.Titles}>Code</h4>
+            <div id="code" className={styles.contents}><h4 className={styles.Titles}>Code</h4>
             <p className={styles.TitlesContent}>
                     If you’d like to use the python interface to piro, or to access the code for this site,
                     please visit our github page: <a href="https://github.com/TRI-AMDD/piro" target="_blank">https://github.com/TRI-AMDD/piro</a>.
                     Tutorial jupyter notebooks showing how to use piro locally are provided in the notebooks folder.
             </p>
             </div>
-            <div id="manuscript">
+            <div id="manuscript" className={styles.contents}>
             <h4 className={styles.Titles}>Manuscript</h4>
             <p className={styles.TitlesContent}>
                     For more information about the physical theory behind piro, please read our paper,
