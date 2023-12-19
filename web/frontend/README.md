@@ -1,64 +1,103 @@
-# Getting Started with TRI Web App
+# DNA Example Web App UI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<!-- TOC -->
+- [DNA Example Web App UI](#dna-example-web-app-ui)
+  - [What is inside?](#what-is-inside)
+  - [Getting Started](#getting-started)
+    - [Install](#install)
+    - [Local Run](#local-run)
+    - [Lint](#lint)
+    - [Typecheck](#typecheck)
+    - [Build](#build)
+    - [Test](#test)
+  - [User Management with AWS Cognito](#user-management-with-aws-cognito)
+  - [License](#license)
+<!-- TOC -->
 
-## Available Scripts
+This is a boilerplate build with Vite, React 18, TypeScript, Vitest, Testing
+Library, TailwindCSS 3, Eslint and Prettier.
 
-In the project directory, you can run:
+## What is inside?
 
-### `npm start`
+This project uses many tools like:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [Vite](https://vitejs.dev)
+- [ReactJS](https://reactjs.org)
+- [TypeScript](https://www.typescriptlang.org)
+- [Vitest](https://vitest.dev)
+- [Testing Library](https://testing-library.com)
+- [Tailwindcss](https://tailwindcss.com)
+- [Eslint](https://eslint.org)
+- [Prettier](https://prettier.io)
+- [React Router](https://reactrouter.com)
+- [TanStack Query](https://tanstack.com/query/latest/docs/react/overview)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Install dependencies.
 
-### `npm run build`
+```bash
+pnpm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Local Run
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Serve with hot reload at <http://localhost:3000>.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+pnpm run dev
+```
 
-### `npm run deploy-s3`
+Or with Docker
 
-Edit the package.json and the line about deploy-s3 to deploy the build as a static website using an S3 bucket\
+```bash
+docker compose build && docker compose watch
+```
 
+### Lint
 
-## TRI Web App Additions
+```bash
+pnpm run lint
+```
 
-Here are the additions added on top of Create React App.
+### Typecheck
 
-### Prettier Code Formatting
-[Prettier](https://prettier.io/) is an opinionated code formatter. This runs on git commits.
-To manually trigger prettier formatting, run `npm run format`
+```bash
+pnpm run typecheck
+```
 
-### Airbnb Typescript Style Guide
-[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) is implemented. All code is checked before a git commit.
+### Build
 
-### Emotion Styling
-[Emotion](https://emotion.sh/docs/introduction) can be used to style components.
+```bash
+pnpm run build
+```
 
-### Lakefront Components
-[Lakefront](https://github.com/ToyotaResearchInstitute/lakefront) has a collection of ready-made styled components (buttons, input, etc).
+Or with Docker
 
-### React Router
-You can use [React Router](https://reactrouter.com/web/guides/quick-start) for setting up multiple pages.
+```bash
+docker build -t export-prod -o dist .
+```
 
-### React Query
-[React Query](https://react-query.tanstack.com/) can be used for fetching data from rest endpoints.
+### Test
 
-## Learn More
+```bash
+pnpm run test
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+View and interact with your tests via UI.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+pnpm run test:ui
+```
+
+## User Management with AWS Cognito
+
+The app supports AWS Cognito login using Cognito's hosted UI. To enable
+Cognito, supply the details in the [config.js](public/config.js) to connect to
+the desired Cognito user pool and set the flag `AMPLIFY_ENABLED` to true.
+
+## License
+
+This project is licensed under the MIT License.

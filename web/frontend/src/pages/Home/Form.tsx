@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Button, Input, Toggle } from '@toyota-research-institute/lakefront';
-import ReactTooltip from 'react-tooltip';
+import { Button } from "@material-tailwind/react";
+import { Input, Toggle } from '@toyota-research-institute/lakefront';
+import { Tooltip } from 'react-tooltip';
 
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
@@ -93,7 +94,7 @@ export default function Form() {
     return (
         /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
         <form onSubmit={handleSubmit(onSubmit)} className={styles.Form}>
-            <ReactTooltip multiline />
+            <Tooltip />
             <div className={styles.FormGrid}>
                 <div>
                     <Toggle options={toggleOptions} onChange={setCompoundMode} value={compoundMode} />

@@ -1,5 +1,6 @@
-/* bring in normalize.css styles */
-@import-normalize;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 html, body, #root {
     height: 100%;
