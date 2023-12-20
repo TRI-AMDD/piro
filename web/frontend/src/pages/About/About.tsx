@@ -43,15 +43,15 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
         }, []); // Empty dependency array for initial rendering
 
     return (
-        <article className={styles.PageContent}>
+        <div className={styles.PageContent}>
+        <article>
             <p><Link to="/">Back to Main</Link></p>
             <h2 className={styles.AboutHeader}>About</h2>
             <div id="" className={styles.contents}><p className={styles.AboutContent}>
                     Piro is an application that assists with rational planning of solid-state synthesis routes for inorganics.
                     It is a recommendation system for navigation and planning of synthesis of inorganic materials based on classical
                     nucleation theory and semi-empirical, data-driven approximations to its parts. Currently it works with Materials Project data via its Rester API.
-            </p>
-            <p className={styles.AboutContent}>
+                    <br/><br/>
                     Piro creates synthesis reaction planning plots for target polymorphs under a specific set of thermodynamic
                     conditions and a precursor library, where favorable routes are those that are (nearly) Pareto optimal in terms of two metrics:
                     nucleation barrier and phase-selection. It allows retrosynthetic analysis of target inorganic materials
@@ -79,6 +79,7 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
                     <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank">(https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888)</a>.
             </p></div>
         </article>
+        </div>
     );
 };
 
