@@ -11,7 +11,7 @@ export default function Header() {
         <img src={logo} alt="Logo" width={"150px"}/>
         <h3>Piro Synthesis Analyzer</h3>
         <a href="/about" className={styles.Aboutlink}>About</a>
-        {!AMPLIFY_ENABLED && <button className={styles.Signout} onClick={signOut}>Sign Out</button>}
+        {AMPLIFY_ENABLED && <button className={styles.Signout} onClick={signOut}>Sign Out</button>}
     </header>
     );
 }
