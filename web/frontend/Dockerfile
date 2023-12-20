@@ -1,23 +1,34 @@
-# build environment
-FROM node:16 as build
+ARG APP_DIR="/home/dockeruser"
 
-WORKDIR /app
+FROM node:20-slim AS run-dev
+ARG APP_DIR
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-COPY package.json /app/package.json
+RUN useradd -m dockeruser
+WORKDIR ${APP_DIR}
+USER dockeruser
 
-ENV NODE_PATH=/node_modules
-ENV PATH=$PATH:/node_modules/.bin
-RUN npm install
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
+    pnpm install --frozen-lockfile
 
+COPY --chown=dockeruser:dockeruser . .
 
-COPY public /app/public
-COPY src /app/src
+CMD ["pnpm", "run", "dev"]
 
-RUN npm run build
+FROM run-dev AS build-prod
+RUN pnpm run build
+
+FROM scratch AS export-prod
+ARG APP_DIR
+COPY --from=build-prod ${APP_DIR}/dist /
 
 # production environment
 FROM nginx:latest
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build-prod ${APP_DIR}/dist /usr/share/nginx/html
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 
 CMD ["nginx", "-g", "daemon off;"]

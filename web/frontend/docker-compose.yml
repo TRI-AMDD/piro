@@ -1,0 +1,16 @@
+services:
+  ui:
+    build:
+      dockerfile: Dockerfile
+      target: run-dev
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /home/dockeruser/
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: Dockerfile
