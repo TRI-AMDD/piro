@@ -1,18 +1,48 @@
 .AppHeader {
     display: flex;
-    justify-content: space-between;
+    height: 10%;
+    padding: 16px 24px;
     align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+    background: var(--grey-900, #212121);
 }
-.AppHeader h1 {
-    color: #2c2c35;
-    font-size: 30px;
+.Signout{
+    display: flex;
+    height: 36px;
+    padding: 8px 14px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 2px 4px -2px rgba(33, 33, 33, 0.20), 0px 4px 6px -1px rgba(33, 33, 33, 0.20);
 }
-.Footer p {
-    display: inline-block;
-    margin: 16px 0;
-    padding: 0 8px;
-    border-right: solid 1px #c6c6d1;
+.Aboutlink{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: auto;
+    color: #ece8e8;
 }
-.Footer p:last-child {
-    border-right: none;
+.AppHeader h3 {
+    color: white;
+    font-size: 25px;
+}
+.Footer{
+    display: flex;
+    padding: 25px;
+    gap: 24px;
+    background: var(--grey-900, #212121);
+    align-items: center;
+    position: relative;
+    margin-top: auto;
+}
+.Footercopyright{
+    margin-left: auto;
+    color:#ece8e8
+}
+.Footerlink{
+    color:#ece8e8
 }

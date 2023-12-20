@@ -16,12 +16,14 @@ const App = () => (
       <BrowserRouter>
         <div className="app">
           <Header />
+          <div className="appbody">
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
             </Routes>
           </Suspense>
+          </div>
           <Footer />
         </div>
       </BrowserRouter>

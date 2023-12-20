@@ -21,5 +21,10 @@ code {
 .app {
     background-color: rgb(246, 246, 248);
     min-height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.appbody{
     padding: 12px;
 }
