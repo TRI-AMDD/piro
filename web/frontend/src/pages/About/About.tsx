@@ -45,7 +45,14 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
     return (
         <div className={styles.PageContent}>
         <article>
-            <p><Link to="/">Back to Main Page</Link></p>
+            <p style={{ display: 'flex', alignItems: 'center' }}>
+                <Link to="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0z" fill="none"/><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </Link>
+                <Link to="/">Back to Main Page</Link>
+            </p>
             <h2 className={styles.AboutHeader}>About</h2>
             <div id=""><p className={styles.Content}>
                     Piro is an application that assists with rational planning of solid-state synthesis routes for inorganics.
