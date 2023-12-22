@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import 'tailwindcss/tailwind.css';
-import App from './app';
+import App from './App';
 import { ThemeProvider } from '@material-tailwind/react';
 
 
