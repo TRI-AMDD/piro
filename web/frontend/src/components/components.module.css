@@ -32,7 +32,7 @@
 }
 .Footer{
     display: flex;
-    padding: 25px;
+    padding: 30px;
     gap: 24px;
     background: var(--grey-900, #212121);
     align-items: center;
