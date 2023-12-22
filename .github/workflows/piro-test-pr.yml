@@ -26,7 +26,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e .[tests,m3gnet] pymatgen==2023.3.23
+        pip install -e .[tests,m3gnet]
+        pip install -r requirements.txt
     - name: pytest
       env:
         MPLBACKEND: "Agg"
