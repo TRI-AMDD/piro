@@ -1,9 +1,9 @@
 matminer==0.9.0
 plotly
 pymongo==4.6.0
-maggma==0.60.0
+maggma==0.51.18
 pymatgen==2023.9.10
-pydantic_settings==2.1.0
-monty==2023.11.3
+pydantic_settings==2.0.0
+monty==2022.9.9
 
 
