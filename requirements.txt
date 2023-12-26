@@ -1,3 +1,5 @@
 matminer==0.8.0
 plotly==5.11.0
 pymongo==3.12.0
+pymatgen==2023.9.10
+pydantic_settings==2.1.0
