@@ -27,7 +27,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[tests,m3gnet]
-        pip install pymatgen==2022.10.22
+        pip install pymatgen==2023.9.10
     - name: pytest
       env:
         MPLBACKEND: "Agg"
