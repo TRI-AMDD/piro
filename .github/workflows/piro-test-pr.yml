@@ -28,6 +28,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e .[tests,m3gnet]
         pip install pymatgen==2023.9.10
+    - name: Check pymatgen installation
+      run: |
+        pip show pymatgen
+        echo "Test Pymatgen version: ${{ steps.check_pymatgen.outputs.version }}"
     - name: pytest
       env:
         MPLBACKEND: "Agg"
