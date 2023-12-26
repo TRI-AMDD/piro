@@ -6,7 +6,6 @@ import pickle
 import numpy as np
 import json
 from functools import lru_cache
-
 from pymatgen.core import Structure
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymongo import MongoClient

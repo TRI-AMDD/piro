@@ -2,7 +2,7 @@ import os
 import unittest
 import warnings
 from pathlib import Path
-from pymatgen.ext.matproj import MPRester, MPRestError, _MPResterLegacy
+from pymatgen.ext.matproj import MPRester, MPRestError, MPRester
 from pymatgen.core import SETTINGS
 from _pytest.monkeypatch import MonkeyPatch
 from monty.serialization import loadfn, dumpfn
@@ -31,11 +31,11 @@ class RoutesTest(unittest.TestCase):
                 return None
 
             self.monkeypatch.setattr(
-                _MPResterLegacy, "get_entries_in_chemsys", get_entries_in_chemsys)
+                MPRester, "get_entries_in_chemsys", get_entries_in_chemsys)
             self.monkeypatch.setattr(
-                _MPResterLegacy, "get_entry_by_material_id", get_entry_by_material_id)
+                MPRester, "get_entry_by_material_id", get_entry_by_material_id)
             self.monkeypatch.setattr(
-                _MPResterLegacy, "get_database_version", get_database_version)
+                MPRester, "get_database_version", get_database_version)
 
     def test_basic_route(self):
         # BaTiO3 example
