@@ -12,7 +12,7 @@ from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymongo import MongoClient
 from scipy.interpolate import interp1d
 from pymatgen.core.composition import Composition
-from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
+from pymatgen.analysis.interfaces.substrate_analyzer import SubstrateAnalyzer
 from matminer.featurizers.base import MultipleFeaturizer
 from matminer.featurizers.composition import (
     ElementProperty,

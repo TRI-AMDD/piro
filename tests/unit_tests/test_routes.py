@@ -2,7 +2,8 @@ import os
 import unittest
 import warnings
 from pathlib import Path
-from pymatgen.ext.matproj import MPRester, MPRestError, _MPResterLegacy
+from pymatgen.ext.matproj import MPRester, MPRestError
+from pymatgen.ext.matproj_legacy import _MPResterLegacy
 from pymatgen.core import SETTINGS
 from _pytest.monkeypatch import MonkeyPatch
 from monty.serialization import loadfn, dumpfn
