@@ -26,7 +26,7 @@ module.exports = defineConfig({
 
   e2e: {
 
-    baseUrl: 'https://google.co.in/',
+    baseUrl: 'https://piro.matr.io/',
     ModifyObstructiveThirdPartyCode: true,
     SkipDomainInjection: [ '*.matr.io'],
 
