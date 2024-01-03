@@ -33,7 +33,7 @@ jobs:
     - name: pytest
       env:
         MPLBACKEND: "Agg"
-        PMG_MAPI_KEY: "fake_api_key"
+        PMG_MAPI_KEY: ${{ secrets.PMG_MAPI_KEY }}
       run: |
         pytest tests/unit_tests  --color=yes --cov=piro --cov-report html:coverage_reports
     - name: Coveralls
