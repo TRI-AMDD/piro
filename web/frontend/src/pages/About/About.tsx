@@ -35,14 +35,6 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
             return () => clearTimeout(timeoutId);
       }, [highlightedParagraph]);
 
-      useEffect(() => {
-          // Additional effect to handle the initial rendering when highlightedParagraph is null
-          const divs = document.querySelectorAll('div');
-          divs.forEach((div) => {
-            div.classList.remove(styles.highlighted);
-          });
-        }, []); // Empty dependency array for initial rendering
-
     return (
         <div className={styles.PageContent}>
         <article>
