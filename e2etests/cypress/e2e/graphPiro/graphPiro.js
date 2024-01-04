@@ -20,10 +20,10 @@ cy.get(".login_login__19CNz")
   .click()
   
 cy.get("#signInFormUsername")
-  .type('tri.jaramillo.group@tri.global',{force: true})
+  .type(Cypress.config().username,{force: true})
 
 cy.get("#signInFormPassword")
-  .type('PiroTest1234!',{force : true})
+  .type(Cypress.config().password,{force : true})
 
 cy.get('[name="signInSubmitButton"]').eq(1)
   .click()
@@ -32,7 +32,7 @@ cy.get('[name="signInSubmitButton"]').eq(1)
 
 
 When('I enter value of Target Compound mp-id', () => {
-cy.get('[name="target_entry_id"]').type('mp-9029')
+cy.get('[name="target_entry_id"]').type(Cypress.config().mpid)
 
 });
 
