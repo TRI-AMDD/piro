@@ -4,6 +4,12 @@
     src: url('./fonts/Gellix-Regular/Gellix-Regular.woff2') format('woff2'),
          url('./fonts/Gellix-Regular/Gellix-Regular.woff') format('woff');
 }
+@font-face{
+  font-family: 'Gellix-Medium';
+    src: url('./fonts/Gellix-Medium/Gellix-Medium.eot');
+      src: url('./fonts/Gellix-Medium/Gellix-Medium.woff2') format('woff2'),
+           url('./fonts/Gellix-Medium/Gellix-Medium.woff') format('woff');
+}
 
 body {
   font-family: 'Gellix-Regular', sans-serif;
