@@ -66,7 +66,7 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
                         <p className={styles.Content}>
                                 The piro platform is developed by a team of researchers and software developers at Toyota Research Institute: Murat Aykol,
                                 Joseph Montoya, Jens Hummelshøj, Chris Fajardo, Michael Puzon, and Reko Ong.
-                                If you have any questions or feedback, please reach out to us at <a href="mailto:em-piro@tri.global">em-piro@tri.global</a>
+                                If you have any questions or feedback, please reach out to us at <u><a href="mailto:em-piro@tri.global">em-piro@tri.global</a></u>.
                         </p></div>
             </div>
             <p className={styles.gap}></p>
@@ -75,8 +75,9 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
                     <h4 className={styles.Titles}>Code</h4>
                     <p className={styles.Content}>
                             If you’d like to use the python interface to piro, or to access the code for this site,
-                            please visit our github page: <a href="https://github.com/TRI-AMDD/piro" target="_blank">https://github.com/TRI-AMDD/piro</a>.
+                            please visit our github page: <u><a href="https://github.com/TRI-AMDD/piro" target="_blank">https://github.com/TRI-AMDD/piro</a></u>.
                             Tutorial jupyter notebooks showing how to use piro locally are provided in the notebooks folder.
+                            <div className={styles.spacer}></div>
                     </p>
                 </div>
             </div>
@@ -86,8 +87,8 @@ const About: React.FC<highlightProps> = ({highlightedParagraph, highlight}) => {
                     <h4 className={styles.Titles}>Manuscript</h4>
                     <p className={styles.Content}>
                             For more information about the physical theory behind piro, please read our paper,
-                            “Rational Solid-State Synthesis Routes for Inorganic Materials” by Murat Aykol et al.
-                            <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank">(https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888)</a>.
+                            “Rational Solid-State Synthesis Routes for Inorganic Materials” by Murat Aykol et al. <u><a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank">(https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888)</a></u>.
+                            <div className={styles.spacer}></div>
                     </p></div>
             </div>
         </article>

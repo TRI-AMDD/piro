@@ -10,7 +10,7 @@
 .Breadcrumbs{
      color: #212121;
      font-size: 16px;
-     font-family: Gellix;
+     font-family: Gellix-Regular;
      font-weight: 500;
      line-height: 24px;
      letter-spacing: 0.03px;
@@ -23,7 +23,7 @@
     font-feature-settings: 'clig' off, 'liga' off;
 
     /* header/h2 */
-    font-family: Gellix;
+    font-family: Gellix-Regular;
     font-size: 34px;
     font-style: normal;
     font-weight: 400;
@@ -37,7 +37,7 @@
     font-feature-settings: 'clig' off, 'liga' off;
     padding-top:8px;
     /* body/body 1-regular */
-    font-family: Gellix;
+    font-family: Gellix-Regular;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -49,7 +49,7 @@
     color: var(--grey-900, #212121);
     font-feature-settings: 'clig' off, 'liga' off;
     /* header/h4 */
-    font-family: Gellix;
+    font-family: Gellix-Regular;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
@@ -68,7 +68,9 @@
 .gap{
     padding-bottom:40px;
 }
-
+.spacer {
+    padding-bottom: 8px;
+}
 @keyframes shadowEffect {
   0% {
     box-shadow: 0 0 0 0 #757575;

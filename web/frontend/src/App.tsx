@@ -5,6 +5,7 @@ import CognitoProvider from '@/features/cognito/cognito-hosted';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './index.css';
+import './fonts.css';
 
 const queryClient = new QueryClient();
 const Home = lazy(() => import('@/pages/Home/Home'));
