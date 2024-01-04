@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'Gellix-Regular';
+  src: url('./fonts/Gellix-Regular/Gellix-Regular.eot');
+    src: url('./fonts/Gellix-Regular/Gellix-Regular.woff2') format('woff2'),
+         url('./fonts/Gellix-Regular/Gellix-Regular.woff') format('woff');
+}
+
+body {
+  font-family: 'Gellix-Regular', sans-serif;
+}
