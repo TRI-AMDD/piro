@@ -27,8 +27,8 @@ module.exports = defineConfig({
   e2e: {
 
     baseUrl: 'https://piro.matr.io/',
-    username: 'tri.jaramillo.group@tri.global',
-    password: 'PiroTest1234!',
+    username: '',
+    password: '',
     mpid: 'mp-9029',
     ModifyObstructiveThirdPartyCode: true,
     SkipDomainInjection: [ '*.matr.io'],
