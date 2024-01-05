@@ -1,7 +1,9 @@
 import { Amplify, Auth, Hub } from 'aws-amplify';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { UserAuthContext } from './user-auth-context';
-
+import Login from '@/components/loginheader';
+import LoginFooter from '@/components/loginfooter';
+import LoginCSS from './login.module.css';
 Amplify.configure(AWS_CONFIG);
 
 interface Props {
@@ -57,6 +59,16 @@ export default function CognitoProvider({ children }: Props) {
   // the app needs a token to work, show the login screen
   if (token === '') {
     return (
+      <div>
+      <Login/>
+      <div className={LoginCSS.firstblock}>
+        <div className={LoginCSS.piroheader}>
+        Piro Synthesis Analyzer
+        </div>
+        <div className={LoginCSS.firstblockbody}>
+        The Piro Synthesis Analyzer is an application that assists with rational planning of solid-state synthesis routes for inorganics. It is a recommendation system for navigation and planning of synthesis of inorganic materials based on classical nucleation theory and semi-empirical, data-driven approximations to its parts. Currently, the app works with Materials Project data via its Rester API. Sign in to learn more and use the tool.
+        </div>
+      </div>
       <div className="container mx-auto px-4 pt-6 ">
         <p className="mb-4">You have to login to use the DNA Example app. You can create your own account.</p>
         <button
@@ -65,6 +77,8 @@ export default function CognitoProvider({ children }: Props) {
         >
           Login
         </button>
+      </div>
+      <LoginFooter/>
       </div>
     );
   }

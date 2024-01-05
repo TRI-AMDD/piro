@@ -1,0 +1,39 @@
+.firstblock{
+    display: flex;
+    padding: 80px 160px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    background: var(--white, #FFF);
+}
+.piroheader{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Medium;
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 42px;
+}
+.firstblockbody{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Regular;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+}
+.signinbutton{
+    display: flex;
+    width: 218px;
+    height: 44px;
+    padding: 10px 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--grey-900, #212121);
+    box-shadow: 0px 2px 4px -2px rgba(33, 33, 33, 0.20), 0px 4px 6px -1px rgba(33, 33, 33, 0.20);
+}
