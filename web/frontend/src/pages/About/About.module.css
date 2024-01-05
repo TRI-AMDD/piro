@@ -10,11 +10,15 @@
 .Breadcrumbs{
      color: #212121;
      font-size: 16px;
-     font-family: Gellix-Regular;
+     font-family: Gellix-Medium;
      font-weight: 500;
      line-height: 24px;
      letter-spacing: 0.03px;
-     word-wrap: break-word
+     word-wrap: break-word;
+     width: 137px;
+     height: 24px;
+     gap: 8px;
+
 }
 .AboutHeader{
     align-self: stretch;
@@ -49,7 +53,7 @@
     color: var(--grey-900, #212121);
     font-feature-settings: 'clig' off, 'liga' off;
     /* header/h4 */
-    font-family: Gellix-Regular;
+    font-family: Gellix-Medium;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
