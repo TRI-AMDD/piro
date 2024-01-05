@@ -37,3 +37,22 @@
     background: var(--grey-900, #212121);
     box-shadow: 0px 2px 4px -2px rgba(33, 33, 33, 0.20), 0px 4px 6px -1px rgba(33, 33, 33, 0.20);
 }
+.signincontent{
+    color: var(--white, #FFF);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Regular;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+.secondblock{
+    display: flex;
+    padding: 40px 160px;
+    align-items: flex-start;
+    gap: 40px;
+    align-self: stretch;
+    background: var(--grey-100, #F5F5F5);
+}
