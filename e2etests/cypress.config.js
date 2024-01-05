@@ -26,7 +26,10 @@ module.exports = defineConfig({
 
   e2e: {
 
-    baseUrl: 'https://google.co.in/',
+    baseUrl: 'https://piro.matr.io/',
+    username: '',
+    password: '',
+    mpid: 'mp-9029',
     ModifyObstructiveThirdPartyCode: true,
     SkipDomainInjection: [ '*.matr.io'],
 

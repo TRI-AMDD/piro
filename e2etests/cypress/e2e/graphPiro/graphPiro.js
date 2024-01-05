@@ -9,21 +9,42 @@ const newleFilesPath = "cypress/fixtures/newLe.text"
 
 const sometext='';
 
-Given('I open the piro website', () => {
+Given('I login the piro website', () => {
 
-  //cy.visit('https://oxi.matr.io/');
-  //cy.visit('https://www.google.co.in/');
-  //cy.visit(baseUrl)
-  cy.visit(Cypress.config().baseUrl),{
-    Headers:{
-        "Accept":"application/json, text/plain, */*",
-        "User-Agent": "axios/0.18.0"
-    }
-  }
-  cy.screenshot() // Replace with your website URL
-  cy.log('NAVIGATING TO PIRO WEB')
-  cy.wait(10000)
-    
+cy.visit(Cypress.config().baseUrl)
+cy.log('NAVIGATING TO PIRO WEB')
+cy.wait(10000)
+
+cy.get(".login_login__19CNz")
+  .should('be.visible')
+  .click()
+  
+cy.get("#signInFormUsername")
+  .type(Cypress.config().username,{force: true})
+
+cy.get("#signInFormPassword")
+  .type(Cypress.config().password,{force : true})
+
+cy.get('[name="signInSubmitButton"]').eq(1)
+  .click()
+  
 });
 
 
+When('I enter value of Target Compound mp-id', () => {
+cy.get('[name="target_entry_id"]').type(Cypress.config().mpid)
+
+});
+
+
+And('I click on run button', () => {
+cy.get('[type="submit"]').click()
+});
+
+
+Then('the graph should be loaded', () => {
+cy.wait(10000);
+cy.scrollTo('bottom')
+cy.get('.js-plotly-plot').scrollIntoView()
+cy.screenshot
+});
