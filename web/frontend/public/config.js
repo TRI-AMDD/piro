@@ -53,4 +53,4 @@ var AWS_CONFIG = {
 var API_BASE_URL = "";
 
 // boolean flag to set amplify on/off for user authentication support
-var AMPLIFY_ENABLED = false;
+var AMPLIFY_ENABLED = true;

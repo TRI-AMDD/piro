@@ -9,7 +9,7 @@
 .piroheader{
     color: var(--grey-900, #212121);
     font-feature-settings: 'clig' off, 'liga' off;
-    font-family: Gellix-Medium;
+    font-family: Gellix-Regular;
     font-size: 34px;
     font-style: normal;
     font-weight: 400;
@@ -43,7 +43,7 @@
     font-family: Gellix-Regular;
     font-size: 14px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 24px;
     letter-spacing: 0.4px;
     text-transform: uppercase;
@@ -55,4 +55,82 @@
     gap: 40px;
     align-self: stretch;
     background: var(--grey-100, #F5F5F5);
+}
+.donthavesignin{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Regular;
+    font-size: 12px;
+    margin-top: -30px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 166.667% */
+    letter-spacing: 0.2px;
+    align-self: stretch;
+}
+.requestsignin{
+    font-style: italic;
+    font-weight: 400;
+    text-decoration-line: underline;
+}
+.secondblockheader{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Medium;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 160% */
+}
+.secondblockcontent{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Regular;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+    letter-spacing: 0.15px;
+    align-self: stretch;
+}
+.secondblockmargin{
+    margin-top: 13px;
+}
+.thirdblock{
+    display: flex;
+    padding: 40px 160px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+}
+.thirdblockheader{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Medium;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 160% */
+}
+.thirdblockcontent{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Regular;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+    letter-spacing: 0.15px;
+}
+.mailstyle{
+    color: var(--info-dark, #0288D1);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Regular;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    text-decoration-line: underline;
 }
