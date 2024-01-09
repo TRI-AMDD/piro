@@ -2,8 +2,6 @@ const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
 
-  projectId:'ag5qdq',
-
   chromeWebSecurity: false,
 
   'cypress-cucumber-preprocessor': {
@@ -13,17 +11,6 @@ module.exports = defineConfig({
     step_definitions: './cypress/e2e/**/*.feature',
 
   },
-  /*clientCertificates: [
-    {
-      url: 'https://oxi.matr.io/',
-      certs: [
-        {
-          cert: 'cypress/certs/cert.pem',
-          //key: 'cypress/certs/private.key',
-        },
-      ]
-    }], */
-
   e2e: {
 
     baseUrl: 'https://piro.matr.io/',
@@ -39,14 +26,11 @@ module.exports = defineConfig({
 
     },
 
-    //retries: 1,
-
     testIsolation: false,
-
+    supportFile: 'cypress/support/commands.js',
     specPattern: 'cypress/e2e/**/*.feature',
     experimentalWebKitSupport: true,
-    supportFile:false
-
+    
   },
 
 })
