@@ -8,17 +8,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ./web/frontend
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        working-directory: web/frontend
 
     steps:
     - uses: actions/checkout@v3
