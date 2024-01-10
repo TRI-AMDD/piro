@@ -80,7 +80,7 @@ export default function CognitoProvider({ children }: Props) {
         <div className={LoginCSS.secondblockcontent}>
         <h4 className={LoginCSS.secondblockheader}>More about the tool</h4><p className={LoginCSS.secondblockmargin}>Piro creates synthesis reaction planning plots for target polymorphs under a specific set of thermodynamic conditions and a precursor library, where favorable routes are those that are (nearly) Pareto optimal in terms of two metrics: nucleation barrier and phase-selection.</p> 
 <p className={LoginCSS.secondblockmargin}>It allows retrosynthetic analysis of target inorganic materials to generate a synthesis reaction tree (i.e. laying out the reaction pathways necessary to arrive at the target from practical/purchasable reagents/starting materials).</p></div>
-<img className={LoginCSS.imagecontent} src={logo} alt="Logo"/>
+<img src={logo} alt="image" style={{ maxWidth: '100%', maxHeight: '100%', display: 'block' }}/>
 
       </div>
       <div className={LoginCSS.thirdblock}>

@@ -55,6 +55,7 @@
     gap: 40px;
     align-self: stretch;
     background: var(--grey-100, #F5F5F5);
+    overflow: hidden;
 }
 .donthavesignin{
     color: var(--grey-900, #212121);
