@@ -1,7 +1,12 @@
 import { Amplify, Auth, Hub } from 'aws-amplify';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { UserAuthContext } from './user-auth-context';
-
+import Login from '@/components/loginheader';
+import LoginFooter from '@/components/loginfooter';
+import LoginCSS from './login.module.css';
+import logo from './loginpic.png';
+import logo2 from './blackimage.png';
+import PreLogin from './Prelogin'
 Amplify.configure(AWS_CONFIG);
 
 interface Props {
@@ -57,15 +62,7 @@ export default function CognitoProvider({ children }: Props) {
   // the app needs a token to work, show the login screen
   if (token === '') {
     return (
-      <div className="container mx-auto px-4 pt-6 ">
-        <p className="mb-4">You have to login to use the DNA Example app. You can create your own account.</p>
-        <button
-          className="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-          onClick={() => Auth.federatedSignIn()}
-        >
-          Login
-        </button>
-      </div>
+      <PreLogin/>
     );
   }
 
