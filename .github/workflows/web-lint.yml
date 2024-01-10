@@ -23,6 +23,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16
+        working-directory: web/frontend
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install
