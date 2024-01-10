@@ -4,8 +4,8 @@ import { UserAuthContext } from './user-auth-context';
 import Login from '@/components/loginheader';
 import LoginFooter from '@/components/loginfooter';
 import LoginCSS from './login.module.css';
-import logo from './loginpic.png'
-
+import logo from './loginpic.png';
+import logo2 from './blackimage.png'
 Amplify.configure(AWS_CONFIG);
 
 interface Props {
@@ -62,7 +62,10 @@ export default function CognitoProvider({ children }: Props) {
   if (token === '') {
     return (
       <div>
-      <Login/>
+      <header className={LoginCSS.AppHeader}>
+        <img src={logo2} alt="Logo" width={"150px"}/>
+        <button className={LoginCSS.loginsignin} onClick={() => Auth.federatedSignIn()}>SIGN IN</button>
+    </header>
       <div className={LoginCSS.firstblock}>
         <div className={LoginCSS.piroheader}>
         Piro Synthesis Analyzer
@@ -70,14 +73,14 @@ export default function CognitoProvider({ children }: Props) {
         <div className={LoginCSS.firstblockbody}>
         The Piro Synthesis Analyzer is an application that assists with rational planning of solid-state synthesis routes for inorganics. It is a recommendation system for navigation and planning of synthesis of inorganic materials based on classical nucleation theory and semi-empirical, data-driven approximations to its parts. Currently, the app works with Materials Project data via its Rester API. Sign in to learn more and use the tool.
         </div>
-        <button className={LoginCSS.signinbutton}><div className={LoginCSS.signincontent}>Go to sign in page</div></button>
+        <button className={LoginCSS.signinbutton}><div className={LoginCSS.signincontent} onClick={() => Auth.federatedSignIn()}>Go to sign in page</div></button>
         <p className={LoginCSS.donthavesignin}>Don’t have a sign in?<i className={LoginCSS.requestsignin}>Request one here</i> </p>
       </div>
       <div className={LoginCSS.secondblock}>
         <div className={LoginCSS.secondblockcontent}>
         <h4 className={LoginCSS.secondblockheader}>More about the tool</h4><p className={LoginCSS.secondblockmargin}>Piro creates synthesis reaction planning plots for target polymorphs under a specific set of thermodynamic conditions and a precursor library, where favorable routes are those that are (nearly) Pareto optimal in terms of two metrics: nucleation barrier and phase-selection.</p> 
 <p className={LoginCSS.secondblockmargin}>It allows retrosynthetic analysis of target inorganic materials to generate a synthesis reaction tree (i.e. laying out the reaction pathways necessary to arrive at the target from practical/purchasable reagents/starting materials).</p></div>
-<img src={logo} alt="Logo"/>
+<img className={LoginCSS.imagecontent} src={logo} alt="Logo"/>
 
       </div>
       <div className={LoginCSS.thirdblock}>
@@ -96,7 +99,6 @@ export default function CognitoProvider({ children }: Props) {
           <p className={LoginCSS.thirdblockcontent}>For more information about the physical theory behind Piro, please read our paper, “Rational Solid-State Synthesis Routes for Inorganic Materials” by Murat Aykol et al. (<u><a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888">https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888</a></u>).</p>
         </div>
       </div>
-      
       <LoginFooter/>
       </div>
     );
