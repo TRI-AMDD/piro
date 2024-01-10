@@ -46,16 +46,7 @@ var AWS_CONFIG = {
             redirectSignOut: 'http://localhost:3000/',
             responseType: 'code' // or 'token', note that REFRESH token will only be generated when the responseType is code
         }
-       
-        oauth: {
-            domain: 'your_cognito_domain',
-            scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
-            redirectSignIn: 'http://localhost:3000/',
-            redirectSignOut: 'http://localhost:3000/',
-            responseType: 'code' // or 'token', note that REFRESH token will only be generated when the responseType is code
-        }
         */
-        
     }
 };
 // base url prepend for all api calls
