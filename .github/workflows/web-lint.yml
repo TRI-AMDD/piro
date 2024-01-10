@@ -23,8 +23,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16
-        working-directory: web/frontend
         cache: 'pnpm'
+        cache-dependency-path: web/frontend/pnpm-lock.yaml
     - name: Install dependencies
       run: pnpm install
     - run: pnpm run lint
