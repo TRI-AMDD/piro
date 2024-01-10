@@ -10,6 +10,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "lint": "eslint src --max-warnings=0",
+    "lint-fix": "eslint --fix src --ext ts,tsx .",
     "format": "prettier --write 'src/**/*.{ts,tsx,scss,css,json}'",
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
@@ -35,6 +36,7 @@
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
+    "@types/react-plotly.js": "^2.6.3",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
     "@vitejs/plugin-react-swc": "^3.4.1",

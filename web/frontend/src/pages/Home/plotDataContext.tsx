@@ -1,55 +1,67 @@
-import { FC, createContext, useContext, useState, useMemo, useEffect } from 'react';
-import { UseMutationResult } from 'react-query';
+import { FC, createContext, useContext, useState, useMemo, useEffect, ReactNode } from 'react';
+import { UseMutationResult } from '@tanstack/react-query';
 import { Auth, Hub } from 'aws-amplify';
 import { useSubmitTask, useNormalPlotData } from './usePlotData';
 
+type Result = {
+  data: Plotly.Data[];
+  layout: Partial<Plotly.Layout>;
+};
+
 type ContextProps = {
-    apiMode: string;
-    token: string;
-    setApiMode: (v: string) => void;
-    mutation: UseMutationResult<any, unknown, void, unknown>;
+  apiMode: string;
+  token: string;
+  setApiMode: (v: string) => void;
+  mutation: UseMutationResult<Result, unknown, void, unknown>;
 };
 
 const PlotDataContext = createContext({} as ContextProps);
 
-const PlotDataProvider: FC = ({ children }) => {
-    const [apiMode, setApiMode] = useState('task');
-    const [token, setToken] = useState('');
+const PlotDataProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [apiMode, setApiMode] = useState('task');
+  const [token, setToken] = useState('');
 
-    // fetch the token to be used for api calls when user has signed in or up
-    useEffect(() => {
-        Hub.listen('auth', (data) => {
-            const event = data.payload.event;
-            if (event === 'signIn' || event === 'signUp') {
-                Auth.currentSession()
-                    .then((session) => { setToken(session.getIdToken().getJwtToken()) })
-                    .catch(() => {})
-            }
-        })
-
+  // fetch the token to be used for api calls when user has signed in or up
+  useEffect(() => {
+    Hub.listen('auth', (data) => {
+      const event = data.payload.event;
+      if (event === 'signIn' || event === 'signUp') {
         Auth.currentSession()
-            .then((session) => { setToken(session.getIdToken().getJwtToken()) })
-            .catch(() => {})
-    }, []);
+          .then((session) => {
+            setToken(session.getIdToken().getJwtToken());
+          })
+          .catch(() => {});
+      }
+    });
 
-    const taskMutation = useSubmitTask(token);
-    const normalMutation = useNormalPlotData(token);
+    Auth.currentSession()
+      .then((session) => {
+        setToken(session.getIdToken().getJwtToken());
+      })
+      .catch(() => {});
+  }, []);
 
-    const value = useMemo(() => ({
-        apiMode,
-        setApiMode,
-        token,
-        mutation: apiMode === 'task' ? taskMutation : normalMutation,
-    }), [apiMode, taskMutation, normalMutation, token]);
-    return <PlotDataContext.Provider value={value}>{children}</PlotDataContext.Provider>;
+  const taskMutation = useSubmitTask(token);
+  const normalMutation = useNormalPlotData(token);
+
+  const value = useMemo(
+    () => ({
+      apiMode,
+      setApiMode,
+      token,
+      mutation: apiMode === 'task' ? taskMutation : normalMutation
+    }),
+    [apiMode, taskMutation, normalMutation, token]
+  );
+  return <PlotDataContext.Provider value={value}>{children}</PlotDataContext.Provider>;
 };
 
 function usePlotData() {
-    const context = useContext(PlotDataContext);
-    if (context === undefined) {
-        throw new Error('useApiModeContext must be used within a ApiModeProvider');
-    }
-    return context;
+  const context = useContext(PlotDataContext);
+  if (context === undefined) {
+    throw new Error('useApiModeContext must be used within a ApiModeProvider');
+  }
+  return context;
 }
 
 export { PlotDataProvider, usePlotData };

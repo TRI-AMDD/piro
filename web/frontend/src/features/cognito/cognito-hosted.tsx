@@ -1,12 +1,7 @@
 import { Amplify, Auth, Hub } from 'aws-amplify';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { UserAuthContext } from './user-auth-context';
-import Login from '@/components/loginheader';
-import LoginFooter from '@/components/loginfooter';
-import LoginCSS from './login.module.css';
-import logo from './loginpic.png';
-import logo2 from './blackimage.png';
-import PreLogin from './Prelogin'
+import PreLogin from './Prelogin';
 Amplify.configure(AWS_CONFIG);
 
 interface Props {
@@ -61,9 +56,7 @@ export default function CognitoProvider({ children }: Props) {
 
   // the app needs a token to work, show the login screen
   if (token === '') {
-    return (
-      <PreLogin/>
-    );
+    return <PreLogin />;
   }
 
   return <UserAuthContext.Provider value={value}>{children}</UserAuthContext.Provider>;

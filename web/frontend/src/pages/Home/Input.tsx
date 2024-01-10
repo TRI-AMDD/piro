@@ -1,14 +1,14 @@
 import { forwardRef, FC, ComponentPropsWithRef } from 'react';
 
 export type InputProps = {
-    /**
-     * This shows a label above the input when provided.
-     */
-    label?: string;
-    /**
-     * If not empty, the input component will be displayed in an error state with the provided error message.
-     */
-    error?: string;
+  /**
+   * This shows a label above the input when provided.
+   */
+  label?: string;
+  /**
+   * If not empty, the input component will be displayed in an error state with the provided error message.
+   */
+  error?: string;
 };
 
 /**
@@ -19,11 +19,13 @@ export type InputProps = {
  *
  */
 const Input: FC<InputProps & ComponentPropsWithRef<'input'>> = forwardRef(({ label, error = '', ...props }, ref) => (
-    <div>
-        {label && <span>{label}</span>}
-        <input {...props} ref={ref} />
-        <div>{error}</div>
-    </div>
+  <div>
+    {label && <span>{label}</span>}
+    <input {...props} ref={ref} />
+    <div>{error}</div>
+  </div>
 ));
+
+Input.displayName = 'Input';
 
 export default Input;
