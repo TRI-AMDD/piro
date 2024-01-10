@@ -6,15 +6,16 @@ import { Tooltip } from 'react-tooltip';
 
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
-import { Inputs } from './TypeProps';
+import { Inputs, PressureType, Option } from './TypeProps';
 
 import MultiSelect from './MultiSelect';
 import AdvancedOptions from './AdvancedOptions';
-import Pressure, { PressureType } from './Pressure';
+import Pressure from './Pressure';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
 import SingleSelect from './SingleSelect';
 import { usePlotData } from './plotDataContext';
+import { MultiValue } from 'react-select';
 
 const addElementOptions = [
   { value: '', label: 'None' },
@@ -29,10 +30,10 @@ const toggleOptions = [
 
 export default function Form() {
   const { mutation } = usePlotData();
-  const [pressure, setPressure] = useState<PressureType | null>(null);
+  const [pressure, setPressure] = useState<PressureType | null | number>(null);
   const [addElements, setAddElements] = useState<{ label: string; value: string }>();
-  const [explicitIncludes, setExplicitIncludes] = useState<{ label: string; value: string }[]>([]);
-  const [excludeCompositions, setExcludeCompositions] = useState<{ label: string; value: string }[]>([]);
+  const [explicitIncludes, setExplicitIncludes] = useState<MultiValue<Option>>([]);
+  const [excludeCompositions, setExcludeCompositions] = useState<MultiValue<Option>>([]);
   const [compoundMode, setCompoundMode] = useState('compound');
   const [cifString, setCifString] = useState<string>('');
 
@@ -220,7 +221,9 @@ export default function Form() {
         setExcludeCompositions={setExcludeCompositions}
       />
 
-      <Button type="submit">Run</Button>
+      <Button placeholder="Run" type="submit">
+        Run
+      </Button>
     </form>
   );
 }

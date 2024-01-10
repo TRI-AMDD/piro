@@ -7,9 +7,9 @@ import TaskPlot from './TaskPlot';
 
 function SynthesisPlot() {
   const { mutation, apiMode } = usePlotData();
-  const { data, error, isLoading } = mutation;
+  const { data, error, isPending } = mutation;
 
-  if (isLoading)
+  if (isPending)
     return (
       <div className={styles.Loading}>
         <Loading animated height={24} label="Loading..." width={24} />
@@ -36,7 +36,7 @@ function SynthesisPlot() {
     return <TaskPlot key={data.task_id} taskId={data.task_id} />;
   }
 
-  return <PlotResults result={data} />;
+  return <PlotResults result={data.result} />;
 }
 
 export default SynthesisPlot;

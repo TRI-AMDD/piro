@@ -1,19 +1,20 @@
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Control, UseFormRegister } from 'react-hook-form';
 import { Collapsible, Input, Toggle } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
-import { Inputs } from './TypeProps';
+import { Inputs, Option } from './TypeProps';
 import MultiSelect from './MultiSelect';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
 import { usePlotData } from './plotDataContext';
+import { MultiValue } from 'react-select';
 
 interface Props {
   control: Control<Inputs>;
   compoundMode: string;
   register: UseFormRegister<Inputs>;
-  setExcludeCompositions(input: { label: string; value: string }[]): void;
+  setExcludeCompositions: Dispatch<SetStateAction<MultiValue<Option>>>;
 }
 
 const toggleOptions = [

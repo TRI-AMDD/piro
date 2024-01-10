@@ -2,17 +2,13 @@ import { FC, createContext, useContext, useState, useMemo, useEffect, ReactNode 
 import { UseMutationResult } from '@tanstack/react-query';
 import { Auth, Hub } from 'aws-amplify';
 import { useSubmitTask, useNormalPlotData } from './usePlotData';
-
-type Result = {
-  data: Plotly.Data[];
-  layout: Partial<Plotly.Layout>;
-};
+import { Inputs, Results } from './TypeProps';
 
 type ContextProps = {
   apiMode: string;
   token: string;
   setApiMode: (v: string) => void;
-  mutation: UseMutationResult<Result, unknown, void, unknown>;
+  mutation: UseMutationResult<Results, unknown, Inputs, unknown>;
 };
 
 const PlotDataContext = createContext({} as ContextProps);

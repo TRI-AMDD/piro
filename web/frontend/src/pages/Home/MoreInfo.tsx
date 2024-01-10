@@ -1,9 +1,10 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import styles from './Home.module.css';
 
 export type Props = {
   info: string;
   isCheckbox?: boolean;
+  children: ReactNode;
 };
 
 const MoreInfo: FC<Props> = ({ info, isCheckbox, children }) => {

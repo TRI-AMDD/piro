@@ -4,12 +4,8 @@ import { Input } from '@toyota-research-institute/lakefront';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
 import styles from './Home.module.css';
-import { Option } from './TypeProps';
+import { Option, PressureType } from './TypeProps';
 import SingleSelect from './SingleSelect';
-
-export type PressureType = {
-  [key: string]: number;
-};
 
 interface Props {
   setPressure(pressure: PressureType | number): void;
