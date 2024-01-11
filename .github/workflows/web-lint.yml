@@ -1,0 +1,31 @@
+name: Web Testing and Linting
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: web/frontend
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: 'pnpm'
+        cache-dependency-path: web/frontend/pnpm-lock.yaml
+    - name: Install dependencies
+      run: pnpm install
+    - run: pnpm run lint
+    - run: pnpm run typecheck

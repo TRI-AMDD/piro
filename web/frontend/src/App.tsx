@@ -12,30 +12,33 @@ const Home = lazy(() => import('@/pages/Home/Home'));
 const About = lazy(() => import('@/pages/About/About'));
 
 const App: React.FC = () => {
-    const [highlightedParagraph, setHighlightedParagraph] = useState<string | null>(null);
-    const highlight =(id: string | null) =>{
-            setHighlightedParagraph(id);
-        }
-    return(
-       <QueryClientProvider client={queryClient}>
-        <CognitoProvider>
-          <BrowserRouter>
-            <div className="app">
-              <Header />
-              <div className="appbody">
+  const [highlightedParagraph, setHighlightedParagraph] = useState<string | null>(null);
+  const highlight = (id: string | null) => {
+    setHighlightedParagraph(id);
+  };
+  return (
+    <QueryClientProvider client={queryClient}>
+      <CognitoProvider>
+        <BrowserRouter>
+          <div className="app">
+            <Header />
+            <div className="appbody">
               <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About highlightedParagraph={highlightedParagraph} highlight={highlight}/>} />
+                  <Route
+                    path="/about"
+                    element={<About highlightedParagraph={highlightedParagraph} highlight={highlight} />}
+                  />
                 </Routes>
               </Suspense>
-              </div>
-              <Footer highlight={highlight}/>
             </div>
-          </BrowserRouter>
-        </CognitoProvider>
-      </QueryClientProvider>
-    );
+            <Footer highlight={highlight} />
+          </div>
+        </BrowserRouter>
+      </CognitoProvider>
+    </QueryClientProvider>
+  );
 };
 
 export default App;
