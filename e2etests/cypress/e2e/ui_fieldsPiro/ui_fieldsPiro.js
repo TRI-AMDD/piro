@@ -6,20 +6,9 @@ Given('I login the piro website', () => {
 cy.visit(Cypress.config().baseUrl)
 cy.log('NAVIGATING TO PIRO WEB')
 cy.wait(10000)
-cy.clearCookies()
-cy.get(".login_login__19CNz")
-  .should('be.visible')
-  .click()
-  
-cy.get("#signInFormUsername")
-  .type(Cypress.config().username,{force: true})
+cy.clearAllCookies()
+cy.login()
 
-cy.get("#signInFormPassword")
-  .type(Cypress.config().password,{force : true})
-
-cy.get('[name="signInSubmitButton"]').eq(1)
-  .click()
-  
 });
 
 

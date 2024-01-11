@@ -1,3 +1,11 @@
+Cypress.Commands.add('login', () => {
+    cy.get(".login_login__19CNz").should('be.visible').click()
+    cy.get("#signInFormUsername").type(Cypress.config().username,{force: true})
+    cy.get("#signInFormPassword").type(Cypress.config().password,{force : true})
+    cy.get('[name="signInSubmitButton"]').eq(1).click()
+})
+
+
 
 Cypress.Commands.add('verify', (uifield) => {
     

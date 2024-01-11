@@ -26,7 +26,7 @@ module.exports = defineConfig({
 
     },
 
-    testIsolation: false,
+    testIsolation: true,
     supportFile: 'cypress/support/commands.js',
     specPattern: 'cypress/e2e/**/*.feature',
     experimentalWebKitSupport: true,
