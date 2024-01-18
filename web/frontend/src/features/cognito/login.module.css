@@ -37,13 +37,24 @@
     background: var(--grey-900, #212121);
     box-shadow: 0px 2px 4px -2px rgba(33, 33, 33, 0.20), 0px 4px 6px -1px rgba(33, 33, 33, 0.20);
 }
+.signintext{
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Gellix-Medium;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
 .signincontent{
     color: var(--white, #FFF);
     font-feature-settings: 'clig' off, 'liga' off;
     font-family: Gellix-Regular;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 24px;
     letter-spacing: 0.4px;
     text-transform: uppercase;
