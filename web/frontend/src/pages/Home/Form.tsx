@@ -93,7 +93,9 @@ export default function Form() {
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.Form}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.fullpage}>
+          <div className={styles.Form}>
+
       <Tooltip />
       <div className={styles.FormGrid}>
         <div>
@@ -173,7 +175,8 @@ export default function Form() {
             />
           </MoreInfo>
         </div>
-        <div className={styles.Checkboxes}>
+        <div className={styles.secondrow}>
+          <div className={styles.Checkboxes}>
           <MoreInfo info={description.allow_gas_release} isCheckbox>
             <FormCheckbox
               name="allow_gas_release"
@@ -210,16 +213,23 @@ export default function Form() {
               defaultValue={true}
             />
           </MoreInfo>
+          </div>
+          <div className={styles.pressurerevamp}>
+          <Pressure setPressure={setPressure} />
+          </div>
         </div>
-        <Pressure setPressure={setPressure} />
-      </div>
-
-      <AdvancedOptions
+        <div>
+        <AdvancedOptions
         control={control}
         compoundMode={compoundMode}
         register={register}
         setExcludeCompositions={setExcludeCompositions}
       />
+      </div>
+      
+      </div>
+      </div>
+      
 
       <Button placeholder="Run" type="submit">
         Run

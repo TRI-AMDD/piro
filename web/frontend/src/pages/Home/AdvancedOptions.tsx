@@ -33,8 +33,8 @@ export default function AdvancedOptions(props: Props) {
   }, [compoundMode, setApiMode]);
 
   return (
-    <Collapsible title="Advanced Options">
-      <div className={styles.FormGrid}>
+    <Collapsible title={<div className={styles.advancetext}>Advanced Options</div>}>
+      <div className={styles.advanceoptionsformgrid}>
         <div>
           {compoundMode === 'compound' && <Toggle options={toggleOptions} onChange={setApiMode} value={apiMode} />}
           <MoreInfo info={description.simple_precursors}>
