@@ -1,7 +1,6 @@
 import contextlib
 
 from pymatgen.core import Structure
-from pymatgen.ext.matproj import MPRester
 from pymatgen.ext.matproj_legacy import _MPResterLegacy
 from pymongo import MongoClient
 
@@ -14,7 +13,7 @@ def get_mprester():
         with MongoMPRester(settings.mongodb_uri) as mpr:
             yield mpr
     else:
-        with MPRester() as mpr:
+        with _MPResterLegacy() as mpr:
             yield mpr
 
 
