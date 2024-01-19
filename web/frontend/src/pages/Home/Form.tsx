@@ -219,14 +219,14 @@ export default function Form() {
           </div>
           <div>
             <AdvancedOptions
-            control={control}
-            compoundMode={compoundMode}
-            register={register}
-            setExcludeCompositions={setExcludeCompositions}
+              control={control}
+              compoundMode={compoundMode}
+              register={register}
+              setExcludeCompositions={setExcludeCompositions}
             />
           </div>
         </div>
-      </div>
+    </div>
       
 
       <Button placeholder="Run" type="submit">
