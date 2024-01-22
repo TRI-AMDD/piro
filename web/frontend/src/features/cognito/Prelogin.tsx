@@ -10,7 +10,7 @@ export default function PreLogin() {
       <header className={LoginCSS.AppHeader}>
         <img src={logo2} alt="Logo" width={'150px'} />
         <button className={LoginCSS.loginsignin} onClick={() => Auth.federatedSignIn()}>
-          SIGN IN
+          <div className={LoginCSS.signintext}>SIGN IN</div>
         </button>
       </header>
       <div className={LoginCSS.firstblock}>
@@ -28,7 +28,10 @@ export default function PreLogin() {
           </div>
         </button>
         <p className={LoginCSS.donthavesignin}>
-          Don’t have a sign in?<i className={LoginCSS.requestsignin}>Request one here</i>{' '}
+          Don’t have a sign in?<span> </span>
+          <a href="mailto:em-piro@tri.global" className={LoginCSS.requestsignin}>
+            Request one here
+          </a>{' '}
         </p>
       </div>
       <div className={LoginCSS.secondblock}>
