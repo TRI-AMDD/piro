@@ -40,7 +40,7 @@ export const useNormalPlotData = (token: string) => {
 export const useTaskPlotData = (taskId: string, token: string) => {
   return useQuery({
     queryKey: ['getPlotData'],
-    queryFn: async (taskId): Promise<Results> => {
+    queryFn: async (): Promise<Results> => {
       const response = await fetch(`${API_BASE_URL}/api/recommend_routes_task/${taskId}`, {
         headers: {
           'Accept-Encoding': 'gzip',
