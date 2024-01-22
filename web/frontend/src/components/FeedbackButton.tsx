@@ -18,7 +18,7 @@ const FeedbackButton: React.FC<FeedbackButtonProps> = () => {
   // Add your feedback button logic here
   return (
     <div className={styles.FeedbackButtonDiv}>
-        <Button variant="filled" size="md" textAlign="text-center" className={styles.FeedbackButton} onClick={()=>window.showCollectorDialog()}>
+        <Button variant="filled" size="md" textAlign="text-center"  style={{ fontSize: '15px',fontFamily: 'gellix-regular'}} className={`${styles.FeedbackButton} capitalize`} onClick={()=>window.showCollectorDialog()}>
              Feedback
         </Button>
     </div>
