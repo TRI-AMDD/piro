@@ -70,13 +70,16 @@
     color:#ece8e8;
     font-family: Gellix-Medium;
 }
+
+.FeedbackButtonDiv{
+    position:absolute;
+    top:50%;
+    left:94%;
+    height:10%;
+    transform: rotate(90deg);
+}
+
 .FeedbackButton{
-    padding: 16px 12px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0px 0px 4px 4px;
-    border-top: 10px solid var(--white, #FFF);
-    border-bottom: 1px solid var(--white, #FFF);
-    border-left: 1px solid var(--white, #FFF);
-    background: var(--grey-900, #212121);
+    width:114px;
+    height:60px;
 }

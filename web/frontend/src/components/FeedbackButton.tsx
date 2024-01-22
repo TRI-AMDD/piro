@@ -17,8 +17,8 @@ const customStyles = {
 const FeedbackButton: React.FC<FeedbackButtonProps> = () => {
   // Add your feedback button logic here
   return (
-    <div className="absolute top-20 right-0 h-full flex items-center p-0 transform rotate-90">
-        <Button variant="filled" className={styles.FeedbackButton} onClick={()=>window.showCollectorDialog()}>
+    <div className={styles.FeedbackButtonDiv}>
+        <Button variant="filled" size="md" textAlign="text-center" className={styles.FeedbackButton} onClick={()=>window.showCollectorDialog()}>
              Feedback
         </Button>
     </div>
