@@ -7,7 +7,6 @@ interface highlightProps {
   highlightedParagraph: string | null;
   highlight: (id: string | null) => void;
 }
-
 const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) => {
   useEffect(() => {
     const divs = document.querySelectorAll('div');

@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import CognitoProvider from '@/features/cognito/cognito-hosted';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import FeedbackButton from '@/components/FeedbackButton';
 import './index.css';
 import './fonts.css';
 
@@ -34,6 +35,7 @@ const App: React.FC = () => {
               </Suspense>
             </div>
             <Footer highlight={highlight} />
+            <FeedbackButton />
           </div>
         </BrowserRouter>
       </CognitoProvider>

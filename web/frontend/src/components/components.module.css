@@ -70,3 +70,13 @@
     color:#ece8e8;
     font-family: Gellix-Medium;
 }
+.FeedbackButton{
+    padding: 16px 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0px 0px 4px 4px;
+    border-top: 10px solid var(--white, #FFF);
+    border-bottom: 1px solid var(--white, #FFF);
+    border-left: 1px solid var(--white, #FFF);
+    background: var(--grey-900, #212121);
+}
