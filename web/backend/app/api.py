@@ -1,5 +1,5 @@
 import fastapi
-from app.models import PlotlyFigureResponse, RecommendRoutesRequest, RecommendRoutesTask
+from app.models import RecommendRoutesRequest, RecommendRoutesTask
 from app.services import recommend_routes_service
 from app.tasks import recommend_routes_task_result, recommend_routes_task_start
 
@@ -9,7 +9,6 @@ router = fastapi.APIRouter()
 @router.post(
     "/api/recommend_routes",
     description="generate recommended routes for given material as a Plotly figure",
-    response_model=PlotlyFigureResponse,
 )
 def recommend_routes(request: RecommendRoutesRequest):
     return fastapi.responses.Response(
