@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Tuple, List
 
 import pandas as pd
@@ -12,7 +13,7 @@ from pymatgen.entries.computed_entries import ComputedStructureEntry
 from pymongo import MongoClient
 from scipy.interpolate import interp1d
 from pymatgen.core.composition import Composition
-from pymatgen.analysis.substrate_analyzer import SubstrateAnalyzer
+from pymatgen.analysis.interfaces.substrate_analyzer import SubstrateAnalyzer
 from matminer.featurizers.base import MultipleFeaturizer
 from matminer.featurizers.composition import (
     ElementProperty,
@@ -38,7 +39,12 @@ from piro.settings import settings, CacheType
 
 
 def get_v(composition_as_dict: dict, elts: Tuple[str]) -> np.array:
-    return np.array([composition_as_dict[el] for el in elts])
+    # convert to default dict
+    # because this change broke our code
+    # https://github.com/materialsproject/pymatgen/commit/a6d59f57eceb01bfc8cee03320f7d87c7f7d0e15
+    composition_as_dict_with_default = defaultdict(float, composition_as_dict)
+
+    return np.array([composition_as_dict_with_default[el] for el in elts])
 
 
 def get_epitaxies(

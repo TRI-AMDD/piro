@@ -2,7 +2,7 @@ import os
 import unittest
 import warnings
 from pathlib import Path
-from pymatgen.ext.matproj import MPRester, MPRestError, _MPResterLegacy
+from pymatgen.ext.matproj_legacy import _MPResterLegacy, MPRestError
 from pymatgen.core import SETTINGS
 from _pytest.monkeypatch import MonkeyPatch
 from monty.serialization import loadfn, dumpfn
@@ -17,7 +17,7 @@ class RoutesTest(unittest.TestCase):
         self.monkeypatch = MonkeyPatch()
 
         try:
-            MPRester().get_entry_by_material_id('mp-5020')
+            _MPResterLegacy().get_entry_by_material_id('mp-5020')
         except (MPRestError, ValueError):
             warnings.warn("Using mock MPRester response")
 
@@ -61,7 +61,7 @@ class RoutesTest(unittest.TestCase):
 
 def dump_tdata():
     """Quick helper function to dump data for future reference"""
-    with MPRester() as mpr:
+    with _MPResterLegacy() as mpr:
         data = mpr.get_entries_in_chemsys(
             ["Ba", "Ti", "O"], inc_structure="final",
             property_data=["icsd_ids", "formation_energy_per_atom"])

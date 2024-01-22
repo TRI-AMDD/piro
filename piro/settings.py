@@ -1,7 +1,8 @@
 import os
 from enum import Enum
 from typing import Optional
-from pydantic import BaseSettings, validator
+from pydantic import validator
+from pydantic_settings import BaseSettings
 
 
 class CacheType(str, Enum):
