@@ -100,9 +100,6 @@ class RecommendRoutesRequest(BaseModel):
         return v
 
 
-PlotlyFigureResponse = create_model("PlotlyFigureResponse", **Figure().to_dict())
-
-
 class RecommendRoutesTaskStatus(str, Enum):
     PENDING = "pending"
     INVALID = "invalid"
@@ -116,4 +113,4 @@ class RecommendRoutesTask(BaseModel):
     request: Optional[RecommendRoutesRequest] = None
     status: RecommendRoutesTaskStatus = RecommendRoutesTaskStatus.INVALID
     error_message: Optional[str] = None
-    result: Optional[PlotlyFigureResponse] = None
+    result: Optional[dict] = None
