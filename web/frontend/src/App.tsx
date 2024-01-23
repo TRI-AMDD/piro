@@ -35,7 +35,7 @@ const App: React.FC = () => {
               </Suspense>
             </div>
             <Footer highlight={highlight} />
-            <FeedbackButton />
+            <FeedbackButton showFeedbackButton={true} />
           </div>
         </BrowserRouter>
       </CognitoProvider>
