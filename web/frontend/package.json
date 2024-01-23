@@ -1,5 +1,5 @@
 {
-  "name": "tri-web-app",
+  "name": "piro-web-app",
   "description": "This is a boilerplate build with Vite, React 18, TypeScript, Vitest, Testing Library, TailwindCSS 3, Eslint and Prettier.",
   "version": "0.3.0",
   "private": true,
