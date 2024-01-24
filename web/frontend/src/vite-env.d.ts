@@ -10,3 +10,7 @@ declare const AWS_CONFIG: {
 declare const API_BASE_URL: string;
 declare const AMPLIFY_ENABLED: boolean;
 declare const dataLayer: Record<string, string>[];
+
+interface Window {
+  showCollectorDialog(): void;
+}
