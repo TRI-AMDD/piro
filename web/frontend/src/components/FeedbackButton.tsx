@@ -14,10 +14,31 @@ const FeedbackButton: React.FC<FeedbackButtonProps> = () => {
     <div className={styles.FeedbackButtonDiv}>
       <Button
         variant="filled"
-        size="md"
+        size="sm"
         placeholder="Feedback"
-        style={{ fontSize: '15px', fontFamily: 'gellix-regular' }}
-        className={`${styles.FeedbackButton} text-center capitalize`}
+        style={{
+          height:'48px',
+          width:'104px',
+          display: 'inline-flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: '4px 0px 0px 4px',
+          borderTop: '1px solid var(--white, #FFF)',
+          borderBottom: '1px solid var(--white, #FFF)',
+          borderLeft: '1px solid var(--white, #FFF)',
+          background: 'var(--grey-900, #212121)',
+          fontSize: '16px',
+          fontFamily: 'gellix-medium',
+          fontWeight: '500',
+          lineHeight: '24px',
+          letterSpacing: '0.032px',
+          rounded: 'sm',
+          paddingBottom: '12px',
+          paddingTop: '12px',
+          paddingLeft: '16px',
+          paddingRight: '16px'
+        }}
+        className={`text-center capitalize`}
         onClick={() => window.showCollectorDialog()}
       >
         Feedback
