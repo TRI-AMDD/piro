@@ -32,7 +32,6 @@ const FeedbackButton: React.FC<FeedbackButtonProps> = () => {
           fontWeight: '500',
           lineHeight: '24px',
           letterSpacing: '0.032px',
-          rounded: 'sm',
           paddingBottom: '12px',
           paddingTop: '12px',
           paddingLeft: '16px',
