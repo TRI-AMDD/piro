@@ -22,7 +22,7 @@ const FeedbackButton: React.FC<FeedbackButtonProps> = () => {
           display: 'inline-flex',
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: '4px 0px 0px 4px',
+          borderRadius: '0px 0px 4px 4px',
           borderTop: '1px solid var(--white, #FFF)',
           borderBottom: '1px solid var(--white, #FFF)',
           borderLeft: '1px solid var(--white, #FFF)',
