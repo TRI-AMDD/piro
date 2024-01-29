@@ -17,8 +17,8 @@ const FeedbackButton: React.FC<FeedbackButtonProps> = () => {
         size="sm"
         placeholder="Feedback"
         style={{
-          height:'48px',
-          width:'104px',
+          height: '48px',
+          width: '104px',
           display: 'inline-flex',
           justifyContent: 'center',
           alignItems: 'center',
