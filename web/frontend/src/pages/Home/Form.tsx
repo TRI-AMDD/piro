@@ -16,7 +16,6 @@ import { description } from './description';
 import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import React, { useRef } from 'react';
-import classNames from 'classnames';
 
 //import { Input } from "@material-tailwind/react";
 const addElementOptions = [
@@ -118,9 +117,7 @@ export default function Form() {
                     <InfoImage imagePath={logo} altText="Info" information={description.target_entry_id} />
                   </div>
                   <input
-                    className={classNames(styles.inputfield, {
-                      [styles.error]: errors.target_entry_id
-                    })}
+                    className={`${styles.inputfield} ${errors.target_entry_id ? styles.error : ''}`}
                     placeholder="mp-9029"
                     {...register('target_entry_id', { required: true })}
                   />
