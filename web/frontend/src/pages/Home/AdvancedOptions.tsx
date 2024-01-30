@@ -115,7 +115,7 @@ export default function AdvancedOptions(props: Props) {
           </div>
           <div className={styles.selectCSS}>
             <div>
-              <div className={styles.labelwithinfo}>
+              <div className={styles.labelwithinfoforselect}>
                 <label className={styles.label}>Formulas to filter out</label>
                 <InfoImage imagePath={logo} altText="Info" information={description.exclude_compositions} />
               </div>

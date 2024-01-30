@@ -72,12 +72,12 @@ export function Pressure(props: Props) {
     <div>
       <div className={styles.selectCSS}>
         <div>
-          <div className={styles.labelwithinfo}>
+          <div className={styles.labelwithinfoforselect}>
             <label className={styles.label}>Pressure (atm)</label>
             <InfoImage imagePath={logo} altText="Info" information={description.pressure} />
           </div>
           <Select
-            className="w-full"
+            className={styles.singleselect}
             placeholder="Additional element"
             value={option?.value || ''}
             onChange={(value) => setOption(options.find((option) => option.value === value))}
@@ -110,8 +110,8 @@ export function Pressure(props: Props) {
         {option?.value === 'constant' && (
           <div className={styles.selectCSS}>
             <div>
-              <div className={styles.labelwithinfo}>
-                <label className={styles.label}>Constant Pressure</label>
+              <div className={styles.labelwithinfoforselect}>
+                <label className={styles.labelpressure}>Constant Pressure</label>
               </div>
               <input
                 type="number"
@@ -130,7 +130,7 @@ export function Pressure(props: Props) {
               <div className={styles.selectCSS}>
                 <div>
                   <div className={styles.labelwithinputTWO}>
-                    <label className={styles.label}>O2</label>
+                    <label className={styles.labelpressure}>O2</label>
 
                     <input
                       type="number"
@@ -145,7 +145,7 @@ export function Pressure(props: Props) {
               <div className={styles.selectCSS}>
                 <div>
                   <div className={styles.labelwithinputTHREE}>
-                    <label className={styles.label}>CO2</label>
+                    <label className={styles.labelpressure}>CO2</label>
 
                     <input
                       type="number"
@@ -160,7 +160,7 @@ export function Pressure(props: Props) {
               <div className={styles.selectCSS}>
                 <div>
                   <div className={styles.labelwithinputTWO}>
-                    <label className={styles.label}>N2</label>
+                    <label className={styles.labelpressure}>N2</label>
                     <input
                       type="number"
                       step="any"
@@ -174,7 +174,7 @@ export function Pressure(props: Props) {
               <div className={styles.selectCSS}>
                 <div>
                   <div className={styles.labelwithinputTWO}>
-                    <label className={styles.label}>H2</label>
+                    <label className={styles.labelpressure}>H2</label>
                     <input
                       type="number"
                       step="any"
@@ -188,7 +188,7 @@ export function Pressure(props: Props) {
               <div className={styles.selectCSS}>
                 <div>
                   <div className={styles.labelwithinputTHREE}>
-                    <label className={styles.label}>H2O</label>
+                    <label className={styles.labelpressure}>H2O</label>
                     <input
                       type="number"
                       step="any"
@@ -202,7 +202,7 @@ export function Pressure(props: Props) {
               <div className={styles.selectCSS}>
                 <div>
                   <div className={styles.labelwithinputTWO}>
-                    <label className={styles.label}>F2</label>
+                    <label className={styles.labelpressure}>F2</label>
                     <input
                       type="number"
                       step="any"

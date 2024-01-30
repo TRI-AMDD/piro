@@ -223,12 +223,12 @@ export default function Form() {
             />*/}
             <div className={styles.selectCSS}>
               <div>
-                <div className={styles.labelwithinfo}>
+                <div className={styles.labelwithinfoforselect}>
                   <label className={styles.label}>Additional element to consider</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
                 </div>
                 <Select
-                  className="w-full"
+                  className={styles.singleselect}
                   placeholder="Additional element"
                   value={addElements?.value || ''}
                   onChange={(value) => setAddElements(addElementOptions.find((option) => option.value === value))}
@@ -243,7 +243,7 @@ export default function Form() {
             </div>
             <div className={styles.selectCSS}>
               <div>
-                <div className={styles.labelwithinfo}>
+                <div className={styles.labelwithinfoforselect}>
                   <label className={styles.label}>Explicitly include as precursor</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.explicit_includes} />
                 </div>
