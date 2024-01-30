@@ -3,7 +3,7 @@ import { Control, UseFormRegister } from 'react-hook-form';
 import { Collapsible, Input, Toggle } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
-import { Inputs, Option } from './TypeProps';
+import { Inputs, Optionselect } from './TypeProps';
 import MultiSelect from './MultiSelect';
 import MoreInfo from './MoreInfo';
 import { description } from './description';
@@ -14,7 +14,7 @@ interface Props {
   control: Control<Inputs>;
   compoundMode: string;
   register: UseFormRegister<Inputs>;
-  setExcludeCompositions: Dispatch<SetStateAction<MultiValue<Option>>>;
+  setExcludeCompositions: Dispatch<SetStateAction<MultiValue<Optionselect>>>;
 }
 
 const toggleOptions = [
