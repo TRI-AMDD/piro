@@ -6,6 +6,8 @@ pydantic==2.4.2
 pydantic-settings==2.1.0
 emmet-core==0.70.6
 monty==2023.11.3
+pytest-cov
+piro[m3gnet]
 
 
 
