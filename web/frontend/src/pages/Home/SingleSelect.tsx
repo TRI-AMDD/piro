@@ -1,18 +1,18 @@
 import Select from 'react-select';
 import styles from './Home.module.css';
-import { Option } from './TypeProps';
+import { Optionselect } from './TypeProps';
 
 interface Props {
   placeholder?: string;
   label: string;
-  options: Option[];
-  setValue(value: Option): void;
+  options: Optionselect[];
+  setValue(value: Optionselect): void;
 }
 
 export default function SingleSelect(props: Props) {
   const { label, setValue, options } = props;
 
-  const handleChange = (option?: Option | Option[] | null) => {
+  const handleChange = (option?: Optionselect | Optionselect[] | null) => {
     if (option && !Array.isArray(option)) {
       setValue(option);
     }

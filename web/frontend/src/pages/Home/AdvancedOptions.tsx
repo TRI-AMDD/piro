@@ -1,21 +1,54 @@
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Control, UseFormRegister } from 'react-hook-form';
-import { Collapsible, Input, Toggle } from '@toyota-research-institute/lakefront';
+import { Collapsible } from '@toyota-research-institute/lakefront';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
-import { Inputs, Option } from './TypeProps';
+import { Inputs, Optionselect } from './TypeProps';
 import MultiSelect from './MultiSelect';
-import MoreInfo from './MoreInfo';
 import { description } from './description';
 import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
+import InfoImage from './infoimage';
+import logo from './info.svg';
 
 interface Props {
   control: Control<Inputs>;
   compoundMode: string;
   register: UseFormRegister<Inputs>;
-  setExcludeCompositions: Dispatch<SetStateAction<MultiValue<Option>>>;
+  setExcludeCompositions: Dispatch<SetStateAction<MultiValue<Optionselect>>>;
 }
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface RadioToggleProps {
+  options: Option[];
+  onChange: (value: string) => void;
+  value: string;
+}
+
+const RadioToggle: React.FC<RadioToggleProps> = ({ options, onChange, value }) => {
+  return (
+    <div className={styles.radiobuttons}>
+      {options.map((option) => (
+        <div key={option.value} className="mb-2 flex items-center">
+          <input
+            type="radio"
+            id={option.value}
+            value={option.value}
+            checked={value === option.value}
+            onChange={() => onChange(option.value)}
+            className={styles.custumradio}
+          />
+          <label htmlFor={option.value} className="ml-2">
+            {option.label}
+          </label>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const toggleOptions = [
   { label: 'Task Route', value: 'task' },
@@ -35,57 +68,87 @@ export default function AdvancedOptions(props: Props) {
   return (
     <Collapsible title={<div className={styles.advancetext}>Advanced Options</div>}>
       <div className={styles.advanceoptionsformgrid}>
-        <div>
-          {compoundMode === 'compound' && <Toggle options={toggleOptions} onChange={setApiMode} value={apiMode} />}
-          <MoreInfo info={description.simple_precursors}>
-            <Input
-              type="number"
-              step="any"
-              label="Use Simplified Precursor Library"
-              defaultValue={0}
-              {...register('simple_precursors', { valueAsNumber: true })}
-            />
-          </MoreInfo>
-          <Input
-            type="number"
-            step="any"
-            label="Surface energy scaling factor"
-            defaultValue={0.12484}
-            {...register('sigma', { valueAsNumber: true })}
-          />
-          <Input
-            type="number"
-            step="any"
-            label="Transport barrier"
-            defaultValue={10}
-            {...register('transport_constant', { valueAsNumber: true })}
-          />
-          <MoreInfo info={description.exclude_compositions}>
-            <MultiSelect label="Formulas to filter out" setValues={setExcludeCompositions} />
-          </MoreInfo>
+        <div className={styles.advancedoptionscontent}>
+          {compoundMode === 'compound' && <RadioToggle options={toggleOptions} onChange={setApiMode} value={apiMode} />}
+          <div className={styles.selectCSS}>
+            <div>
+              <div className={styles.labelwithinfo}>
+                <label className={styles.label}>Use Simplified Precursor Library</label>
+                <InfoImage imagePath={logo} altText="Info" information={description.simple_precursors} />
+              </div>
+              <input
+                className={styles.inputfield}
+                type="number"
+                step="any"
+                defaultValue={0}
+                {...register('simple_precursors', { valueAsNumber: true })}
+              />
+            </div>
+          </div>
+          <div className={styles.selectCSS}>
+            <div>
+              <div className={styles.labelwithinfo}>
+                <label className={styles.label}>Surface energy scaling factor</label>
+              </div>
+              <input
+                className={styles.inputfield}
+                type="number"
+                step="any"
+                defaultValue={0.12484}
+                {...register('sigma', { valueAsNumber: true })}
+              />
+            </div>
+          </div>
+          <div className={styles.selectCSS}>
+            <div>
+              <div className={styles.labelwithinfo}>
+                <label className={styles.label}>Transport barrier</label>
+              </div>
+              <input
+                className={styles.inputfield}
+                type="number"
+                step="any"
+                defaultValue={10}
+                {...register('transport_constant', { valueAsNumber: true })}
+              />
+            </div>
+          </div>
+          <div className={styles.selectCSS}>
+            <div>
+              <div className={styles.labelwithinfo}>
+                <label className={styles.label}>Formulas to filter out</label>
+                <InfoImage imagePath={logo} altText="Info" information={description.exclude_compositions} />
+              </div>
+              <MultiSelect placeholder="Formulas to filter out" setValues={setExcludeCompositions} />
+            </div>
+          </div>
         </div>
         <div className={styles.Checkboxes}>
-          <MoreInfo info={description.confine_competing_to_icsd} isCheckbox>
-            <FormCheckbox
-              name="confine_competing_to_icsd"
-              control={control}
-              label="ICSD-based Parasitic Phases Only"
-              defaultValue={false}
-            />
-          </MoreInfo>
-          <FormCheckbox
-            name="display_peroxides"
-            control={control}
-            label="Show reactions involving peroxides"
-            defaultValue={true}
-          />
-          <FormCheckbox
-            name="display_superoxides"
-            control={control}
-            label="Show reactions involving superoxides"
-            defaultValue={false}
-          />
-          <FormCheckbox name="add_pareto" control={control} label="Show the Pareto front" defaultValue={true} />
+          <div>
+            <div className={styles.labelwithinfo}>
+              <FormCheckbox name="confine_competing_to_icsd" control={control} defaultValue={false} />
+              <label className={styles.checklabel}>ICSD-based Parasitic Phases Only</label>
+              <InfoImage imagePath={logo} altText="Info" information={description.confine_competing_to_icsd} />
+            </div>
+          </div>
+          <div>
+            <div className={styles.labelwithinfo}>
+              <FormCheckbox name="display_peroxides" control={control} defaultValue={true} />
+              <label> Show reactions involving peroxides</label>
+            </div>
+          </div>
+          <div>
+            <div className={styles.labelwithinfo}>
+              <FormCheckbox name="display_superoxides" control={control} defaultValue={false} />
+              <label> Show reactions involving superoxides</label>
+            </div>
+          </div>
+          <div>
+            <div className={styles.labelwithinfo}>
+              <FormCheckbox name="add_pareto" control={control} defaultValue={true} />
+              <label> Show the Pareto front</label>
+            </div>
+          </div>
         </div>
       </div>
     </Collapsible>

@@ -4,7 +4,6 @@ import { Control, Controller } from 'react-hook-form';
 import { Inputs } from './TypeProps';
 
 export interface CheckboxProps {
-  label: string;
   name:
     | 'confine_to_icsd'
     | 'confine_to_stables'
@@ -19,15 +18,13 @@ export interface CheckboxProps {
   defaultValue: boolean;
 }
 
-const FormCheckbox: FC<CheckboxProps> = ({ name, control, label, defaultValue }) => (
+const FormCheckbox: FC<CheckboxProps> = ({ name, control, defaultValue }) => (
   <div>
     <Controller
       name={`${name}`}
       control={control}
       defaultValue={defaultValue}
-      render={({ field }) => (
-        <Checkbox onBlur={field.onBlur} onChange={field.onChange} checked={field.value} label={label} />
-      )}
+      render={({ field }) => <Checkbox onBlur={field.onBlur} onChange={field.onChange} checked={field.value} />}
     />
   </div>
 );
