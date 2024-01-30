@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button } from '@material-tailwind/react';
-import { Input, Toggle } from '@toyota-research-institute/lakefront';
+import { Toggle } from '@toyota-research-institute/lakefront';
 import { Select, Option } from '@material-tailwind/react';
 import { Tooltip } from 'react-tooltip';
 import logo from './info.svg';
@@ -12,9 +12,7 @@ import InfoImage from './infoimage';
 import MultiSelect from './MultiSelect';
 import AdvancedOptions from './AdvancedOptions';
 import Pressure from './Pressure';
-import MoreInfo from './MoreInfo';
 import { description } from './description';
-import SingleSelect from './SingleSelect';
 import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import React, { useRef } from 'react';
@@ -43,7 +41,6 @@ export default function Form() {
   const [excludeCompositions, setExcludeCompositions] = useState<MultiValue<Optionselect>>([]);
   const [compoundMode, setCompoundMode] = useState('compound');
   const [cifString, setCifString] = useState<string>('');
-  const [isTooltipVisible, setTooltipVisible] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -55,13 +52,6 @@ export default function Form() {
     watch
   } = useForm<Inputs>();
 
-  const handleMouseEnter = () => {
-    setTooltipVisible(true);
-  };
-
-  const handleMouseLeave = () => {
-    setTooltipVisible(false);
-  };
   // watch to disable hull_distance
   const watchConfineToStables = watch('confine_to_stables', true);
 
@@ -314,7 +304,7 @@ export default function Form() {
           </div>
         </div>
       </div>
-      <Button placeholder="Run" type="submit">
+      <Button placeholder="Run" type="submit" className={styles.runbutton}>
         Run
       </Button>
     </form>

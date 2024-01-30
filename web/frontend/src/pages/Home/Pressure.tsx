@@ -1,11 +1,8 @@
 import { useState, useEffect, useMemo, memo } from 'react';
 import { useForm } from 'react-hook-form';
-import { Input } from '@toyota-research-institute/lakefront';
-import MoreInfo from './MoreInfo';
 import { description } from './description';
 import styles from './Home.module.css';
-import { Optionselect, PressureType } from './TypeProps';
-import SingleSelect from './SingleSelect';
+import { PressureType } from './TypeProps';
 import { Select, Option } from '@material-tailwind/react';
 import InfoImage from './infoimage';
 import logo from './info.svg';

@@ -252,6 +252,12 @@
     background: var(--white, #FFF);
     font-family: Gellix-Medium;
 }
+.advancedoptionscontent{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap:24px;
+}
 .error{
     color: red;
 }
@@ -265,5 +271,28 @@
     line-height: 20px; /* 142.857% */
     letter-spacing: 0.2px;
 }
+.radiobuttons{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap:15px;
+    margin-top: 24px;
+}
+.custumradio {
+    height: 18px;
+    width: 18px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    accent-color: black;
+  }
+  .custom-label {
+    color: #333;
+    font-size: 16px;
+  }
+  .runbutton{
+    color: white;
+    width: 20%;
+  }
+  
 
   
