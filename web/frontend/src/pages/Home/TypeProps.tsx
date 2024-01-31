@@ -29,7 +29,7 @@ export interface Inputs {
   add_pareto: boolean;
 }
 
-export type Option = { label: string; value: string };
+export type Optionselect = { label: string; value: string };
 
 export type Results = {
   result: {

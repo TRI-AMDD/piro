@@ -14,8 +14,13 @@
     background: var(--white, #FFF);
     box-shadow: 0px 1px 2px 0px rgba(51, 65, 86, 0.08);
 }
+.toggle{
+    width: 40px;
+    height: 20px;
+}
+
 .advancetext{
-    color: var(--grey-logo, #585859);
+    color: var(--grey-logo, #16161b);
     font-family: Gellix-regular;
     font-size: 16px;
     font-style: normal;
@@ -49,9 +54,6 @@
 .Form > div, .Form > label {
     margin-bottom: 6px;
 }
-.Form input[type="checkbox" i] {
-    margin: 3px;
-}
 .FormGrid {
     display: flex;
     align-items: flex-start;
@@ -71,19 +73,21 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    gap: 10px;
     color: var(--grey-900, #212121);
     font-feature-settings: 'clig' off, 'liga' off;
     font-family: Gellix-regular;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 20px;
     letter-spacing: 0.2px;
     }
 .firstrow{
-    font-family: Gellix-regular;
-    height: 692px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
     flex: 1 0 0;
     border-radius: 8px 0px 0px 8px;
     background: var(--white, #FFF);
@@ -102,9 +106,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
-}
-.Checkboxes > div {
-    margin-bottom: 6px;
+    margin-left: 10px;
 }
 .Plot, .Loading, .Error {
     margin: 16px 0;
@@ -125,6 +127,45 @@
     font-size: 12px;
     font-weight: 600;
 }
+.label{
+    color: #0f0f1a;
+    font-size: 12px;
+    font-weight: 600;
+}
+.pressurelabel{
+    color: #0f0f1a;
+    font-size: 12px;
+    font-weight: 600;
+}
+.labelwithinfo{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+}
+.labelwithinfoforselect{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    margin-bottom: 8px;
+}
+.tooltip {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    margin-left: 8px; /* adjust the gap according to your design */
+    background: #222020;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    white-space: nowrap; /* Ensures the tooltip stays in a single line */
+}
+.tooltiptext{
+    color: #F5F5F5;
+}
 .Multi {
     margin-bottom: 16px;
 }
@@ -136,10 +177,158 @@
     grid-template-columns: 350px 16px;
     column-gap: 8px;
 }
+.selectCSS{
+    display: grid;
+    grid-template-columns: 350px 16px;
+    column-gap: 8px;
+}
 .Tooltip {
     cursor: help;
     font-size: 12px;
 }
-.FileUpload input {
-    border: none;
+.FileUpload {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
 }
+.container {
+    position: relative;
+    display: inline-block;
+} 
+.icon {
+    cursor: pointer;
+}
+.selectbox{
+    margin-top: 8px;
+}
+.inputformat{
+    display: flex;
+    padding: 10px 16px 10px 0px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid var(--grey-400, #BDBDBD);
+    width: 100%;
+}
+.inputfield {
+    margin-top: 8px;
+    padding: 0.5rem; /* You might need to adjust this based on your design */
+    border: 1px solid #757575; /* border-gray-300 equivalent */
+    border-radius: 0.375rem; /* rounded-md equivalent */
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s ease-in-out; /* focus:border-blue-500 equivalent */
+    font-family: Gellix-Regular;
+  }
+.inputfield:focus {
+    border-color: #01080f; /* focus:border-blue-500 equivalent */
+}
+.inputfield:disabled {
+    background-color: #EEEEEE; /* focus:border-blue-500 equivalent */
+}
+.inputfield.error {
+    border: 1px solid red;
+}
+.labelwithinputTWO{
+    display: flex;
+    align-items: center;
+    gap: 17.5px;
+    align-self: stretch;
+    font-family: Gellix-Regular;
+}
+.labelwithinputTHREE{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    font-family: Gellix-Regular;
+}
+.inputfieldpressure{ 
+    margin-top: 16px;
+    padding: 0.5rem; /* You might need to adjust this based on your design */
+    border: 1px solid #757575;; /* border-gray-300 equivalent */
+    border-radius: 0.375rem; /* rounded-md equivalent */
+    width: 50%;
+    outline: none;
+    transition: border-color 0.2s ease-in-out; /* focus:border-blue-500 equivalent */    
+}
+.choosefile{
+    display: flex;
+    height: 36px;
+    padding: 8px 14px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--grey-900, #212121);
+    background: var(--white, #FFF);
+    font-family: Gellix-Medium;
+}
+.advancedoptionscontent{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap:24px;
+}
+.error{
+    color: red;
+}
+.checklabel{
+    font-family: Gellix-Regular;
+    color: var(--grey-900, #212121);
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 142.857% */
+    letter-spacing: 0.2px;
+}
+.radiobuttons{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap:15px;
+    margin-top: 24px;
+}
+.custumradio {
+    height: 18px;
+    width: 18px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    accent-color: black;
+  }
+  .custom-label {
+    color: #333;
+    font-size: 16px;
+  }
+  .runbutton{
+    color: white;
+    width: 20%;
+  }
+  .singleselect{
+    padding: 0.5rem; /* You might need to adjust this based on your design */
+    border: 1px solid #757575; /* border-gray-300 equivalent */
+    border-radius: 0.375rem; /* rounded-md equivalent */
+    width: 100%;
+    align-items: center;
+    gap:3px;
+    outline: none;
+    transition: border-color 0.2s ease-in-out; /* focus:border-blue-500 equivalent */
+    font-family: Gellix-Regular;
+  }
+  .labelpressure{
+    color: #0f0f1a;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .selectgap{
+    margin-bottom: 8px;
+  }
+  .custumcreateselect {
+    border: 1px solid #757575; /* border-gray-300 equivalent */
+    border-radius: 0.375rem;
+    width: 100%;
+    font-family: Gellix-Regular;
+  }

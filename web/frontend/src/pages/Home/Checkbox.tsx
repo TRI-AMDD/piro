@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { Checkbox } from '@toyota-research-institute/lakefront';
+import { Checkbox } from '@material-tailwind/react';
 import { Control, Controller } from 'react-hook-form';
 import { Inputs } from './TypeProps';
 
-export interface CheckboxProps {
-  label: string;
+export interface CheckBoxProps {
   name:
     | 'confine_to_icsd'
     | 'confine_to_stables'
@@ -19,14 +18,14 @@ export interface CheckboxProps {
   defaultValue: boolean;
 }
 
-const FormCheckbox: FC<CheckboxProps> = ({ name, control, label, defaultValue }) => (
+const FormCheckbox: FC<CheckBoxProps> = ({ name, control, defaultValue }) => (
   <div>
     <Controller
       name={`${name}`}
       control={control}
       defaultValue={defaultValue}
       render={({ field }) => (
-        <Checkbox onBlur={field.onBlur} onChange={field.onChange} checked={field.value} label={label} />
+        <Checkbox onBlur={field.onBlur} onChange={field.onChange} checked={field.value} crossOrigin="anonymous" />
       )}
     />
   </div>
