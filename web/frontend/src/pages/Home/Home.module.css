@@ -54,9 +54,6 @@
 .Form > div, .Form > label {
     margin-bottom: 6px;
 }
-.Form input[type="checkbox" i] {
-    margin: 3px;
-}
 .FormGrid {
     display: flex;
     align-items: flex-start;
@@ -76,13 +73,13 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    gap: 10px;
     color: var(--grey-900, #212121);
     font-feature-settings: 'clig' off, 'liga' off;
     font-family: Gellix-regular;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 20px;
     letter-spacing: 0.2px;
     }
@@ -109,9 +106,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
-}
-.Checkboxes > div {
-    margin-bottom: 6px;
+    margin-left: 10px;
 }
 .Plot, .Loading, .Error {
     margin: 16px 0;
@@ -230,6 +225,9 @@
 .inputfield:focus {
     border-color: #01080f; /* focus:border-blue-500 equivalent */
 }
+.inputfield:disabled {
+    background-color: #EEEEEE; /* focus:border-blue-500 equivalent */
+}
 .inputfield.error {
     border: 1px solid red;
 }
@@ -283,7 +281,7 @@
     font-feature-settings: 'clig' off, 'liga' off;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 20px; /* 142.857% */
     letter-spacing: 0.2px;
 }
@@ -314,6 +312,8 @@
     border: 1px solid #757575; /* border-gray-300 equivalent */
     border-radius: 0.375rem; /* rounded-md equivalent */
     width: 100%;
+    align-items: center;
+    gap:3px;
     outline: none;
     transition: border-color 0.2s ease-in-out; /* focus:border-blue-500 equivalent */
     font-family: Gellix-Regular;
@@ -326,5 +326,9 @@
   .selectgap{
     margin-bottom: 8px;
   }
-
-  
+  .custumcreateselect {
+    border: 1px solid #757575; /* border-gray-300 equivalent */
+    border-radius: 0.375rem;
+    width: 100%;
+    font-family: Gellix-Regular;
+  }

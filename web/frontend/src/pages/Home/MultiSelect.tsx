@@ -4,7 +4,6 @@ import styles from './Home.module.css';
 import { Optionselect } from './TypeProps';
 import { Dispatch, SetStateAction } from 'react';
 
-
 interface Props {
   placeholder?: string;
   setValues: Dispatch<SetStateAction<MultiValue<Optionselect>>>;
@@ -21,6 +20,7 @@ export default function MultiSelect(props: Props) {
         isMulti
         onChange={(newValues) => setValues(newValues)}
         options={emptyOptions}
+        className={styles.custumcreateselect}
       />
     </div>
   );
