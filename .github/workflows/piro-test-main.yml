@@ -3,7 +3,6 @@ name: Testing - main
 on:
   push:
     paths:
-      - 'web/backend/**'
       - 'piro/**'
       - '.github/workflows/**'
       - 'tests/**'
@@ -17,8 +16,7 @@ jobs:
       max-parallel: 20
       matrix:
         os: [
-          ubuntu-latest,
-          windows-latest
+          ubuntu-latest
         ]
         python-version: [3.9]
 

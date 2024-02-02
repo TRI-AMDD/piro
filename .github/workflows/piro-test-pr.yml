@@ -3,7 +3,6 @@ name: Testing - main
 on:
   pull_request:
       paths:
-        - 'web/backend/**'
         - 'piro/**'
         - '.github/workflows/**'
         - 'tests/**'
@@ -18,6 +17,7 @@ jobs:
       matrix:
         os: [
           ubuntu-latest,
+          macos-latest,
           windows-latest
         ]
         python-version: [3.9]
