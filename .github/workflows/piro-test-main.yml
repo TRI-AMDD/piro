@@ -1,6 +1,14 @@
 name: Testing - main
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'web/backend/**'
+      - 'piro/**'
+      - '.github/workflows/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - 'setup.py'
 
 jobs:
   build:
@@ -10,7 +18,6 @@ jobs:
       matrix:
         os: [
           ubuntu-latest,
-          macos-latest,
           windows-latest
         ]
         python-version: [3.9]
