@@ -3,9 +3,9 @@ name: Testing - main
 on:
   pull_request:
       paths:
-        - 'piro/**'
-        - '.github/workflows/**'
-        - 'tests/**'
+        - 'piro/**/*'
+        - '.github/workflows/**/*'
+        - 'tests/**/*'
         - 'requirements.txt'
         - 'setup.py'
 
