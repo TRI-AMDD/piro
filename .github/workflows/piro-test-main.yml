@@ -4,10 +4,6 @@ on:
   push:
     paths:
       - 'piro/**/*'
-      - '.github/workflows/**/*'
-      - 'tests/**/*'
-      - 'requirements.txt'
-      - 'setup.py'
 
 jobs:
   build:
