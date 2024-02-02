@@ -582,4 +582,5 @@ class SynthesisRoutes:
             if not options:
                 raise ValueError("{} query failed, please enter valid formula or mp id".format(formula_str))
             options = sorted(options, key=lambda x: x["e_above_hull"])
+            print(options)
             return options[0]["material_id"]
