@@ -15,7 +15,7 @@ const FeedbackButton: React.FC<FeedbackButtonProps> = () => {
       <Button
         variant="filled"
         size="sm"
-        placeholder="Feedback test ui changes"
+        placeholder="Feedback"
         style={{
           height: '48px',
           width: '104px',
