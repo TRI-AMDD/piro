@@ -1,13 +1,5 @@
 import { Given, When, Then, And } from 'cypress-cucumber-preprocessor/steps';
 import "cypress-xpath";
-const genFilesPath = "cypress/fixtures/rpv.text"
-const leFilesPath = "cypress/fixtures/le.text"
-const newRpvPath = "cypress/fixtures/newRpv.text"
-const newleFilesPath = "cypress/fixtures/newLe.text"
-//cy.writeFile(genFilesPath,'test') tested
-
-
-const sometext='';
 
 Given('I login the piro website', () => {
 
@@ -18,21 +10,13 @@ cy.login()
   
 });
 
-
-When('I enter value of Target Compound mp-id', () => {
-cy.get('[name="target_entry_id"]').type(Cypress.config().mpid)
-
-});
-
-
-And('I click on run button', () => {
-cy.get('[type="submit"]').click()
-});
+When('I enter tc as {string}  temperature as {string} number of components as {string} and depth as {string}', (tc,temperature,comp,depth) => {
+    cy.wait(3000)
+    cy.generateGraph(tc,temperature,comp,depth)
+  
+  })
 
 
-Then('the graph should be loaded', () => {
-cy.wait(10000);
-cy.scrollTo('bottom')
-cy.get('.js-plotly-plot').scrollIntoView()
-cy.screenshot
+Then('the expected graph should be loaded', () => {
+    cy.validateGraph()
 });

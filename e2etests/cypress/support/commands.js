@@ -1,8 +1,12 @@
+// cypress/support/commands.js
+const compareSnapshotCommand = require('cypress-image-diff-js/dist/command')
+compareSnapshotCommand()
 Cypress.Commands.add('login', () => {
     cy.get(".login_login__19CNz").should('be.visible').click()
     cy.get("#signInFormUsername").type(Cypress.config().username,{force: true})
     cy.get("#signInFormPassword").type(Cypress.config().password,{force : true})
     cy.get('[name="signInSubmitButton"]').eq(1).click()
+    cy.wait(3000)
 })
 
 
@@ -52,7 +56,11 @@ Cypress.Commands.add('generateGraph',(tc,temperature,comp,depth) => {
     cy.get('[type="submit"]').click()
 })
 
-
+Cypress.Commands.add('validateGraph', () => {
+    cy.wait(10000);
+    cy.scrollTo('bottom')
+    cy.get('.js-plotly-plot').scrollIntoView().compareSnapshot('piro-graph')
+})
 
 
 Cypress.Commands.add('validateErr', (tc,temperature,comp,depth) => {

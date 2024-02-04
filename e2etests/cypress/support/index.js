@@ -1,0 +1,3 @@
+after(() => {
+    cy.task('generateReport')
+    })
