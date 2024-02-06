@@ -16,8 +16,8 @@ import { description } from './description';
 import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import React, { useRef } from 'react';
+import SingleSelect from './SingleSelect';
 
-//import { Input } from "@material-tailwind/react";
 const addElementOptions = [
   { value: '', label: 'None' },
   { value: 'C', label: 'C' },
@@ -35,7 +35,7 @@ interface Option {
 export default function Form() {
   const { mutation } = usePlotData();
   const [pressure, setPressure] = useState<PressureType | null | number>(null);
-  const [addElements, setAddElements] = useState<Option | undefined>(() => addElementOptions[0]);
+  const [addElements, setAddElements] = useState<Option>(addElementOptions[0]);
   const [explicitIncludes, setExplicitIncludes] = useState<MultiValue<Optionselect>>([]);
   const [excludeCompositions, setExcludeCompositions] = useState<MultiValue<Optionselect>>([]);
   const [compoundMode, setCompoundMode] = useState('compound');
@@ -56,7 +56,7 @@ export default function Form() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     // set values from multi-select values
-    data.add_elements = addElements ? [addElements.value] : [];
+    data.add_elements = addElements?.value !== '' ? [addElements?.value] : [];
     data.explicit_includes = explicitIncludes.map((e) => e.value);
     data.exclude_compositions = excludeCompositions.map((e) => e.value);
     // get values from pressure
@@ -215,30 +215,13 @@ export default function Form() {
                 />
               </div>
             </div>
-
-            {/*<SingleSelect
-                label="Additional element to consider"
-                options={addElementOptions}
-                setValue={setAddElements}
-            />*/}
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfoforselect}>
                   <label className={styles.label}>Additional element to consider</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
                 </div>
-                <Select
-                  className={styles.singleselect}
-                  placeholder="Additional element"
-                  value={addElements?.value || ''}
-                  onChange={(value) => setAddElements(addElementOptions.find((option) => option.value === value))}
-                >
-                  {addElementOptions.map((option) => (
-                    <Option key={option.value} value={option.value}>
-                      {option.label}
-                    </Option>
-                  ))}
-                </Select>
+                <SingleSelect value={addElements.value} options={addElementOptions} setValue={setAddElements} />
               </div>
             </div>
             <div className={styles.selectCSS}>
