@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button } from '@material-tailwind/react';
 import { Toggle } from '@toyota-research-institute/lakefront';
-import { Select, Option } from '@material-tailwind/react';
+import { Option } from '@material-tailwind/react';
 import { Tooltip } from 'react-tooltip';
 import logo from './info.svg';
 import styles from './Home.module.css';
