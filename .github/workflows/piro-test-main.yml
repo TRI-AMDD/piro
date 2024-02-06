@@ -1,6 +1,9 @@
 name: Testing - main
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'piro/**/*'
 
 jobs:
   build:
@@ -9,9 +12,7 @@ jobs:
       max-parallel: 20
       matrix:
         os: [
-          ubuntu-latest,
-          macos-latest,
-          windows-latest
+          ubuntu-latest
         ]
         python-version: [3.9]
 

@@ -1,6 +1,9 @@
 name: Testing - main
 
-on: [pull_request]
+on:
+  pull_request:
+      paths:
+        - 'piro/**/*'
 
 jobs:
   build:
