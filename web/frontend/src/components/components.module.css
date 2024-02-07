@@ -74,7 +74,7 @@
 .FeedbackButtonDiv{
     position:absolute;
     top:50%;
-    right:-1%;
-    height:10%;
+    right: 0;
+    transform-origin: right top;
     transform: rotate(90deg);
 }

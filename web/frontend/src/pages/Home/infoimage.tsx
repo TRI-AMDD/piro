@@ -36,7 +36,7 @@ const InfoImage: React.FC<InfoImageProps> = ({ imagePath, altText, information }
 
       {isTooltipVisible && (
         <div className={styles.tooltip}>
-          <p className={styles.tooltiptext}>{renderParagraphs()}</p>
+          <div className={styles.tooltiptext}>{renderParagraphs()}</div>
         </div>
       )}
     </div>
