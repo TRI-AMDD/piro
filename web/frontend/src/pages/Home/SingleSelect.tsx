@@ -1,27 +1,32 @@
-import Select from 'react-select';
+import { Select, Option } from '@material-tailwind/react';
 import styles from './Home.module.css';
 import { Optionselect } from './TypeProps';
 
 interface Props {
-  placeholder?: string;
-  label: string;
+  value: string;
   options: Optionselect[];
   setValue(value: Optionselect): void;
 }
 
 export default function SingleSelect(props: Props) {
-  const { label, setValue, options } = props;
+  const { value, setValue, options } = props;
 
-  const handleChange = (option?: Optionselect | Optionselect[] | null) => {
-    if (option && !Array.isArray(option)) {
-      setValue(option);
+  const handleChange = (value: string | undefined) => {
+    if (value) {
+      const optionItem = options.find((option) => option.value === value);
+      if (optionItem) {
+        setValue(optionItem);
+      }
     }
   };
 
   return (
-    <div className={styles.Multi}>
-      <label className={styles.Label}>{label}</label>
-      <Select defaultValue={options[0]} onChange={handleChange} options={options} />
-    </div>
+    <Select className={styles.singleselect} placeholder="Additional element" value={value} onChange={handleChange}>
+      {options.map((option) => (
+        <Option key={option.value} value={option.value}>
+          {option.label}
+        </Option>
+      ))}
+    </Select>
   );
 }
