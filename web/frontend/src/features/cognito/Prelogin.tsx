@@ -29,7 +29,7 @@ export default function PreLogin() {
         </button>
         <p className={LoginCSS.donthavesignin}>
           Don’t have a sign in?<span> </span>
-          <a href="mailto:em-piro@tri.global" target="_blank" className={LoginCSS.requestsignin}>
+          <a href="mailto:em-piro@tri.global" target="_blank" rel="noreferrer" className={LoginCSS.requestsignin}>
             Request one here
           </a>{' '}
         </p>
@@ -60,7 +60,7 @@ export default function PreLogin() {
           <br></br>
           <p className={LoginCSS.thirdblockcontent}>
             To request access or if you have questions about logging in, reach out to us at{' '}
-            <a href="mailto:em-piro@tri.global" target="_blank" className={LoginCSS.mailstyle}>
+            <a href="mailto:em-piro@tri.global" target="_blank" rel="noreferrer" className={LoginCSS.mailstyle}>
               em-piro@tri.global
             </a>
             .
@@ -72,7 +72,9 @@ export default function PreLogin() {
             If you’d like to use the Python interface to Piro, or to access the code for this site, please visit our
             GitHub page:{' '}
             <u>
-              <a href="https://github.com/TRI-AMDD/piro" target="_blank">https://github.com/TRI-AMDD/piro</a>
+              <a href="https://github.com/TRI-AMDD/piro" target="_blank" rel="noreferrer">
+                https://github.com/TRI-AMDD/piro
+              </a>
             </u>
             . Tutorial Jupyter notebooks showing how to use Piro locally are provided in the notebooks folder.
           </p>
@@ -83,7 +85,7 @@ export default function PreLogin() {
             For more information about the physical theory behind Piro, please read our paper, “Rational Solid-State
             Synthesis Routes for Inorganic Materials” by Murat Aykol et al. (
             <u>
-              <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank">
+              <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank" rel="noreferrer">
                 https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888
               </a>
             </u>
