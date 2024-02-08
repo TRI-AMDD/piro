@@ -258,14 +258,14 @@ export default function Form() {
               <div>
                 <div className={styles.labelwithinfo}>
                   <FormCheckbox name="confine_to_stables" control={control} defaultValue={true} />
-                  <label> Show only reactions with known precursors</label>
+                  <label>Stable precursors only</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.confine_to_stables} />
                 </div>
               </div>
               <div>
                 <div className={styles.labelwithinfo}>
                   <FormCheckbox name="confine_to_icsd" control={control} defaultValue={true} />
-                  <label> ICSD-based Precursors Only</label>
+                  <label> ICSD-based precursors only</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.confine_to_icsd} />
                 </div>
               </div>

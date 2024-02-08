@@ -56,8 +56,8 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
               Piro creates synthesis reaction planning plots for target polymorphs under a specific set of thermodynamic
               conditions and a precursor library, where favorable routes are those that are (nearly) Pareto optimal in
               terms of two metrics: nucleation barrier and phase-selection. It allows retrosynthetic analysis of target
-              inorganic materials to generate a synthesis reaction tree. (i.e. laying out the reaction pathways
-              necessary to arrive at the target from practical/purchasable reagents/starting materials)
+              inorganic materials to generate a synthesis reaction tree (i.e., laying out the reaction pathways
+              necessary to arrive at the target from practical/purchasable reagents/starting materials).
             </p>
           </div>
         </div>
@@ -66,11 +66,11 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
           <div className={styles.InnerContainer}>
             <h4 className={styles.Titles}>Contact</h4>
             <p className={styles.Content}>
-              The piro platform is developed by a team of researchers and software developers at Toyota Research
+              The Piro platform is developed by a team of researchers and software developers at Toyota Research
               Institute: Murat Aykol, Joseph Montoya, Jens Hummelshøj, Chris Fajardo, Michael Puzon, and Reko Ong. If
               you have any questions or feedback, please reach out to us at{' '}
               <u>
-                <a href="mailto:em-piro@tri.global">em-piro@tri.global</a>
+                <a href="mailto:em-piro@tri.global" className={styles.mailstyle}>em-piro@tri.global</a>
               </u>
               .
             </p>
@@ -81,14 +81,14 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
           <div className={styles.InnerContainer}>
             <h4 className={styles.Titles}>Code</h4>
             <p className={styles.Content}>
-              If you’d like to use the python interface to piro, or to access the code for this site, please visit our
-              github page:{' '}
+              If you’d like to use the Python interface to Piro, or to access the code for this site, please visit our
+              GitHub page:{' '}
               <u>
                 <a href="https://github.com/TRI-AMDD/piro" target="_blank" rel="noreferrer">
                   https://github.com/TRI-AMDD/piro
                 </a>
               </u>
-              . Tutorial jupyter notebooks showing how to use piro locally are provided in the notebooks folder.
+              . Tutorial Jupyter notebooks showing how to use Piro locally are provided in the notebooks folder.
               <div className={styles.spacer}></div>
             </p>
           </div>
@@ -98,7 +98,7 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
           <div className={styles.InnerContainer}>
             <h4 className={styles.Titles}>Manuscript</h4>
             <p className={styles.Content}>
-              For more information about the physical theory behind piro, please read our paper, “Rational Solid-State
+              For more information about the physical theory behind Piro, please read our paper, “Rational Solid-State
               Synthesis Routes for Inorganic Materials” by Murat Aykol et al.{' '}
               <u>
                 <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank" rel="noreferrer">

@@ -14,7 +14,7 @@ export default function Header() {
       </a>
       {AMPLIFY_ENABLED && (
         <button className={styles.Signout} onClick={signOut}>
-          Sign Out
+          SIGN OUT
         </button>
       )}
     </header>

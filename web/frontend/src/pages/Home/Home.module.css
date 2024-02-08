@@ -160,6 +160,7 @@
     position: absolute;
     top: 50%;
     left: 100%;
+    right: auto;
     transform: translateY(-50%);
     margin-left: 8px; /* adjust the gap according to your design */
     background: #222020;
@@ -171,6 +172,8 @@
 }
 .tooltiptext{
     color: #F5F5F5;
+    font-size: 14px;
+    font-weight: 500;
 }
 .Multi {
     margin-bottom: 16px;
@@ -200,7 +203,6 @@
 }
 .container {
     position: relative;
-    display: inline-block;
 } 
 .icon {
     cursor: pointer;
