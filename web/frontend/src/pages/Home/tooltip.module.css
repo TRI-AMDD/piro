@@ -1,0 +1,22 @@
+.tooltip {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    margin-left: 8px; /* adjust the gap according to your design */
+    background: #222020;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    min-width: 185px;
+    white-space: nowrap;
+}
+.tooltiptext{
+    color: #F5F5F5;
+    font-size: 14px;
+    font-weight: 500;
+}
+.container {
+    position: relative;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './Home.module.css';
+import styles from './tooltip.module.css';
 
 interface InfoImageProps {
   imagePath: string;
