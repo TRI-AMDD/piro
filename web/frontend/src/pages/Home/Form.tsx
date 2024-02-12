@@ -163,42 +163,45 @@ export default function Form() {
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfo}>
-                  <label className={styles.label}>Temperature (K)</label>
+                  <label className={styles.label}>Temperature (K)*</label>
                 </div>
                 <input
                   type="number"
                   step="any"
-                  className={styles.inputfield}
+                  className={`${styles.inputfield} ${errors.temperature ? styles.error : ''}`}
                   defaultValue={1000}
-                  {...register('temperature', { valueAsNumber: true })}
+                  {...register('temperature', { valueAsNumber: true,required: true })}
                 />
+                <p className={styles.error}>{errors.temperature ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfo}>
-                  <label className={styles.label}>Maximum number of components in precursors</label>
+                  <label className={styles.label}>Maximum number of components in precursors*</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.max_component_precursors} />
                 </div>
                 <input
                   type="text"
-                  className={styles.inputfield}
-                  {...register('max_component_precursors', { valueAsNumber: true })}
+                  className={`${styles.inputfield} ${errors.max_component_precursors ? styles.error : ''}`}
+                  {...register('max_component_precursors', { valueAsNumber: true,required:true })}
                   defaultValue={0}
                 />
+                <p className={styles.error}>{errors.max_component_precursors ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfo}>
-                  <label className={styles.label}>Depth of parasitic reaction search</label>
+                  <label className={styles.label}>Depth of parasitic reaction search*</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.flexible_competition} />
                 </div>
                 <input
-                  className={styles.inputfield}
-                  {...register('flexible_competition', { valueAsNumber: true })}
+                  className={`${styles.inputfield} ${errors.flexible_competition ? styles.error : ''}`}
+                  {...register('flexible_competition', { valueAsNumber: true,required:true })}
                   defaultValue={0}
                 />
+                <p className={styles.error}>{errors.flexible_competition ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
