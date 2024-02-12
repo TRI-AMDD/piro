@@ -17,13 +17,17 @@ const InfoImage: React.FC<InfoImageProps> = ({ imagePath, altText, information }
   const handleMouseLeave = () => {
     setTooltipVisible(false);
   };
-  const characterToColor: string = "`";
-  const lines: string[] = information.split("<br>");
+  const characterToColor: string = '`';
+  const lines: string[] = information.split('<br>');
   const modifiedLines: JSX.Element[] = lines.map((line: string, lineIndex: number) => {
-    const characters: string[] = line.split("");
+    const characters: string[] = line.split('');
     const modifiedCharacters: JSX.Element[] = characters.map((char: string, index: number) => {
       if (char === characterToColor) {
-        return <span key={index} style={{ color: '#222020' }}>{char}</span>;
+        return (
+          <span key={index} style={{ color: '#222020' }}>
+            {char}
+          </span>
+        );
       } else {
         return <span key={index}>{char}</span>;
       }
