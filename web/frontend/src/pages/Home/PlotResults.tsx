@@ -1,5 +1,7 @@
 import Plot from 'react-plotly.js';
 import styles from './Home.module.css';
+import { pushEvent } from 'src/utils/GA';
+import { useEffect, useRef } from 'react';
 
 interface Props {
   result: {
@@ -8,11 +10,29 @@ interface Props {
   };
 }
 
+
+    const handleDivLoad = () => {
+        pushEvent("plot successfully rendered")
+    };
+
+
 function PlotResults(props: Props) {
   const { result } = props;
 
+  useEffect(() => {
+        const plotDiv = plotDivRef.current;
+
+        if (plotDiv) {
+          plotDiv.addEventListener('load', handleDivLoad);
+
+          return () => {
+            plotDiv.removeEventListener('load', handleDivLoad);
+          };
+        }
+      }, []);
+
   return (
-    <div className={styles.Plot}>
+    <div className={styles.Plot} ref={plotDivRef}>
       <Plot {...result} />
     </div>
   );

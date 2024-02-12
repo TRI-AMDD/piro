@@ -10,6 +10,7 @@ import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import InfoImage from './infoimage';
 import logo from './info.svg';
+import { infoHandleHover } from 'src/utils/GA';
 
 interface Props {
   control: Control<Inputs>;
@@ -72,7 +73,7 @@ export default function AdvancedOptions(props: Props) {
           {compoundMode === 'compound' && <RadioToggle options={toggleOptions} onChange={setApiMode} value={apiMode} />}
           <div className={styles.selectCSS}>
             <div>
-              <div className={styles.labelwithinfo}>
+              <div className={styles.labelwithinfo} onMouseOver={() => infoHandleHover("infoHover",description.simple_precursors)}>
                 <label className={styles.label}>Use Simplified Precursor Library</label>
                 <InfoImage imagePath={logo} altText="Info" information={description.simple_precursors} />
               </div>
@@ -115,7 +116,7 @@ export default function AdvancedOptions(props: Props) {
           </div>
           <div className={styles.selectCSS}>
             <div>
-              <div className={styles.labelwithinfoforselect}>
+              <div className={styles.labelwithinfoforselect} onMouseOver={() => infoHandleHover("infoHover",description.exclude_compositions)}>
                 <label className={styles.label}>Formulas to filter out</label>
                 <InfoImage imagePath={logo} altText="Info" information={description.exclude_compositions} />
               </div>
@@ -125,7 +126,7 @@ export default function AdvancedOptions(props: Props) {
         </div>
         <div className={styles.Checkboxes}>
           <div>
-            <div className={styles.labelwithinfo}>
+            <div className={styles.labelwithinfo} onMouseOver={() => infoHandleHover("infoHover",description.confine_competing_to_icsd)}>
               <FormCheckbox name="confine_competing_to_icsd" control={control} defaultValue={false} />
               <label className={styles.checklabel}>ICSD-based Parasitic Phases Only</label>
               <InfoImage imagePath={logo} altText="Info" information={description.confine_competing_to_icsd} />

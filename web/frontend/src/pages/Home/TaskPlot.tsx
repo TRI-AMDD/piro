@@ -4,6 +4,7 @@ import styles from './Home.module.css';
 import ErrorMessage from './ErrorMessage';
 import PlotResults from './PlotResults';
 import { usePlotData } from './plotDataContext';
+import { pushEvent } from 'src/utils/GA';
 
 interface Props {
   taskId: string;
@@ -22,6 +23,7 @@ function TaskPlot(props: Props) {
     );
 
   if (error) {
+    pushEvent("Error encountered")
     return <ErrorMessage error="Error encountered" />;
   }
 
@@ -38,10 +40,12 @@ function TaskPlot(props: Props) {
   }
 
   if (data.status === 'failure') {
+    pushEvent("Failure")
     return <ErrorMessage error={data.error_message} />;
   }
 
   if (data.status === 'invalid') {
+    pushEvent("Invalid request sent")
     return <ErrorMessage error="Invalid request sent." />;
   }
 
