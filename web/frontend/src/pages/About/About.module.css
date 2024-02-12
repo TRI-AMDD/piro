@@ -1,11 +1,19 @@
 .PageContent{
     display: flex;
-    width: 1440px;
-    height: 862px;
     padding: 40px 160px 40px 160px;
     flex-direction: column;
     align-items: flex-start;
     gap: 40px;
+}
+@media (max-width: 768px) {
+  .PageContent {
+    padding: 10px 15px 10px 15px;
+  }
+}
+@media (max-width: 300px) {
+  .PageContent {
+    padding: 10px 10px 10px 10px;
+  }
 }
 .Breadcrumbs{
      color: #212121;
