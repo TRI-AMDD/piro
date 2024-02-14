@@ -6,14 +6,18 @@ const tagManagerArgs = { gtmId: 'G-QNR2D22FG3' };
 TagManager.initialize(tagManagerArgs);
 
 export const infoHandleHover = (event: string, label: string) => {
-  window.dataLayer.push({
-    event: event,
-    label: label
-  });
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: event,
+      label: label
+    });
+  }
 };
 
 export const pushEvent = (event: string) => {
-  window.dataLayer.push({
-    event: event
-  });
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: event
+    });
+  }
 };
