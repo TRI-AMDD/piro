@@ -32,6 +32,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  react-gtm-module:
+    specifier: ^2.0.11
+    version: 2.0.11
   react-hook-form:
     specifier: ^7.49.2
     version: 7.49.2(react@18.2.0)
@@ -10757,6 +10760,10 @@ packages:
       react: '>=16'
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /react-gtm-module@2.0.11:
+    resolution: {integrity: sha512-8gyj4TTxeP7eEyc2QKawEuQoAZdjKvMY4pgWfycGmqGByhs17fR+zEBs0JUDq4US/l+vbTl+6zvUIx27iDo/Vw==}
     dev: false
 
   /react-hook-form@7.49.2(react@18.2.0):
