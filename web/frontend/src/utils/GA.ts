@@ -11,7 +11,7 @@ export const infoHandleHover = (event: string, label: string) => {
   });
 };
 
-export const pushEvent = (event: strinf) => {
+export const pushEvent = (event: string) => {
   window.dataLayer.push({
     event: event
   });
