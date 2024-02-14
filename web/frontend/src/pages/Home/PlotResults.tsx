@@ -1,7 +1,7 @@
 import Plot from 'react-plotly.js';
 import styles from './Home.module.css';
 import { pushEvent } from 'src/utils/GA';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Props {
   result: {
@@ -16,6 +16,7 @@ const handleDivLoad = () => {
 
 function PlotResults(props: Props) {
   const { result } = props;
+  const plotDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const plotDiv = plotDivRef.current;
