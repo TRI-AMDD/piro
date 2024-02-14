@@ -29,7 +29,7 @@ export default function PreLogin() {
         </button>
         <p className={LoginCSS.donthavesignin}>
           Don’t have a sign in?<span> </span>
-          <a href="mailto:em-piro@tri.global" className={LoginCSS.requestsignin}>
+          <a href="mailto:em-piro@tri.global" target="_blank" rel="noreferrer" className={LoginCSS.requestsignin}>
             Request one here
           </a>{' '}
         </p>
@@ -43,7 +43,7 @@ export default function PreLogin() {
             terms of two metrics: nucleation barrier and phase-selection.
           </p>
           <p className={LoginCSS.secondblockmargin}>
-            It allows retrosynthetic analysis of target inorganic materials to generate a synthesis reaction tree (i.e.
+            It allows retrosynthetic analysis of target inorganic materials to generate a synthesis reaction tree (i.e.,
             laying out the reaction pathways necessary to arrive at the target from practical/purchasable
             reagents/starting materials).
           </p>
@@ -60,7 +60,7 @@ export default function PreLogin() {
           <br></br>
           <p className={LoginCSS.thirdblockcontent}>
             To request access or if you have questions about logging in, reach out to us at{' '}
-            <a href="mailto:em-piro@tri.global" className={LoginCSS.mailstyle}>
+            <a href="mailto:em-piro@tri.global" target="_blank" rel="noreferrer" className={LoginCSS.mailstyle}>
               em-piro@tri.global
             </a>
             .
@@ -69,12 +69,14 @@ export default function PreLogin() {
         <div>
           <h4 className={LoginCSS.thirdblockheader}>Code</h4>
           <p className={LoginCSS.thirdblockcontent}>
-            If you’d like to use the python interface to Piro, or to access the code for this site, please visit our
-            github page:{' '}
+            If you’d like to use the Python interface to Piro, or to access the code for this site, please visit our
+            GitHub page:{' '}
             <u>
-              <a href="https://github.com/TRI-AMDD/piro">https://github.com/TRI-AMDD/piro</a>
+              <a href="https://github.com/TRI-AMDD/piro" target="_blank" rel="noreferrer">
+                https://github.com/TRI-AMDD/piro
+              </a>
             </u>
-            . Tutorial jupyter notebooks showing how to use Piro locally are provided in the notebooks folder.
+            . Tutorial Jupyter notebooks showing how to use Piro locally are provided in the notebooks folder.
           </p>
         </div>
         <div>
@@ -83,7 +85,7 @@ export default function PreLogin() {
             For more information about the physical theory behind Piro, please read our paper, “Rational Solid-State
             Synthesis Routes for Inorganic Materials” by Murat Aykol et al. (
             <u>
-              <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888">
+              <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank" rel="noreferrer">
                 https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888
               </a>
             </u>

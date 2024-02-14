@@ -128,7 +128,7 @@ export default function AdvancedOptions(props: Props) {
           <div>
             <div className={styles.labelwithinfo} onMouseOver={() => infoHandleHover("infoHover",description.confine_competing_to_icsd)}>
               <FormCheckbox name="confine_competing_to_icsd" control={control} defaultValue={false} />
-              <label className={styles.checklabel}>ICSD-based Parasitic Phases Only</label>
+              <label className={styles.checklabel}>ICSD-based parasitic phases only</label>
               <InfoImage imagePath={logo} altText="Info" information={description.confine_competing_to_icsd} />
             </div>
           </div>

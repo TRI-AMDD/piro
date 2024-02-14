@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './Home.module.css';
+import styles from './tooltip.module.css';
 
 interface InfoImageProps {
   imagePath: string;
@@ -17,12 +17,24 @@ const InfoImage: React.FC<InfoImageProps> = ({ imagePath, altText, information }
   const handleMouseLeave = () => {
     setTooltipVisible(false);
   };
-
-  const renderParagraphs = () => {
-    const paragraphs = information.split('<br>');
-
-    return paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>);
-  };
+  const characterToColor: string = '`';
+  const lines: string[] = information.split('<br>');
+  const modifiedLines: JSX.Element[] = lines.map((line: string, lineIndex: number) => {
+    const characters: string[] = line.split('');
+    const modifiedCharacters: JSX.Element[] = characters.map((char: string, index: number) => {
+      if (char === characterToColor) {
+        return (
+          <span key={index} style={{ color: '#222020' }}>
+            {char}
+          </span>
+        );
+      } else {
+        return <span key={index}>{char}</span>;
+      }
+    });
+    const modifiedLine: JSX.Element = <>{modifiedCharacters}</>;
+    return <div key={lineIndex}>{modifiedLine}</div>;
+  });
 
   return (
     <div className={styles.container}>
@@ -36,7 +48,7 @@ const InfoImage: React.FC<InfoImageProps> = ({ imagePath, altText, information }
 
       {isTooltipVisible && (
         <div className={styles.tooltip}>
-          <p className={styles.tooltiptext}>{renderParagraphs()}</p>
+          <div className={styles.tooltiptext}>{modifiedLines}</div>
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button } from '@material-tailwind/react';
 import { Toggle } from '@toyota-research-institute/lakefront';
-import { Select, Option } from '@material-tailwind/react';
+import { Option } from '@material-tailwind/react';
 import { Tooltip } from 'react-tooltip';
 import logo from './info.svg';
 import styles from './Home.module.css';
@@ -16,10 +16,10 @@ import { description } from './description';
 import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import React, { useRef } from 'react';
+import SingleSelect from './SingleSelect';
 import { infoHandleHover, pushEvent } from 'src/utils/GA';
 
 
-//import { Input } from "@material-tailwind/react";
 const addElementOptions = [
   { value: '', label: 'None' },
   { value: 'C', label: 'C' },
@@ -37,7 +37,7 @@ interface Option {
 export default function Form() {
   const { mutation } = usePlotData();
   const [pressure, setPressure] = useState<PressureType | null | number>(null);
-  const [addElements, setAddElements] = useState<Option | undefined>(() => addElementOptions[0]);
+  const [addElements, setAddElements] = useState<Option>(addElementOptions[0]);
   const [explicitIncludes, setExplicitIncludes] = useState<MultiValue<Optionselect>>([]);
   const [excludeCompositions, setExcludeCompositions] = useState<MultiValue<Optionselect>>([]);
   const [compoundMode, setCompoundMode] = useState('compound');
@@ -58,7 +58,7 @@ export default function Form() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     // set values from multi-select values
-    data.add_elements = addElements ? [addElements.value] : [];
+    data.add_elements = addElements?.value !== '' ? [addElements?.value] : [];
     data.explicit_includes = explicitIncludes.map((e) => e.value);
     data.exclude_compositions = excludeCompositions.map((e) => e.value);
     // get values from pressure
@@ -166,42 +166,45 @@ export default function Form() {
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfo}>
-                  <label className={styles.label}>Temperature (K)</label>
+                  <label className={styles.label}>Temperature (K)*</label>
                 </div>
                 <input
                   type="number"
                   step="any"
-                  className={styles.inputfield}
+                  className={`${styles.inputfield} ${errors.temperature ? styles.error : ''}`}
                   defaultValue={1000}
-                  {...register('temperature', { valueAsNumber: true })}
+                  {...register('temperature', { valueAsNumber: true, required: true })}
                 />
+                <p className={styles.error}>{errors.temperature ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfo} onMouseOver={() => infoHandleHover("infoHover",description.max_component_precursors)}>
-                  <label className={styles.label}>Maximum number of components in precursors</label>
+                  <label className={styles.label}>Maximum number of components in precursors*</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.max_component_precursors} />
                 </div>
                 <input
                   type="text"
-                  className={styles.inputfield}
-                  {...register('max_component_precursors', { valueAsNumber: true })}
+                  className={`${styles.inputfield} ${errors.max_component_precursors ? styles.error : ''}`}
+                  {...register('max_component_precursors', { valueAsNumber: true, required: true })}
                   defaultValue={0}
                 />
+                <p className={styles.error}>{errors.max_component_precursors ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfo} onMouseOver={() => infoHandleHover("infoHover",description.flexible_competition)}>
-                  <label className={styles.label}>Depth of parasitic reaction search</label>
+                  <label className={styles.label}>Depth of parasitic reaction search*</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.flexible_competition} />
                 </div>
                 <input
-                  className={styles.inputfield}
-                  {...register('flexible_competition', { valueAsNumber: true })}
+                  className={`${styles.inputfield} ${errors.flexible_competition ? styles.error : ''}`}
+                  {...register('flexible_competition', { valueAsNumber: true, required: true })}
                   defaultValue={0}
                 />
+                <p className={styles.error}>{errors.flexible_competition ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
@@ -218,30 +221,13 @@ export default function Form() {
                 />
               </div>
             </div>
-
-            {/*<SingleSelect
-                label="Additional element to consider"
-                options={addElementOptions}
-                setValue={setAddElements}
-            />*/}
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfoforselect} onMouseOver={() => infoHandleHover("infoHover",description.add_elements)}>
                   <label className={styles.label}>Additional element to consider</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
                 </div>
-                <Select
-                  className={styles.singleselect}
-                  placeholder="Additional element"
-                  value={addElements?.value || ''}
-                  onChange={(value) => setAddElements(addElementOptions.find((option) => option.value === value))}
-                >
-                  {addElementOptions.map((option) => (
-                    <Option key={option.value} value={option.value}>
-                      {option.label}
-                    </Option>
-                  ))}
-                </Select>
+                <SingleSelect value={addElements.value} options={addElementOptions} setValue={setAddElements} />
               </div>
             </div>
             <div className={styles.selectCSS}>
@@ -278,14 +264,14 @@ export default function Form() {
               <div>
                 <div className={styles.labelwithinfo} onMouseOver={() => infoHandleHover("infoHover",description.confine_to_stables)}>
                   <FormCheckbox name="confine_to_stables" control={control} defaultValue={true} />
-                  <label> Show only reactions with known precursors</label>
+                  <label>Stable precursors only</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.confine_to_stables} />
                 </div>
               </div>
               <div>
                 <div className={styles.labelwithinfo} onMouseOver={() => infoHandleHover("infoHover",description.confine_to_icsd)}>
                   <FormCheckbox name="confine_to_icsd" control={control} defaultValue={true} />
-                  <label> ICSD-based Precursors Only</label>
+                  <label> ICSD-based precursors only</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.confine_to_icsd} />
                 </div>
               </div>
