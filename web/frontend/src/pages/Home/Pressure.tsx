@@ -73,9 +73,12 @@ export function Pressure(props: Props) {
     <div>
       <div className={styles.selectCSS}>
         <div>
-          <div className={styles.labelwithinfoforselect} onMouseOver={() => infoHandleHover("infoHover",description.pressure)}>
+          <div
+            className={styles.labelwithinfoforselect}
+            onMouseOver={() => infoHandleHover('infoHover', description.pressure)}
+          >
             <label className={styles.label}>Pressure (atm)</label>
-            <InfoImage imagePath={logo} altText="Info" information={description.pressure}  />
+            <InfoImage imagePath={logo} altText="Info" information={description.pressure} />
           </div>
           <Select
             className={styles.singleselect}
