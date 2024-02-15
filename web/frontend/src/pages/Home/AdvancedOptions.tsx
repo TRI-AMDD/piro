@@ -54,22 +54,16 @@ const RadioToggle: React.FC<RadioToggleProps> = ({ options, onChange, value }) =
 const isProd = import.meta.env.MODE === 'production';
 const keyToRemove = 'Task Route';
 
-console.log(import.meta.env.MODE);
-console.log('isProd', isProd);
-console.log('keyToRemove', keyToRemove);
-
 const toggleOptions = [
   { label: 'Task Route', value: 'task' },
   { label: 'Normal Route', value: 'normal' }
 ];
 
 const indexToRemove = toggleOptions.findIndex((item) => item.label === keyToRemove);
-console.log('indexToRemove', indexToRemove);
 
 if (isProd && indexToRemove !== -1) {
   toggleOptions.splice(indexToRemove, 1);
 }
-console.log('toggleOptions', toggleOptions);
 
 export default function AdvancedOptions(props: Props) {
   const { control, register, setExcludeCompositions, compoundMode } = props;
