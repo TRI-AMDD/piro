@@ -16,7 +16,7 @@ interface Window {
   showCollectorDialog(): void;
 }
 
-interface MetaEnv{
-    MODE: string;
+interface MetaEnv {
+  MODE: string;
 }
 

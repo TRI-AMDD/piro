@@ -1,6 +1,5 @@
 import TagManager from 'react-gtm-module';
 
-
 const tagManagerArgs = { gtmId: 'G-QNR2D22FG3' };
 
 TagManager.initialize(tagManagerArgs);
