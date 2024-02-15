@@ -12,6 +12,7 @@ declare const AMPLIFY_ENABLED: boolean;
 declare const dataLayer: Record<string, string>[];
 
 interface Window {
+  dataLayer: Record<string, string>[];
   showCollectorDialog(): void;
 }
 
