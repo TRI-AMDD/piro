@@ -19,6 +19,23 @@
               window.showCollectorDialog = showCollectorDialog;
       }};
     </script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+    </script>
+    <script>
+      if (location.host === 'www.piro.matr.io') {
+        var gtmScript = document.createElement('script');
+        gtmScript.async = true;
+        gtmScript.src = "https://www.googletagmanager.com/gtag/js?id=G-QNR2D22FG3"
+        document.head.appendChild(gtmScript);
+
+        gtag('js', new Date());
+        gtag('config', 'G-QNR2D22FG3');
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

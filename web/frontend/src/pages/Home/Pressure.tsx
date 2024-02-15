@@ -6,6 +6,7 @@ import { PressureType } from './TypeProps';
 import { Select, Option } from '@material-tailwind/react';
 import InfoImage from './infoimage';
 import logo from './info.svg';
+import { infoHandleHover } from 'src/utils/GA';
 
 interface Props {
   setPressure(pressure: PressureType | number): void;
@@ -72,7 +73,10 @@ export function Pressure(props: Props) {
     <div>
       <div className={styles.selectCSS}>
         <div>
-          <div className={styles.labelwithinfoforselect}>
+          <div
+            className={styles.labelwithinfoforselect}
+            onMouseOver={() => infoHandleHover('infoHover', description.pressure)}
+          >
             <label className={styles.label}>Pressure (atm)</label>
             <InfoImage imagePath={logo} altText="Info" information={description.pressure} />
           </div>
