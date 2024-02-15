@@ -14,3 +14,8 @@ declare const dataLayer: Record<string, string>[];
 interface Window {
   showCollectorDialog(): void;
 }
+
+interface MetaEnv{
+    MODE: string;
+}
+
