@@ -340,3 +340,10 @@
     width: 100%;
     font-family: Gellix-Regular;
   }
+  .errortoast{
+    display: flex;
+    max-width: 50%;
+    margin-left: 25%;
+    padding: 16px 24px;
+    justify-content: space-between;
+  }
