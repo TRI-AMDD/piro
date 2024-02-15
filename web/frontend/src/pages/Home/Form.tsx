@@ -17,7 +17,6 @@ import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import React, { useRef } from 'react';
 import SingleSelect from './SingleSelect';
-import { infoHandleHover, pushEvent } from 'src/utils/GA';
 
 const addElementOptions = [
   { value: '', label: 'None' },
@@ -89,7 +88,6 @@ export default function Form() {
       const file = event.target.files[0];
       const fileReader = new FileReader();
       setSelectedFile(file);
-      pushEvent('CIFUpload');
       fileReader.onload = function () {
         const content = fileReader.result;
         if (content && typeof content === 'string') {
@@ -114,10 +112,7 @@ export default function Form() {
             {compoundMode === 'compound' ? (
               <div className={styles.selectCSS}>
                 <div>
-                  <div
-                    className={styles.labelwithinfo}
-                    onMouseOver={() => infoHandleHover('infoHover', description.target_entry_id)}
-                  >
+                  <div className={styles.labelwithinfo}>
                     <label className={styles.label}>Target Compound (mp-id)*</label>
                     <InfoImage imagePath={logo} altText="Info" information={description.target_entry_id} />
                   </div>
@@ -126,7 +121,7 @@ export default function Form() {
                     placeholder="mp-9029"
                     {...register('target_entry_id', { required: true })}
                   />
-                  <p className={styles.error}>{errors.target_entry_id ? 'Formula field is required' : ''}</p>
+                  <p className={styles.error}>{errors.target_entry_id ? 'This field is required' : ''}</p>
                 </div>
               </div>
             ) : (
@@ -168,59 +163,47 @@ export default function Form() {
             <div className={styles.selectCSS}>
               <div>
                 <div className={styles.labelwithinfo}>
-                  <label className={styles.label}>Temperature (K)*</label>
+                  <label className={styles.label}>Temperature (K)</label>
                 </div>
                 <input
                   type="number"
                   step="any"
-                  className={`${styles.inputfield} ${errors.temperature ? styles.error : ''}`}
+                  className={styles.inputfield}
                   defaultValue={1000}
-                  {...register('temperature', { valueAsNumber: true, required: true })}
+                  {...register('temperature', { valueAsNumber: true })}
                 />
-                <p className={styles.error}>{errors.temperature ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
               <div>
-                <div
-                  className={styles.labelwithinfo}
-                  onMouseOver={() => infoHandleHover('infoHover', description.max_component_precursors)}
-                >
-                  <label className={styles.label}>Maximum number of components in precursors*</label>
+                <div className={styles.labelwithinfo}>
+                  <label className={styles.label}>Maximum number of components in precursors</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.max_component_precursors} />
                 </div>
                 <input
                   type="text"
-                  className={`${styles.inputfield} ${errors.max_component_precursors ? styles.error : ''}`}
-                  {...register('max_component_precursors', { valueAsNumber: true, required: true })}
+                  className={styles.inputfield}
+                  {...register('max_component_precursors', { valueAsNumber: true })}
                   defaultValue={0}
                 />
-                <p className={styles.error}>{errors.max_component_precursors ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
               <div>
-                <div
-                  className={styles.labelwithinfo}
-                  onMouseOver={() => infoHandleHover('infoHover', description.flexible_competition)}
-                >
-                  <label className={styles.label}>Depth of parasitic reaction search*</label>
+                <div className={styles.labelwithinfo}>
+                  <label className={styles.label}>Depth of parasitic reaction search</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.flexible_competition} />
                 </div>
                 <input
-                  className={`${styles.inputfield} ${errors.flexible_competition ? styles.error : ''}`}
-                  {...register('flexible_competition', { valueAsNumber: true, required: true })}
+                  className={styles.inputfield}
+                  {...register('flexible_competition', { valueAsNumber: true })}
                   defaultValue={0}
                 />
-                <p className={styles.error}>{errors.flexible_competition ? 'This field is required' : ''}</p>
               </div>
             </div>
             <div className={styles.selectCSS}>
               <div>
-                <div
-                  className={styles.labelwithinfo}
-                  onMouseOver={() => infoHandleHover('infoHover', description.hull_distance)}
-                >
+                <div className={styles.labelwithinfo}>
                   <label className={styles.label}>Distance to Hull (eV/atom)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.hull_distance} />
                 </div>
@@ -234,10 +217,7 @@ export default function Form() {
             </div>
             <div className={styles.selectCSS}>
               <div>
-                <div
-                  className={styles.labelwithinfoforselect}
-                  onMouseOver={() => infoHandleHover('infoHover', description.add_elements)}
-                >
+                <div className={styles.labelwithinfoforselect}>
                   <label className={styles.label}>Additional element to consider</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
                 </div>
@@ -246,10 +226,7 @@ export default function Form() {
             </div>
             <div className={styles.selectCSS}>
               <div>
-                <div
-                  className={styles.labelwithinfoforselect}
-                  onMouseOver={() => infoHandleHover('infoHover', description.explicit_includes)}
-                >
+                <div className={styles.labelwithinfoforselect}>
                   <label className={styles.label}>Explicitly include as precursor</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.explicit_includes} />
                 </div>
@@ -260,10 +237,7 @@ export default function Form() {
           <div className={styles.secondrow}>
             <div className={styles.Checkboxes}>
               <div>
-                <div
-                  className={styles.labelwithinfo}
-                  onMouseOver={() => infoHandleHover('infoHover', description.allow_gas_release)}
-                >
+                <div className={styles.labelwithinfo}>
                   <FormCheckbox name="allow_gas_release" control={control} defaultValue={false} />
                   <label className={styles.checklabel}> Allow for gaseous reaction products</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.allow_gas_release} />
@@ -282,20 +256,14 @@ export default function Form() {
                 </div>
               </div>
               <div>
-                <div
-                  className={styles.labelwithinfo}
-                  onMouseOver={() => infoHandleHover('infoHover', description.confine_to_stables)}
-                >
+                <div className={styles.labelwithinfo}>
                   <FormCheckbox name="confine_to_stables" control={control} defaultValue={true} />
                   <label>Stable precursors only</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.confine_to_stables} />
                 </div>
               </div>
               <div>
-                <div
-                  className={styles.labelwithinfo}
-                  onMouseOver={() => infoHandleHover('infoHover', description.confine_to_icsd)}
-                >
+                <div className={styles.labelwithinfo}>
                   <FormCheckbox name="confine_to_icsd" control={control} defaultValue={true} />
                   <label> ICSD-based precursors only</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.confine_to_icsd} />
