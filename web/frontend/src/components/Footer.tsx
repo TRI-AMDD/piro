@@ -10,13 +10,13 @@ const Footer: React.FC<FooterProps> = ({ highlight }) => {
   };
   const year = new Date().getFullYear();
   const scrollToTop = () => {
-      window.scrollTo(0, 0)
-  }
+    window.scrollTo(0, 0);
+  };
 
   return (
     <footer className={styles.Footer}>
       <p>
-        <Link className={styles.Footerlink} to="/about" onClick={() =>scrollToTop()}>
+        <Link className={styles.Footerlink} to="/about" onClick={() => scrollToTop()}>
           About
         </Link>
       </p>
