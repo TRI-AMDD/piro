@@ -53,9 +53,6 @@ const RadioToggle: React.FC<RadioToggleProps> = ({ options, onChange, value }) =
 
 const isProd = import.meta.env.MODE === 'production';
 
-console.log(import.meta.env.MODE);
-console.log('isProd', isProd);
-
 const toggleOptions = [
   { label: 'Task Route', value: 'task' },
   { label: 'Normal Route', value: 'normal' }
