@@ -52,18 +52,14 @@ const RadioToggle: React.FC<RadioToggleProps> = ({ options, onChange, value }) =
 };
 
 const isProd = import.meta.env.MODE === 'production';
-const keyToRemove = 'Task Route';
+
+console.log(import.meta.env.MODE);
+console.log('isProd', isProd);
 
 const toggleOptions = [
   { label: 'Task Route', value: 'task' },
   { label: 'Normal Route', value: 'normal' }
 ];
-
-const indexToRemove = toggleOptions.findIndex((item) => item.label === keyToRemove);
-
-if (isProd && indexToRemove !== -1) {
-  toggleOptions.splice(indexToRemove, 1);
-}
 
 export default function AdvancedOptions(props: Props) {
   const { control, register, setExcludeCompositions, compoundMode } = props;
@@ -79,7 +75,13 @@ export default function AdvancedOptions(props: Props) {
     <Collapsible title={<div className={styles.advancetext}>Advanced Options</div>}>
       <div className={styles.advanceoptionsformgrid}>
         <div className={styles.advancedoptionscontent}>
-          {compoundMode === 'compound' && <RadioToggle options={toggleOptions} onChange={setApiMode} value={apiMode} />}
+          {compoundMode === 'compound' && (
+            <RadioToggle
+              options={isProd ? toggleOptions.filter((itr) => itr.value != 'task') : toggleOptions}
+              onChange={setApiMode}
+              value={isProd ? 'normal' : apiMode}
+            />
+          )}
           <div className={styles.selectCSS}>
             <div>
               <div
