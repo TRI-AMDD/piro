@@ -126,7 +126,7 @@ export default function Form() {
                     placeholder="mp-9029"
                     {...register('target_entry_id', { required: true })}
                   />
-                  <p className={styles.error}>{errors.target_entry_id ? 'Formula field is required' : ''}</p>
+                  <p className={styles.error}>{errors.target_entry_id ? 'This field is required' : ''}</p>
                 </div>
               </div>
             ) : (
