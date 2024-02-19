@@ -15,3 +15,7 @@ interface Window {
   dataLayer: Record<string, string>[];
   showCollectorDialog(): void;
 }
+
+interface MetaEnv {
+  MODE: string;
+}

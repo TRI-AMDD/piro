@@ -51,6 +51,8 @@ const RadioToggle: React.FC<RadioToggleProps> = ({ options, onChange, value }) =
   );
 };
 
+const isProd = import.meta.env.MODE === 'production';
+
 const toggleOptions = [
   { label: 'Task Route', value: 'task' },
   { label: 'Normal Route', value: 'normal' }
@@ -70,7 +72,13 @@ export default function AdvancedOptions(props: Props) {
     <Collapsible title={<div className={styles.advancetext}>Advanced Options</div>}>
       <div className={styles.advanceoptionsformgrid}>
         <div className={styles.advancedoptionscontent}>
-          {compoundMode === 'compound' && <RadioToggle options={toggleOptions} onChange={setApiMode} value={apiMode} />}
+          {compoundMode === 'compound' && (
+            <RadioToggle
+              options={isProd ? toggleOptions.filter((itr) => itr.value != 'task') : toggleOptions}
+              onChange={setApiMode}
+              value={isProd ? 'normal' : apiMode}
+            />
+          )}
           <div className={styles.selectCSS}>
             <div>
               <div

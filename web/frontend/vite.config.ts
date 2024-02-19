@@ -13,13 +13,9 @@ export default defineConfig({
     setupFiles: '.vitest/setup',
     include: ['**/test.{ts,tsx}']
   },
-  // https://github.com/vitejs/vite/issues/1973
-  // define: {
-  //   // "process.env": process.env,
-  //   // By default, Vite doesn't include shims for NodeJS/
-  //   // necessary for amplify lib to work
-  //   global: {}
-  // },
+  define: {
+    'process.env.MODE': JSON.stringify(process.env.MODE || 'development'),
+  },
   resolve: {
     alias: [
       {
