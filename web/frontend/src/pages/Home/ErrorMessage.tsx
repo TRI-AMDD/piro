@@ -2,8 +2,6 @@ import styles from './Home.module.css';
 import { Alert } from '@material-tailwind/react';
 import React from 'react';
 
-
-
 interface Props {
   error: object | string;
 }
