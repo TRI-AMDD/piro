@@ -347,3 +347,14 @@
     padding: 16px 24px;
     justify-content: space-between;
   }
+  .alert {
+    position: fixed;
+    top: 88px;
+    background: var(--error-dark, #D32F2F);
+    margin-left: 25%;
+    min-width: 25%;
+    transform: translateX(-50%);
+    max-width: 50%;
+    z-index: 1000; /* Ensure the alert is above other elements */
+  }
+  
