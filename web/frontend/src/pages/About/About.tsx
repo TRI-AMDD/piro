@@ -20,16 +20,23 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
     });
 
     // Remove highlight after 5 seconds
-    const timeoutId = setTimeout(() => {
+    setTimeout(() => {
       divs.forEach((div) => {
         if (div.id === highlightedParagraph) {
+          highlight(null);
           div.classList.remove(styles.highlighted);
         }
       });
-      highlight(null);
     }, 4000);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      divs.forEach((div) => {
+        if (div.id === highlightedParagraph) {
+          highlight(null);
+          div.classList.remove(styles.highlighted);
+        }
+      });
+    };
   }, [highlightedParagraph, highlight]);
 
   return (
