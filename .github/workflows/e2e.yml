@@ -19,4 +19,4 @@ jobs:
         with:
           working-directory: web/frontend
           build: npm run build
-          start: npm start
+          start: npm run dev
