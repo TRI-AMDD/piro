@@ -18,5 +18,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: web/frontend
+          run: npm install -g pnpm
           build: pnpm install
           start: pnpm run dev
