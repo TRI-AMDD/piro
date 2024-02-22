@@ -8,9 +8,10 @@ import { CSSObject } from '@emotion/react';
 const customStyles = {
   control: (base: CSSObject) => ({
     ...base,
-    borderColor: '#ccc', // default border color
+    borderColor: '#757575', // default border color
     '&:hover': {
-      borderColor: '#999' // border color on hover
+      borderColor: '#212121',
+      border: '2px solid #212121' // border color on hover
     },
     boxShadow: 'none' // remove default box shadow
   })
