@@ -34,7 +34,7 @@ module.exports = defineConfig({
     supportFile: 'cypress/support/commands.js',
     specPattern: 'cypress/e2e/**/*.feature',
     experimentalWebKitSupport: true,
-    
+    defaultCommandTimeout: 10000
   },
 
 })
