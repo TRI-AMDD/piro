@@ -18,7 +18,7 @@ export default function MultiSelect(props: Props) {
     <div className={styles.Multi}>
       <CreatableSelect
         styles={{
-          control: (base: CSSObjectWithLabel, props: ControlProps<any, boolean, GroupBase<any>>) => ({
+          control: (base: CSSObjectWithLabel, props: ControlProps<Optionselect, boolean, GroupBase<Optionselect>>) => ({
             ...base,
             boxShadow: props.isFocused ? 'none' : base.boxShadow,
             borderColor: props.isFocused ? '#ccc' : base.borderColor,
