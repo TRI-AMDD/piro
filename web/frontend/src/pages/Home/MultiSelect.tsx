@@ -13,7 +13,7 @@ const customStyles = {
       borderColor: '#212121',
       border: '2px solid #212121' // border color on hover
     },
-    boxShadow: 'none' // remove default box shadow
+    boxShadow: 'none'
   })
 };
 
