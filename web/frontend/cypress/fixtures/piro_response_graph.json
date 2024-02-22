@@ -1,0 +1,38 @@
+{
+    "task_id": "ed867b97-b0e2-4203-b229-95ac922aace8",
+    "request": {
+        "target_entry_id": "mp-9029",
+        "custom_entry_cif_string": null,
+        "custom_entry_formation_energy_per_atom": null,
+        "confine_to_icsd": true,
+        "confine_to_stables": true,
+        "hull_distance": null,
+        "simple_precursors": 0,
+        "explicit_includes": [],
+        "add_elements": [],
+        "exclude_compositions": [],
+        "sigma": 0.12484,
+        "transport_constant": 10.0,
+        "flexible_competition": 0,
+        "temperature": 1000.0,
+        "pressure": {
+            "O2": 0.2095,
+            "CO2": 0.000394737,
+            "N2": 0.7809,
+            "H2": 0.1,
+            "H2O": 0.1,
+            "F2": 0.1
+        },
+        "allow_gas_release": false,
+        "max_component_precursors": 0,
+        "show_fraction_known_precursors": false,
+        "show_known_precursors_only": false,
+        "confine_competing_to_icsd": false,
+        "display_peroxides": true,
+        "display_superoxides": false,
+        "add_pareto": true
+    },
+    "status": "pending",
+    "error_message": null,
+    "result": null
+}
