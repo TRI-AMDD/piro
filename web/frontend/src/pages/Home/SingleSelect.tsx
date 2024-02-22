@@ -21,12 +21,16 @@ export default function SingleSelect(props: Props) {
   };
 
   return (
-    <Select className={styles.singleselect} placeholder="Additional element" value={value} onChange={handleChange}>
-      {options.map((option) => (
-        <Option key={option.value} value={option.value}>
-          {option.label}
-        </Option>
-      ))}
-    </Select>
+    <div className={styles.singleselect}>
+      <div className={styles.singleselectmargin}>
+        <Select className={styles.fontforselect} placeholder="Additional element" value={value} onChange={handleChange}>
+          {options.map((option) => (
+            <Option key={option.value} value={option.value} className={styles.fontforoption}>
+              {option.label}
+            </Option>
+          ))}
+        </Select>
+      </div>
+    </div>
   );
 }
