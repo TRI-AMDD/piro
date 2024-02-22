@@ -18,14 +18,12 @@ type CustomStyles = {
 };
 
 const customStyles: CustomStyles = {
-  control: (base, props) => ({
+  control: (base) => ({
     ...base,
-    boxShadow: props.isFocused ? 'none' : base.boxShadow,
-    borderColor: props.isFocused ? '#ccc' : base.borderColor,
-    '&:hover': {
-      borderColor: props.isFocused ? '#212121' : base.borderColor,
-      border: props.isFocused ? '2px solid' : base.borderColor
-    }
+      "&:hover": {
+        border: "1px solid #ff8b67",
+        boxShadow: "0px 0px 6px #ff8b67"
+      }
   })
 };
 interface Props {
