@@ -9,7 +9,10 @@ interface Props {
   placeholder?: string;
   setValues: Dispatch<SetStateAction<MultiValue<Optionselect>>>;
 }
-
+interface OptionType {
+  label: string;
+  value: string;
+}
 export default function MultiSelect(props: Props) {
   const { placeholder, setValues } = props;
   const emptyOptions: Optionselect[] = [];
@@ -18,7 +21,7 @@ export default function MultiSelect(props: Props) {
     <div className={styles.Multi}>
       <CreatableSelect
         styles={{
-          control: (base: CSSObjectWithLabel, props: ControlProps<Optionselect, boolean, GroupBase<Optionselect>>) => ({
+          control: (base: CSSObjectWithLabel, props: ControlProps<OptionType, boolean, GroupBase<OptionType>>) => ({
             ...base,
             boxShadow: props.isFocused ? 'none' : base.boxShadow,
             borderColor: props.isFocused ? '#ccc' : base.borderColor,
