@@ -1,11 +1,7 @@
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Control, UseFormRegister } from 'react-hook-form';
-import { Collapsible } from '@toyota-research-institute/lakefront';
 import { Button } from '@material-tailwind/react';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useState } from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Link, Typography } from '@mui/material';
 import styles from './Home.module.css';
 import FormCheckbox from './Checkbox';
 import { Inputs, Optionselect } from './TypeProps';
@@ -16,11 +12,7 @@ import { MultiValue } from 'react-select';
 import InfoImage from './infoimage';
 import logo from './info.svg';
 import { infoHandleHover } from 'src/utils/GA';
-import Card from "@mui/material/Card";
 import Collapse from "@mui/material/Collapse";
-import CardHeader from "@mui/material/CardHeader";
-import Container from "@mui/material/Container";
-import CardContent from "@mui/material/CardContent";
 import KeyboardArrowDownIcon from
     "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from
