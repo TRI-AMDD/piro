@@ -10,10 +10,10 @@ const customStyles = {
     ...base,
     borderColor: '#ccc', // default border color
     '&:hover': {
-      borderColor: '#999', // border color on hover
+      borderColor: '#999' // border color on hover
     },
-    boxShadow: 'none', // remove default box shadow
-  }),
+    boxShadow: 'none' // remove default box shadow
+  })
 };
 
 interface Props {
@@ -28,7 +28,7 @@ export default function MultiSelect(props: Props) {
   return (
     <div className={styles.Multi}>
       <CreatableSelect
-      styles={customStyles}
+        styles={customStyles}
         placeholder={placeholder}
         isMulti
         onChange={(newValues) => setValues(newValues)}
