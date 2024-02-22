@@ -48,11 +48,11 @@ Then('show only reactions with known precursors checkbox should be available', (
 });  
 
 Then('stable Precursors Only checkbox should be available', () => {
-  cy.verifyCheckBox("Stable Precursors Only")
-});                                     
+  cy.verifyCheckBox("Stable precursors only")
+});                                    
 
 Then('ICSD-based Precursors Only checkbox should be available', () => {
-  cy.verifyCheckBox("ICSD-based Precursors Only")
+  cy.verifyCheckBox(" ICSD-based precursors only")
 });
 
 Then('Drop down input fields should be available', () => {

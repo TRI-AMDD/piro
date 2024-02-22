@@ -6,7 +6,7 @@ Feature: Validation of Graph in PIRO
 
     When I enter tc as "<tc>"  temperature as "<temp>" number of components as "<numComp>" and depth as "<depth>"
 
-    Then I should see Error message
+    Then I should see Error message for tc as "<tc>"  temperature as "<temp>" number of components as "<numComp>" and depth as "<depth>"
     
     Examples:
         | tc |temp | numComp | depth | 

@@ -18,7 +18,7 @@ When('I enter tc as {string}  temperature as {string} number of components as {s
 
 })
 
-Then('I should see Error message', (tc,temperature,comp,depth) => {
+Then('I should see Error message for tc as {string}  temperature as {string} number of components as {string} and depth as {string}', (tc,temperature,comp,depth) => {
   cy.wait(10000)
   cy.validateErr(tc,temperature,comp,depth)
 })

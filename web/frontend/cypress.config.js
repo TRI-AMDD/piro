@@ -14,13 +14,11 @@ module.exports = defineConfig({
   },
   e2e: {
 
-    baseUrl: 'https://piro.matr.io/',
+    baseUrl: 'http://localhost:3000',
     username: '',
     password: '',
-    errmsg1: 'Error Message:[{"loc":["body","temperature"],"msg":"none is not an allowed value","type":"type_error.none.not_allowed"}]',
-    errmsg2: 'Error Message:[{"loc":["body","max_component_precursors"],"msg":"none is not an allowed value","type":"type_error.none.not_allowed"}]',
-    errmsg3: 'Error Message:[{"loc":["body","flexible_competition"],"msg":"none is not an allowed value","type":"type_error.none.not_allowed"}]',
-    errmsg4: 'Formula field is required',
+    errmsg1: 'This field is required',
+    errmsg2: 'Formula field is required',
     mpid: 'mp-9029',
     ModifyObstructiveThirdPartyCode: true,
     SkipDomainInjection: [ '*.matr.io'],
