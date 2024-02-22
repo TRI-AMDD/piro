@@ -1,4 +1,5 @@
 import CreatableSelect from 'react-select/creatable';
+import { ControlProps, CSSObjectWithLabel, GroupBase } from 'react-select';
 import { MultiValue } from 'react-select';
 import styles from './Home.module.css';
 import { Optionselect } from './TypeProps';
@@ -17,13 +18,13 @@ export default function MultiSelect(props: Props) {
     <div className={styles.Multi}>
       <CreatableSelect
         styles={{
-          control: (provided, state) => ({
-            ...provided,
-            boxShadow: state.isFocused ? 'none' : provided.boxShadow,
-            borderColor: state.isFocused ? '#ccc' : provided.borderColor,
+          control: (base: CSSObjectWithLabel, props: ControlProps<any, boolean, GroupBase<any>>) => ({
+            ...base,
+            boxShadow: props.isFocused ? 'none' : base.boxShadow,
+            borderColor: props.isFocused ? '#ccc' : base.borderColor,
             '&:hover': {
-              borderColor: state.isFocused ? '#212121' : provided.borderColor,
-              border: state.isFocused ? '2px solid' : provided.borderColor
+              borderColor: props.isFocused ? '#212121' : base.borderColor,
+              border: props.isFocused ? '2px solid' : base.borderColor
             }
           })
         }}
