@@ -80,18 +80,22 @@ export function Pressure(props: Props) {
             <label className={styles.label}>Pressure (atm)</label>
             <InfoImage imagePath={logo} altText="Info" information={description.pressure} />
           </div>
-          <Select
-            className={styles.singleselect}
-            placeholder="Additional element"
-            value={option?.value || ''}
-            onChange={(value) => setOption(options.find((option) => option.value === value))}
-          >
-            {options.map((option) => (
-              <Option key={option.value} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
-          </Select>
+          <div className={styles.singleselect}>
+            <div className={styles.singleselectmargin}>
+              <Select
+                className={styles.fontforselect}
+                placeholder="Additional element"
+                value={option?.value || ''}
+                onChange={(value) => setOption(options.find((option) => option.value === value))}
+              >
+                {options.map((option) => (
+                  <Option key={option.value} value={option.value} className={styles.fontforoption}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          </div>
         </div>
       </div>
       <div className={styles.PressureOptions}>

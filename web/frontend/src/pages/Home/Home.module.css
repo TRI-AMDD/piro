@@ -178,6 +178,14 @@
 .Multi {
     margin-bottom: 16px;
 }
+.Multi .customSelect__control:focus {
+    box-shadow: none;
+    border-color: #ccc;
+  }
+  
+  .Multi .customSelect__control:hover {
+    border-color: #ccc;
+  }
 .PressureOptions {
     margin-top: 16px;
 }
@@ -315,17 +323,6 @@
     color: white;
     width: 350px;
   }
-  .singleselect{
-    padding: 0.5rem; 
-    border: 1px solid #757575; /* border-gray-300 equivalent */
-    border-radius: 0.375rem; /* rounded-md equivalent */
-    width: 100%;
-    align-items: center;
-    gap:3px;
-    outline: none;
-    transition: border-color 0.2s ease-in-out; /* focus:border-blue-500 equivalent */
-    font-family: Gellix-Regular;
-  }
   .labelpressure{
     color: #0f0f1a;
     font-size: 12px;
@@ -349,4 +346,41 @@
     transform: translateX(-50%);
     max-width: 50%;
     z-index: 1000; /* Ensure the alert is above other elements */
+  }
+  .customselect .mt-select__control {
+    border: 2px solid #333; /* Custom border color */
+    border-radius: 8px; /* Custom border radius */
+    padding-right: 24px; /* Adjust padding to accommodate the arrow */
+    margin-right: -2px; /* Remove the gap in the border */
+  }
+  
+  .customselect .mt-select__control--is-focused {
+    border-color: #333; /* Set border color when focused */
+    box-shadow: none; /* Remove the default box shadow */
+  }
+  .singleselect{
+    border: 1px solid #757575; /* border-gray-300 equivalent */
+    border-radius: 0.5rem; /* rounded-md equivalent */
+    padding: -10rem 0px 0px 0px;
+    outline: none;
+    font-family: Gellix-Regular;
+  }
+  .singleselectmargin{
+    margin-top: -1px;
+  }
+  .singleselectfocussed {
+    border-color: blue; 
+  }
+  .fontforselect{
+    font-family: Gellix-Regular;
+    color: #757575;
+  }
+  .fontforoption{
+    font-family: Gellix-Medium;
+    color: #212121;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 150% */
+    letter-spacing: 0.032px;
   }
