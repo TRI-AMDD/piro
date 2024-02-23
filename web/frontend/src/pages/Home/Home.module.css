@@ -369,7 +369,7 @@
     margin-top: -1px;
   }
   .singleselectfocussed {
-    border-color: blue; /* Change the border color to the desired highlight color */
+    border-color: blue; 
   }
   .fontforselect{
     font-family: Gellix-Regular;
