@@ -3,6 +3,7 @@ import { MultiValue } from 'react-select';
 import styles from './Home.module.css';
 import { Optionselect } from './TypeProps';
 import { Dispatch, SetStateAction } from 'react';
+import { CSSObject } from '@emotion/react';
 
 const customStyles = {
   control: (base: CSSObject) => ({
@@ -12,11 +13,8 @@ const customStyles = {
       borderColor: '#212121',
       border: '2px solid #212121' // border color on hover
     },
-    boxShadow: 'none' // remove default box shadow
+    boxShadow: 'none'
   })
-};
-type CSSObject = {
-  [key: string]: string | number | CSSObject;
 };
 
 interface Props {
