@@ -11,7 +11,7 @@ const customStyles = {
     borderColor: '#757575', // default border color
     '&:hover': {
       borderColor: '#212121',
-      border: '2px solid #212121' // border color on hover
+      border: '1px solid #212121' // border color on hover
     },
     boxShadow: 'none'
   })
