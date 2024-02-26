@@ -3,6 +3,20 @@ import { MultiValue } from 'react-select';
 import styles from './Home.module.css';
 import { Optionselect } from './TypeProps';
 import { Dispatch, SetStateAction } from 'react';
+import { CSSObject } from '@emotion/react';
+
+const customStyles = {
+  control: (base: CSSObject) => ({
+    ...base,
+    borderColor: '#757575',
+    borderWidth: '1px',
+    boxShadow: '0 0 0 1px white',
+    '&:hover': {
+      borderColor: '#212121',
+      boxShadow: '0 0 0 1px black'
+    }
+  })
+};
 
 interface Props {
   placeholder?: string;
@@ -16,6 +30,7 @@ export default function MultiSelect(props: Props) {
   return (
     <div className={styles.Multi}>
       <CreatableSelect
+        styles={customStyles}
         placeholder={placeholder}
         isMulti
         onChange={(newValues) => setValues(newValues)}

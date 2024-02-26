@@ -7,6 +7,7 @@ import { Select, Option } from '@material-tailwind/react';
 import InfoImage from './infoimage';
 import logo from './info.svg';
 import { infoHandleHover } from 'src/utils/GA';
+import useOnClickOutside from './outsideclick';
 
 interface Props {
   setPressure(pressure: PressureType | number): void;
@@ -68,6 +69,16 @@ export function Pressure(props: Props) {
   useEffect(() => {
     setPressure(pressure);
   }, [pressure, setPressure]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const wrapperRef = useOnClickOutside(() => setIsOpen(false));
+  const handleClick = () => {
+    if (isOpen === true) {
+      setIsOpen(false);
+    }
+    if (isOpen === false) {
+      setIsOpen(true);
+    }
+  };
 
   return (
     <div>
@@ -80,18 +91,29 @@ export function Pressure(props: Props) {
             <label className={styles.label}>Pressure (atm)</label>
             <InfoImage imagePath={logo} altText="Info" information={description.pressure} />
           </div>
-          <Select
-            className={styles.singleselect}
-            placeholder="Additional element"
-            value={option?.value || ''}
-            onChange={(value) => setOption(options.find((option) => option.value === value))}
-          >
-            {options.map((option) => (
-              <Option key={option.value} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
-          </Select>
+          <div className={styles.singleselect}>
+            <div className={styles.singleselectmargin}>
+              <Select
+                placeholder="Additional element"
+                value={option?.value || ''}
+                onChange={(value) => setOption(options.find((option) => option.value === value))}
+                ref={wrapperRef}
+                className={`border ${isOpen ? 'border-2 border-dark-black ' : ''}${styles.fontforselect}`}
+                labelProps={{
+                  style: {
+                    visibility: 'hidden' // Hide the existing label
+                  }
+                }}
+                onClick={handleClick}
+              >
+                {options.map((option) => (
+                  <Option key={option.value} value={option.value} className={styles.fontforoption}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          </div>
         </div>
       </div>
       <div className={styles.PressureOptions}>
