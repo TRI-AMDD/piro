@@ -22,7 +22,7 @@ import { infoHandleHover, pushEvent } from 'src/utils/GA';
 const addElementOptions = [
   { value: '', label: 'None' },
   { value: 'C', label: 'C' },
-  { value: 'O', label: 'O' }
+  { value: 'D', label: 'D' }
 ];
 
 const toggleOptions = [
