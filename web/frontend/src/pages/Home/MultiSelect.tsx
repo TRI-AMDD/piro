@@ -13,7 +13,7 @@ const customStyles = {
     boxShadow: '0 0 0 1px white',
     '&:hover': {
       borderColor: '#212121',
-      boxShadow:  '0 0 0 1px black' 
+      boxShadow: '0 0 0 1px black'
     }
   })
 };
