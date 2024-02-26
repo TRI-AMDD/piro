@@ -37,9 +37,8 @@ export default function SingleSelect(props: Props) {
           placeholder="Additional element"
           value={value}
           onChange={handleChange}
-          label="hi"
           ref={wrapperRef}
-          className={`border ${isOpen ? 'border-2 border-dark-black' : ''}`}
+          className={`border ${isOpen ? 'border-2 border-dark-black ' : ''}${styles.fontforselect}`}
           labelProps={{
             style: {
               visibility: 'hidden' // Hide the existing label
