@@ -1,29 +1,29 @@
-# name: End-to-end tests
+name: End-to-end tests
 
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-# jobs:
-#   cypress-run:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-#       - name: pnpm install
-#         uses: pnpm/action-setup@v2
-#         with:
-#           version: 8.15.3
-#           run_install: |
-#            - recursive: true
-#              args: [--frozen-lockfile]
-#       # Install NPM dependencies, cache them correctly
-#       # and run all Cypress tests
-#       - name: Cypress run
-#         uses: cypress-io/github-action@v6
-#         with:
-#           working-directory: web/frontend
-#           build: npm i -g pnpm
-#           start: pnpm run dev
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: pnpm install
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.3
+          run_install: |
+           - recursive: true
+             args: [--frozen-lockfile]
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: web/frontend
+          build: npm i -g pnpm
+          start: pnpm run dev
