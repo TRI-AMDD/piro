@@ -23,11 +23,11 @@ Cypress.Commands.add('verify', (uifield) => {
 
 Cypress.Commands.add('verifyCheckBox', (displayText) => {
     
-    cy.get('._Checkboxes_tpqo1_94').children().contains(displayText).should('be.visible')
+    cy.get('._Checkboxes_alhh7_102').children().contains(displayText).should('be.visible')
 })
 
 Cypress.Commands.add('verifyDropDown', () => {
-    cy.xpath("//button[contains(@class,'_singleselect_tpqo1')]").eq(1).click();
+    cy.xpath("//button[@placeholder='Additional element']").eq(1).click();
     cy.get('#material-tailwind-select-0').should('be.visible')
     cy.get('#material-tailwind-select-1').should('be.visible')
     cy.get('#material-tailwind-select-2').should('be.visible')
@@ -52,7 +52,7 @@ Cypress.Commands.add('generateGraph',(tc,temperature,comp,depth) => {
     cy.fillValue("temperature",temperature)
     cy.fillValue("max_component_precursors",comp)
     cy.fillValue("flexible_competition",depth)
-    cy.xpath("//button[contains(@class,'_runbutton_tpqo1')]").click({force : true})
+    cy.xpath("//button[@placeholder='Run']").click({force : true})
 })
 
 Cypress.Commands.add('validateGraph', () => {
