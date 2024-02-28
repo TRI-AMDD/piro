@@ -24,7 +24,7 @@ interface Props {
 }
 
 const AdvancedOptions = (props: Props) => {
-  const { control, register, setExcludeCompositions, compoundMode } = props;  
+  const { control, register, setExcludeCompositions, compoundMode } = props;
   const collapsibleStyle = { display: 'flex', justifyContent: 'space-between', width: '100%' };
   const iconStyle = { bottom: '5px' };
   const lineStyle = { borderTop: '1px solid #cccccc' };
