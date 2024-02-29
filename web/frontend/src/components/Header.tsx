@@ -7,7 +7,9 @@ export default function Header() {
 
   return (
     <header className={styles.AppHeader}>
-      <a href="/"><img src={logo} alt="Logo" width={'150px'} /></a>
+      <a href="/">
+        <img src={logo} alt="Logo" width={'150px'} />
+      </a>
       <h3>Piro Synthesis Analyzer</h3>
       <a href="/about" className={styles.Aboutlink}>
         About

@@ -151,18 +151,18 @@
     font-size: 12px;
     font-weight: 600;
 }
-.labelwithinfo{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    align-self: stretch;
-}
 .labelwithinfoforselect{
     display: flex;
     align-items: center;
     gap: 8px;
     align-self: stretch;
     margin-bottom: 8px;
+}
+.labelwithinfo{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
 }
 .tooltip {
     position: absolute;

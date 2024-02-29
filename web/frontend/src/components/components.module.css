@@ -9,21 +9,6 @@
     font-family: Gellix-Medium;
     background: var(--grey-900, #212121);
 }
-.Signout{
-    display: flex;
-    height: 36px;
-    padding: 8px 14px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    font-family: Gellix-Medium;
-    font-weight: 600;
-    border-radius: 8px;
-    font-size: 13px;
-    font-family: Gellix-Medium;
-    background: var(--white, #FFF);
-    box-shadow: 0px 2px 4px -2px rgba(33, 33, 33, 0.20), 0px 4px 6px -1px rgba(33, 33, 33, 0.20);
-}
 .Aboutlink{
     display: flex;
     flex-direction: column;
@@ -71,11 +56,25 @@
     color:#ece8e8;
     font-family: Gellix-Medium;
 }
-
 .FeedbackButtonDiv{
     position:absolute;
     top:50%;
     right: 0;
     transform-origin: right top;
     transform: rotate(90deg);
+}
+.Signout{
+    display: flex;
+    height: 36px;
+    padding: 8px 14px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-family: Gellix-Medium;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: Gellix-Medium;
+    background: var(--white, #FFF);
+    box-shadow: 0px 2px 4px -2px rgba(33, 33, 33, 0.20), 0px 4px 6px -1px rgba(33, 33, 33, 0.20);
 }
