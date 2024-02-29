@@ -258,7 +258,7 @@ export default function Form() {
             </div>
           </div>
           <div className={styles.secondrow}>
-            <div className={styles.Checkboxes}>
+            <div className={styles.Checkboxes} data-testid="checkboxes">
               <div>
                 <div
                   className={styles.labelwithinfo}

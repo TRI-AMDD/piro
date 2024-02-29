@@ -22,8 +22,7 @@ Cypress.Commands.add('verify', (uifield) => {
 })
 
 Cypress.Commands.add('verifyCheckBox', (displayText) => {
-    
-    cy.get('._Checkboxes_alhh7_102').children().contains(displayText).should('be.visible')
+    cy.get('[data-testid=checkboxes]').children().contains(displayText).should('be.visible')
 })
 
 Cypress.Commands.add('verifyDropDown', () => {

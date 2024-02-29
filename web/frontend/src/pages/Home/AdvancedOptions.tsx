@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Control, UseFormRegister } from 'react-hook-form';
 import { useState } from 'react';
 import styles from './Home.module.css';
@@ -6,7 +6,6 @@ import FormCheckbox from './Checkbox';
 import { Inputs, Optionselect } from './TypeProps';
 import MultiSelect from './MultiSelect';
 import { description } from './description';
-import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import InfoImage from './infoimage';
 import logo from './info.svg';
@@ -15,6 +14,7 @@ import Collapse from '@mui/material/Collapse';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import IconButton from '@mui/material/IconButton';
+import ApiMode from './ApiMode';
 
 interface Props {
   control: Control<Inputs>;
@@ -22,58 +22,13 @@ interface Props {
   register: UseFormRegister<Inputs>;
   setExcludeCompositions: Dispatch<SetStateAction<MultiValue<Optionselect>>>;
 }
-interface Option {
-  label: string;
-  value: string;
-}
-
-interface RadioToggleProps {
-  options: Option[];
-  onChange: (value: string) => void;
-  value: string;
-}
-
-const RadioToggle: React.FC<RadioToggleProps> = ({ options, onChange, value }) => {
-  return (
-    <div className={styles.radiobuttons}>
-      {options.map((option) => (
-        <div key={option.value} className="mb-2 flex items-center">
-          <input
-            type="radio"
-            id={option.value}
-            value={option.value}
-            checked={value === option.value}
-            onChange={() => onChange(option.value)}
-            className={styles.custumradio}
-          />
-          <label htmlFor={option.value} className="ml-2">
-            {option.label}
-          </label>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const isProd = import.meta.env.MODE === 'production';
-
-const toggleOptions = [
-  { label: 'Task Route', value: 'task' },
-  { label: 'Normal Route', value: 'normal' }
-];
 
 const AdvancedOptions = (props: Props) => {
   const { control, register, setExcludeCompositions, compoundMode } = props;
-  const { apiMode, setApiMode } = usePlotData();
   const collapsibleStyle = { display: 'flex', justifyContent: 'space-between', width: '100%' };
   const iconStyle = { bottom: '5px' };
   const lineStyle = { borderTop: '1px solid #cccccc' };
   const [open, setOpen] = useState<boolean>(false);
-  useEffect(() => {
-    if (compoundMode === 'cif') {
-      setApiMode('task');
-    }
-  }, [compoundMode, setApiMode]);
 
   return (
     <div>
@@ -88,13 +43,7 @@ const AdvancedOptions = (props: Props) => {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <div className={styles.advanceoptionsformgrid}>
             <div className={styles.advancedoptionscontent}>
-              {compoundMode === 'compound' && (
-                <RadioToggle
-                  options={isProd ? toggleOptions.filter((itr) => itr.value != 'task') : toggleOptions}
-                  onChange={setApiMode}
-                  value={isProd ? 'normal' : apiMode}
-                />
-              )}
+              <ApiMode compoundMode={compoundMode} />
               <div className={styles.selectCSS}>
                 <div>
                   <div

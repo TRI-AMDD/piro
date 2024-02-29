@@ -9,6 +9,7 @@
     "serve": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "cypress:open": "cypress open",
     "lint": "eslint src --max-warnings=0",
     "lint-fix": "eslint --fix src --ext ts,tsx .",
     "format": "prettier --write 'src/**/*.{ts,tsx,scss,css,json}'",
