@@ -97,7 +97,9 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
                   https://github.com/TRI-AMDD/piro
                 </a>
               </u>
-              . Tutorial Jupyter notebooks showing how to use Piro locally are provided in the notebooks folder.
+              . Tutorial Jupyter notebooks showing how to use Piro locally are provided in the <a href="https://github.com/TRI-AMDD/piro/tree/main/piro/notebooks" target="_blank" rel="noreferrer">
+                  <u>notebooks folder</u>
+                </a>.
               <div className={styles.spacer}></div>
             </p>
           </div>
