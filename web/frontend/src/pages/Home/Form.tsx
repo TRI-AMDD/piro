@@ -36,7 +36,7 @@ interface Option {
 export default function Form() {
   const { mutation } = usePlotData();
   const [pressure, setPressure] = useState<PressureType | null | number>(null);
-  const [addElements, setAddElements] = useState<Option>(addElementOptions[0]);
+  const [addElements, setAddElements] = useState<MultiValue<Optionselect>>([]);
   const [explicitIncludes, setExplicitIncludes] = useState<MultiValue<Optionselect>>([]);
   const [excludeCompositions, setExcludeCompositions] = useState<MultiValue<Optionselect>>([]);
   const [compoundMode, setCompoundMode] = useState('compound');
@@ -238,10 +238,10 @@ export default function Form() {
                   className={styles.labelwithinfoforselect}
                   onMouseOver={() => infoHandleHover('infoHover', description.add_elements)}
                 >
-                  <label className={styles.label}>Additional element to consider</label>
+                  <label className={styles.label}>Additional elements to consider (up to three)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
-                </div>
-                <SingleSelect value={addElements.value} options={addElementOptions} setValue={setAddElements} />
+                </div>         
+                <MultiSelect placeholder="Type chemical symbol and press enter" setValues={setAddElements} />
               </div>
             </div>
             <div className={styles.selectCSS}>
