@@ -221,7 +221,7 @@ export default function Form() {
                   className={styles.labelwithinfo}
                   onMouseOver={() => infoHandleHover('infoHover', description.hull_distance)}
                 >
-                  <label className={styles.label}>Distance to Hull (eV/atom)</label>
+                  <label className={styles.label}>Distance to hull (eV/atom)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.hull_distance} />
                 </div>
                 <input
