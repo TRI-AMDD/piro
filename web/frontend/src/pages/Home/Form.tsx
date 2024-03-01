@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button } from '@material-tailwind/react';
 import { Toggle } from '@toyota-research-institute/lakefront';
-import { Option } from '@material-tailwind/react';
 import { Tooltip } from 'react-tooltip';
 import logo from './info.svg';
 import styles from './Home.module.css';
@@ -16,23 +15,13 @@ import { description } from './description';
 import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import React, { useRef } from 'react';
-import SingleSelect from './SingleSelect';
 import { infoHandleHover, pushEvent } from 'src/utils/GA';
-
-const addElementOptions = [
-  { value: '', label: 'None' },
-  { value: 'C', label: 'C' },
-  { value: 'D', label: 'D' }
-];
 
 const toggleOptions = [
   { label: 'Upload Target Compound (.cif)', value: 'compound' },
   { label: 'Upload Target Compound (.cif)', value: 'cif' }
 ];
-interface Option {
-  label: string;
-  value: string;
-}
+
 export default function Form() {
   const { mutation } = usePlotData();
   const [pressure, setPressure] = useState<PressureType | null | number>(null);
@@ -240,7 +229,7 @@ export default function Form() {
                 >
                   <label className={styles.label}>Additional elements to consider (up to three)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
-                </div>         
+                </div>
                 <MultiSelect placeholder="Type chemical symbol and press enter" setValues={setAddElements} />
               </div>
             </div>
