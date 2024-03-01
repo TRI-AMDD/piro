@@ -46,7 +46,7 @@ export default function Form() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     // set values from multi-select values
-    data.add_elements = addElements?.value !== '' ? [addElements?.value] : [];
+    data.add_elements = addElements.map((e) => e.value);
     data.explicit_includes = explicitIncludes.map((e) => e.value);
     data.exclude_compositions = excludeCompositions.map((e) => e.value);
     // get values from pressure
