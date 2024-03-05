@@ -18,8 +18,8 @@ import React, { useRef } from 'react';
 import { infoHandleHover, pushEvent } from 'src/utils/GA';
 
 const toggleOptions = [
-  { label: 'Upload Target Compound (.cif)', value: 'compound' },
-  { label: 'Upload Target Compound (.cif)', value: 'cif' }
+  { label: 'Upload target compound (.cif)', value: 'compound' },
+  { label: 'Upload target compound (.cif)', value: 'cif' }
 ];
 
 export default function Form() {
@@ -107,7 +107,7 @@ export default function Form() {
                     className={styles.labelwithinfo}
                     onMouseOver={() => infoHandleHover('infoHover', description.target_entry_id)}
                   >
-                    <label className={styles.label}>Target Compound (mp-id)*</label>
+                    <label className={styles.label}>Target compound (mp-id)*</label>
                     <InfoImage imagePath={logo} altText="Info" information={description.target_entry_id} />
                   </div>
                   <input
@@ -210,7 +210,7 @@ export default function Form() {
                   className={styles.labelwithinfo}
                   onMouseOver={() => infoHandleHover('infoHover', description.hull_distance)}
                 >
-                  <label className={styles.label}>Distance to Hull (eV/atom)</label>
+                  <label className={styles.label}>Distance to hull (eV/atom)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.hull_distance} />
                 </div>
                 <input
