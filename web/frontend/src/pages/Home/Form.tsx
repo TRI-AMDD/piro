@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button } from '@material-tailwind/react';
 import { Toggle } from '@toyota-research-institute/lakefront';
-import { Option } from '@material-tailwind/react';
 import { Tooltip } from 'react-tooltip';
 import logo from './info.svg';
 import styles from './Home.module.css';
@@ -16,27 +15,17 @@ import { description } from './description';
 import { usePlotData } from './plotDataContext';
 import { MultiValue } from 'react-select';
 import React, { useRef } from 'react';
-import SingleSelect from './SingleSelect';
 import { infoHandleHover, pushEvent } from 'src/utils/GA';
-
-const addElementOptions = [
-  { value: '', label: 'None' },
-  { value: 'C', label: 'C' },
-  { value: 'D', label: 'D' }
-];
 
 const toggleOptions = [
   { label: 'Upload Target Compound (.cif)', value: 'compound' },
   { label: 'Upload Target Compound (.cif)', value: 'cif' }
 ];
-interface Option {
-  label: string;
-  value: string;
-}
+
 export default function Form() {
   const { mutation } = usePlotData();
   const [pressure, setPressure] = useState<PressureType | null | number>(null);
-  const [addElements, setAddElements] = useState<Option>(addElementOptions[0]);
+  const [addElements, setAddElements] = useState<MultiValue<Optionselect>>([]);
   const [explicitIncludes, setExplicitIncludes] = useState<MultiValue<Optionselect>>([]);
   const [excludeCompositions, setExcludeCompositions] = useState<MultiValue<Optionselect>>([]);
   const [compoundMode, setCompoundMode] = useState('compound');
@@ -57,7 +46,7 @@ export default function Form() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     // set values from multi-select values
-    data.add_elements = addElements?.value !== '' ? [addElements?.value] : [];
+    data.add_elements = addElements.map((e) => e.value);
     data.explicit_includes = explicitIncludes.map((e) => e.value);
     data.exclude_compositions = excludeCompositions.map((e) => e.value);
     // get values from pressure
@@ -238,10 +227,10 @@ export default function Form() {
                   className={styles.labelwithinfoforselect}
                   onMouseOver={() => infoHandleHover('infoHover', description.add_elements)}
                 >
-                  <label className={styles.label}>Additional element to consider</label>
+                  <label className={styles.label}>Additional elements to consider (up to three)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
                 </div>
-                <SingleSelect value={addElements.value} options={addElementOptions} setValue={setAddElements} />
+                <MultiSelect placeholder="Type chemical symbol and press enter" setValues={setAddElements} />
               </div>
             </div>
             <div className={styles.selectCSS}>

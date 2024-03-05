@@ -24,6 +24,10 @@ Feature: Validation of Graph in PIRO
 
     Then ICSD-based Precursors Only checkbox should be available
 
+    Then Additional elements to consider field should be available
+
+    Then Explicity include as a preCursor field should be available
+
     Then Drop down input fields should be available
     
 
