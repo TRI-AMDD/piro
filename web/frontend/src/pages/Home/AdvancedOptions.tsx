@@ -50,7 +50,7 @@ const AdvancedOptions = (props: Props) => {
                     className={styles.labelwithinfo}
                     onMouseOver={() => infoHandleHover('infoHover', description.simple_precursors)}
                   >
-                    <label className={styles.label}>Use Simplified Precursor Library</label>
+                    <label className={styles.label}>Use simplified precursor library</label>
                     <InfoImage imagePath={logo} altText="Info" information={description.simple_precursors} />
                   </div>
                   <input

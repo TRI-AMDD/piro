@@ -5,7 +5,7 @@ export const description = {
   flexible_competition:
     'Used to limit the search for parasitic reactions to the<br> specified amount less than the target number<br> of elements for a given synthesis target.<br>`<br> For example, choosing 1 when analyzing a ternary target <br>would include binary phase products when <br> counting parasitic reactions',
   hull_distance:
-    'Deselect “Stable precursors only” checkbox<br> if you wish to edit “Distance to Hull”.<br>`<br>This defines the energy range of metastable materials<br> for inclusion in precursor library.',
+    'Deselect “Stable precursors only” checkbox<br> if you wish to edit “Distance to hull”.<br>`<br>This defines the energy range of metastable materials<br> for inclusion for inclusion in precursor library.',
   add_elements:
     'List of chemical symbols of additional elements to consider. <br> The user may choose to leave the field empty or enter up to three chemical symbols.<br> For example, enter C into the field to include carbonates and carbides',
   explicit_includes: 'List of Materials Project IDs of additional materials to include in precursor list',
