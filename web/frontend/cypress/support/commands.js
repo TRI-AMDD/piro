@@ -21,12 +21,17 @@ Cypress.Commands.add('verify', (uifield) => {
     
 })
 
+Cypress.Commands.add('verifyById',(id) => {
+    let theXpath="//input[@id='"+id+"']"
+    cy.xpath(theXpath).should('be.visible')
+})
+
 Cypress.Commands.add('verifyCheckBox', (displayText) => {
     cy.get('[data-testid=checkboxes]').children().contains(displayText).should('be.visible')
 })
 
 Cypress.Commands.add('verifyDropDown', () => {
-    cy.xpath("//button[@placeholder='Additional element']").eq(1).click();
+    cy.xpath("//button[@placeholder='Additional element']").click();
     cy.get('#material-tailwind-select-0').should('be.visible')
     cy.get('#material-tailwind-select-1').should('be.visible')
     cy.get('#material-tailwind-select-2').should('be.visible')
