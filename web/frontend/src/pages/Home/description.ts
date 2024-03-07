@@ -3,7 +3,7 @@ export const description = {
   max_component_precursors:
     'Used to limit the reactants to simpler sub-chemistries<br> of our target to obtain a refined precursor list.<br>`<br> For example, setting this as 2 for a ternary target compound <br> would limit precursors to binary compounds<br> (additional element count ignored)',
   flexible_competition:
-    'Used to limit the reactants to simpler sub-chemistries<br> of our target to obtain a refined precursor list.<br>`<br> For example,setting this as 2 for a ternary target compound would limit precursors <br> to binary compounds<br> (additional element count ignored)',
+    'Used to limit the search for parasitic reactions to the<br> specified amount less than the target number<br> of elements for a given synthesis target.<br>`<br> For example, choosing 1 when analyzing a ternary target <br>would include binary phase products when <br> counting parasitic reactions',
   hull_distance:
     'Deselect “Stable precursors only” checkbox<br> if you wish to edit “Distance to hull”.<br>`<br>This defines the energy range of metastable materials<br> for inclusion for inclusion in precursor library.',
   add_elements:
