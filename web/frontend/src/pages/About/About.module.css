@@ -1,9 +1,9 @@
-.PageContent{
-    display: flex;
-    padding: 40px 160px 40px 160px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 40px;
+.PageContent {
+  display: flex;
+  padding: 40px 160px 40px 160px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
 }
 @media (max-width: 768px) {
   .PageContent {
@@ -15,22 +15,23 @@
     padding: 10px 10px 10px 10px;
   }
 }
-.Breadcrumbs{
-     color: #212121;
-     font-size: 16px;
-     font-family: Gellix-Medium;
-     font-weight: 500;
-     line-height: 24px;
-     letter-spacing: 0.03px;
-     word-wrap: break-word;
-     width: 137px;
-     height: 24px;
-     gap: 8px;
-
+.Breadcrumbs {
+  color: #212121;
+  font-size: 16px;
+  font-family: Gellix-Medium;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.03px;
+  word-wrap: break-word;
+  width: 137px;
+  height: 24px;
+  gap: 8px;
 }
-.mailstyle{
-  color: var(--info-dark, #0288D1);
-  font-feature-settings: 'clig' off, 'liga' off;
+.mailstyle {
+  color: var(--info-dark, #0288d1);
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
   font-family: Gellix-Regular;
   font-size: 16px;
   font-style: normal;
@@ -39,84 +40,63 @@
   letter-spacing: 0.15px;
   text-decoration-line: underline;
 }
-.AboutHeader{
-    align-self: stretch;
-    color: var(--grey-900, #212121);
-    text-align: center;
-    font-feature-settings: 'clig' off, 'liga' off;
+.AboutHeader {
+  align-self: stretch;
+  color: var(--grey-900, #212121);
+  text-align: center;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 
-    /* header/h2 */
-    font-family: Gellix-Regular;
-    font-size: 34px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 42px; /* 123.529% */
-    padding-top: 40px;
-    padding-bottom: 40px;
+  /* header/h2 */
+  font-family: Gellix-Regular;
+  font-size: 34px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 42px; /* 123.529% */
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
-.Content{
-    align-self: stretch;
-    color: var(--grey-900, #212121);
-    font-feature-settings: 'clig' off, 'liga' off;
-    padding-top:8px;
-    /* body/body 1-regular */
-    font-family: Gellix-Regular;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px; /* 150% */
-    letter-spacing: 0.15px;
+.Content {
+  align-self: stretch;
+  color: var(--grey-900, #212121);
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
+  padding-top: 8px;
+  /* body/body 1-regular */
+  font-family: Gellix-Regular;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.15px;
 }
-.Titles{
-    align-self: stretch;
-    color: var(--grey-900, #212121);
-    font-feature-settings: 'clig' off, 'liga' off;
-    /* header/h4 */
-    font-family: Gellix-Medium;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 32px; /* 160% */
+.Titles {
+  align-self: stretch;
+  color: var(--grey-900, #212121);
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
+  /* header/h4 */
+  font-family: Gellix-Medium;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px; /* 160% */
 }
-.InnerContainer{
-    margin-left:10px;
-    margin-right:10px;
+.InnerContainer {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .highlighted {
-    border-radius: 10px;
-    background: #FFFFFF;
-    box-shadow: 0px 0px 10px 0px #757575;
-    animation: shadowEffect 4s infinite;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0px 0px 15px 0px #757575;
 }
-.gap{
-    padding-bottom:40px;
+.gap {
+  padding-bottom: 40px;
 }
 .spacer {
-    padding-bottom: 8px;
-}
-@keyframes shadowEffect {
-  0% {
-    box-shadow: 0 0 0 0 #757575;
-  }
-  15% {
-    box-shadow: 0 0 2px 0 #757575;
-  }
-  30% {
-    box-shadow: 0 0 5px 0 #757575;
-  }
-  50% {
-    box-shadow: 0 0 10px 0 #757575;
-  }
-  70% {
-    box-shadow: 0 0 15px 0 #757575;
-  }
-  80% {
-    box-shadow: 0 0 10px 0 #757575;
-  }
-  90% {
-      box-shadow: 0 0 5px 0 #757575;
-    }
-  100% {
-    box-shadow: 0 0 0 0 #757575;
-  }
+  padding-bottom: 8px;
 }
