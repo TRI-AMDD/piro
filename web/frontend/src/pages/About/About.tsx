@@ -71,11 +71,12 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
         <p className={styles.gap}></p>
         <div id="contact">
           <div className={styles.InnerContainer}>
-            <h4 className={styles.Titles}>Contact</h4>
+            <h4 className={styles.Titles}>The Team</h4>
             <p className={styles.Content}>
               The Piro platform is developed by a team of researchers and software developers at Toyota Research
-              Institute: Murat Aykol, Joseph Montoya, Jens Hummelshøj, Chris Fajardo, Michael Puzon, and Reko Ong. If
-              you have any questions or feedback, please reach out to us at{' '}
+              Institute: Murat Aykol, Joseph Montoya, Jens Hummelshøj, Chris Fajardo, Michael Puzon, and Reko Ong.
+              <br />
+              If you have any questions or feedback, please reach out to us at{' '}
               <u>
                 <a href="mailto:em-piro@tri.global" className={styles.mailstyle}>
                   em-piro@tri.global
@@ -86,7 +87,7 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
           </div>
         </div>
         <p className={styles.gap}></p>
-        <div id="code">
+        <div id="code" className="transition-all">
           <div className={styles.InnerContainer}>
             <h4 className={styles.Titles}>Code</h4>
             <p className={styles.Content}>
@@ -106,12 +107,12 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
           </div>
         </div>
         <p className={styles.gap}></p>
-        <div id="manuscript">
+        <div id="manuscript" className="transition-all">
           <div className={styles.InnerContainer}>
             <h4 className={styles.Titles}>Manuscript</h4>
             <p className={styles.Content}>
               For more information about the physical theory behind Piro, please read our paper, “Rational Solid-State
-              Synthesis Routes for Inorganic Materials” by Murat Aykol et al.{' '}
+              Synthesis Routes for Inorganic Materials” by Murat Aykol et al{' '}
               <u>
                 <a href="https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888" target="_blank" rel="noreferrer">
                   (https://pubs.acs.org/doi/abs/10.1021/jacs.1c04888)
