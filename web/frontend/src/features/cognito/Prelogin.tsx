@@ -52,7 +52,7 @@ export default function PreLogin() {
       </div>
       <div className={LoginCSS.thirdblock}>
         <div>
-          <h4 className={LoginCSS.thirdblockheader}>Contact</h4>
+          <h4 className={LoginCSS.thirdblockheader}>The Team</h4>
           <p className={LoginCSS.thirdblockcontent}>
             The Piro platform is developed by a team of researchers and software developers at Toyota Research
             Institute: Murat Aykol, Joseph Montoya, Jens Hummelshøj, Chris Fajardo, Michael Puzon, and Reko Ong.
