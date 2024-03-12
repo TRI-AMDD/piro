@@ -64,7 +64,7 @@
     'clig' off,
     'liga' off;
   padding-top: 8px;
-  /* body/body 1-regular */
+  margin-bottom: 16px;
   font-family: Gellix-Regular;
   font-size: 16px;
   font-style: normal;
@@ -99,4 +99,8 @@
 }
 .spacer {
   padding-bottom: 8px;
+}
+.blackLink {
+  color: #212121;
+  text-decoration: underline;
 }
