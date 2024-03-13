@@ -51,15 +51,15 @@ export const useTaskPlotData = (taskId: string, token: string) => {
       return data;
     },
     enabled: !!taskId,
-    refetchInterval: query => {      
+    refetchInterval: (query) => {
       if (query.state.data) {
         const { status } = query.state.data;
         // re-fetch results in 2 secs if status is pending
         if (status === 'started' || status === 'pending') {
           return 2000;
-        }        
+        }
       }
-      
+
       return false;
     },
     refetchOnWindowFocus: false,
