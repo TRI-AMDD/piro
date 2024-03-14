@@ -48,13 +48,20 @@ export const useTaskPlotData = (taskId: string, token: string) => {
         }
       });
       const data = await response.json();
-      // throw an error if status is started to trigger loading
-      if (data?.status === 'started' || data?.status === 'pending') {
-        throw new Error('Request initiated. Loading Results...');
-      }
       return data;
     },
     enabled: !!taskId,
+    refetchInterval: (query) => {
+      if (query.state.data) {
+        const { status } = query.state.data;
+        // re-fetch results in 2 secs if status is pending
+        if (status === 'started' || status === 'pending') {
+          return 2000;
+        }
+      }
+
+      return false;
+    },
     refetchOnWindowFocus: false,
     retry: true
   });

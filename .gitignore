@@ -24,3 +24,6 @@ web/frontend/build
 .idea/*
 
 venv/*
+
+piro/files/_epitaxy_cache.json
+piro/files/_similarity_cache.json
