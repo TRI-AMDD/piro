@@ -77,12 +77,10 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
               Institute: Murat Aykol, Joseph Montoya, Jens Hummelshøj, Chris Fajardo, Michael Puzon, and Reko Ong.
             </p>
             <p className={styles.Content}>
-              If you have any questions or feedback, please reach out to us at{' '}
-              <u>
-                <a href="mailto:em-piro@tri.global" className={styles.mailstyle}>
-                  em-piro@tri.global
-                </a>
-              </u>
+              If you have any questions or feedback, please reach out to us at{' '}            
+              <a href="mailto:em-piro@tri.global" className={styles.mailstyle}>
+                em-piro@tri.global
+              </a>
               .
             </p>
           </div>
