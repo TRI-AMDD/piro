@@ -236,7 +236,10 @@ export default function Form() {
                   <label className={styles.label}>Additional elements to consider (up to three)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
                 </div>
-                <MultiSelectVerification placeholder="Type chemical symbol and press enter" setValues={setAddElements} />
+                <MultiSelectVerification
+                  placeholder="Type chemical symbol and press enter"
+                  setValues={setAddElements}
+                />
               </div>
             </div>
             <div className={styles.selectCSS}>
