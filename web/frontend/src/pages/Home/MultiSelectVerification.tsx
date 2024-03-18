@@ -76,13 +76,16 @@ export default function MultiSelectVerification(props: Props) {
     
         if (!options.find((option) => option.value.toLowerCase() === inputValue.toLowerCase()))
  {
-          setError('Enter a correct chemical symbol');
+          setError('Not an element');
         } else {
           setError('');
         }
+        return inputValue.charAt(0).toUpperCase() + inputValue.slice(1).toLowerCase();
       }; 
   const { placeholder, setValues } = props;
   const emptyOptions: Optionselect[] = [];
+  const formatCreateLabel= (inputValue:string) => 
+    `Add element... ${inputValue}`
   return (
     <div className={styles.Multi}>
         {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -91,6 +94,7 @@ export default function MultiSelectVerification(props: Props) {
             options.find((option) => option.value === inputValue) ? true : false
         }
         onInputChange={handleInputChange}
+        formatCreateLabel={formatCreateLabel}
         styles={customStyles}
         placeholder={placeholder}
         isMulti
