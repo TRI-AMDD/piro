@@ -78,7 +78,7 @@ const About: React.FC<highlightProps> = ({ highlightedParagraph, highlight }) =>
             </p>
             <p className={styles.Content}>
               If you have any questions or feedback, please reach out to us at{' '}
-              <a href="mailto:em-piro@tri.global" className={styles.mailstyle}>
+              <a href="mailto:em-piro@tri.global" className={styles.mailstyle} translate="no">
                 em-piro@tri.global
               </a>
               .
