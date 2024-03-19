@@ -9,6 +9,7 @@ import FormCheckbox from './Checkbox';
 import { Inputs, PressureType, Optionselect } from './TypeProps';
 import InfoImage from './infoimage';
 import MultiSelect from './MultiSelect';
+import MultiSelectVerification from './MultiSelectVerification';
 import AdvancedOptions from './AdvancedOptions';
 import Pressure from './Pressure';
 import { description } from './description';
@@ -72,6 +73,11 @@ export default function Form() {
       fileInputRef.current.click();
     }
   };
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
   // store the contents of the cif file into a string for later use
   const handleCIFLoad = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -94,7 +100,7 @@ export default function Form() {
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.fullpage}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.fullpage} onKeyPress={handleKeyPress}>
       <div className={styles.Form}>
         <Tooltip />
         <div className={styles.FormGrid}>
@@ -230,7 +236,10 @@ export default function Form() {
                   <label className={styles.label}>Additional elements to consider (up to three)</label>
                   <InfoImage imagePath={logo} altText="Info" information={description.add_elements} />
                 </div>
-                <MultiSelect placeholder="Type chemical symbol and press enter" setValues={setAddElements} />
+                <MultiSelectVerification
+                  placeholder="Type chemical symbol and press enter"
+                  setValues={setAddElements}
+                />
               </div>
             </div>
             <div className={styles.selectCSS}>
