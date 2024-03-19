@@ -40,7 +40,7 @@ const AdvancedOptions = (props: Props) => {
       </div>
       <div style={lineStyle}></div>
       <div className={styles.advanceoptionsformgrid}>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={open} timeout="auto">
           <div className={styles.advanceoptionsformgrid}>
             <div className={styles.advancedoptionscontent}>
               <ApiMode compoundMode={compoundMode} />
