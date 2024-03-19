@@ -10,7 +10,7 @@ export default function Header() {
       <a href="/">
         <img src={logo} alt="Logo" width={'150px'} />
       </a>{' '}
-      <h3 translate='no'>Piro Synthesis Analyzer</h3>
+      <h3 translate="no">Piro Synthesis Analyzer</h3>
       <a href="/about" className={styles.Aboutlink}>
         About
       </a>
