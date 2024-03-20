@@ -14,13 +14,15 @@ export default function PreLogin() {
         </button>
       </header>
       <div className={LoginCSS.firstblock}>
-        <div className={LoginCSS.piroheader}>Piro Synthesis Analyzer</div>
+        <div className={LoginCSS.piroheader} translate="no">
+          Piro Synthesis Analyzer
+        </div>
         <div className={LoginCSS.firstblockbody}>
-          The Piro Synthesis Analyzer is an application that assists with rational planning of solid-state synthesis
-          routes for inorganics. It is a recommendation system for navigation and planning of synthesis of inorganic
-          materials based on classical nucleation theory and semi-empirical, data-driven approximations to its parts.
-          Currently, the app works with Materials Project data via its Rester API. Sign in to learn more and use the
-          tool.
+          The <span translate="no">Piro Synthesis Analyzer</span> is an application that assists with rational planning
+          of solid-state synthesis routes for inorganics. It is a recommendation system for navigation and planning of
+          synthesis of inorganic materials based on classical nucleation theory and semi-empirical, data-driven
+          approximations to its parts. Currently, the app works with Materials Project data via its Rester API. Sign in
+          to learn more and use the tool.
         </div>
         <button className={LoginCSS.signinbutton}>
           <div className={LoginCSS.signincontent} onClick={() => Auth.federatedSignIn()}>
@@ -60,7 +62,13 @@ export default function PreLogin() {
           <br></br>
           <p className={LoginCSS.thirdblockcontent}>
             To request access or if you have questions about logging in, reach out to us at{' '}
-            <a href="mailto:em-piro@tri.global" target="_blank" rel="noreferrer" className={LoginCSS.mailstyle}>
+            <a
+              href="mailto:em-piro@tri.global"
+              target="_blank"
+              rel="noreferrer"
+              className={LoginCSS.mailstyle}
+              translate="no"
+            >
               em-piro@tri.global
             </a>
             .
