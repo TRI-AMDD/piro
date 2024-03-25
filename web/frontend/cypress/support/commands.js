@@ -81,9 +81,6 @@ Cypress.Commands.add('validateErr', (tc,temperature,comp,depth) => {
 })
 
 Cypress.Commands.add('validateAdditionalElementsField', () => {
-    // cy.get("[id='react-select-2-input']").type("na")
-    // cy.xpath("//div[@id='react-select-2-listbox']/div").click()
-    // cy.xpath("//div[@class=' css-1y7rh0y-MultiValueGeneric2']").invoke('text').should('eq','Na')
     cy.enterValidElements("na","Na")
     cy.enterValidElements("PB","Pb")
     cy.enterValidElements("Mn","Mn")
@@ -91,13 +88,6 @@ Cypress.Commands.add('validateAdditionalElementsField', () => {
     cy.xpath("//div[@class=' css-nhbbvo-NoOptionsMessage2']").invoke('text').should('eq','No options')
     cy.get("[id='react-select-2-input']").clear().type("SS")
     cy.xpath("//p[@style='color: red;']").invoke('text').should('eq','Not an element')
-    
-    // cy.get("[id='react-select-2-input']").clear().type("PB")
-    // cy.xpath("//div[@id='react-select-2-listbox']/div").click()
-    // cy.xpath("//div[@class=' css-1y7rh0y-MultiValueGeneric2']").invoke('text').should('eq','Pb')
-
- 
-
 })
 
 Cypress.Commands.add('enterValidElements', (elementName,message) => {
