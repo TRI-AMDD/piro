@@ -57,6 +57,7 @@ Then('ICSD-based Precursors Only checkbox should be available', () => {
 
 Then('Additional elements to consider field should be available', () => {
   cy.verifyById("react-select-2-input")
+  cy.validateAdditionalElementsField()
 })
 
 Then('Explicity include as a preCursor field should be available', () => {
