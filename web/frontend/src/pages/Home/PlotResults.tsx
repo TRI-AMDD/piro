@@ -17,7 +17,9 @@ const handleDivLoad = () => {
 function PlotResults(props: Props) {
   const { result } = props;
   const plotDivRef = useRef<HTMLDivElement>(null);
-
+  useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, []);
   useEffect(() => {
     const plotDiv = plotDivRef.current;
 
