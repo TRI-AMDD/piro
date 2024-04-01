@@ -18,7 +18,7 @@ setup(
     install_requires=["matminer==0.8.0",
                       "pymatgen==2023.12.18",
                       "plotly==5.11.0",
-                      "pymongo==3.12.0",
+                      "pymongo==4.6.3",
                       ],
     classifiers=[
           "Programming Language :: Python :: 3",
