@@ -15,7 +15,7 @@ setup(
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
-    install_requires=["matminer==0.8.0",
+    install_requires=["matminer==0.9.2",
                       "pymatgen==2023.12.18",
                       "plotly==5.11.0",
                       "pymongo==3.12.0",
