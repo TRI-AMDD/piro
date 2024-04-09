@@ -1,18 +1,10 @@
-import LoginCSS from './login.module.css';
+import LoginCSS from './pre-login.module.css';
 import { Auth } from 'aws-amplify';
-import LoginFooter from '@/components/loginfooter';
 import logo from './loginpic.png';
-import logo2 from './blackimage.png';
 
 export default function PreLogin() {
   return (
     <div>
-      <header className={LoginCSS.AppHeader}>
-        <img src={logo2} alt="Logo" width={'150px'} />
-        <button className={LoginCSS.loginsignin} onClick={() => Auth.federatedSignIn()}>
-          <div className={LoginCSS.signintext}>SIGN IN</div>
-        </button>
-      </header>
       <div className={LoginCSS.firstblock}>
         <div className={LoginCSS.piroheader} translate="no">
           Piro Synthesis Analyzer
@@ -105,7 +97,6 @@ export default function PreLogin() {
           </p>
         </div>
       </div>
-      <LoginFooter />
     </div>
   );
 }
