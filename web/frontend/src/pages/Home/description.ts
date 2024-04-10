@@ -9,7 +9,7 @@ export const description = {
   add_elements:
     'List of chemical symbols of additional elements to consider. <br> The user may choose to leave the field empty or enter up to three chemical symbols.<br> For example, enter C into the field to include carbonates and carbides',
   explicit_includes: 'List of Materials Project IDs of additional materials to include in precursor list',
-  allow_gas_release: 'Reactions are balanced such that O2, CO2 etc. can be released alongside the target',
+  allow_gas_release: 'Reactions are balanced such that O2, CO2 etc.<br> can be released alongside the target',
   confine_to_stables:
     'Deselect “Stable precursors only” checkbox<br> if you wish to edit “Distance to hull”.<br>`<br>This confines the precursor library<br> to thermodynamically stable materials in MP.',
   confine_to_icsd:
@@ -17,7 +17,7 @@ export const description = {
   simple_precursors:
     'Lower order compounds are considered <br> if greater than zero <br> (e.g., 1 means a ternary target would<br> consider up to binaries in precursors)',
   exclude_compositions: 'Materials that have these exact formulas<br> are excluded from the precursor library',
-  confine_competing_to_icsd: 'Confine competing<br> reactions<br> to those containing<br> ICSD materials',
+  confine_competing_to_icsd: 'Confine competing<br> reactions to those <br>containing ICSD materials',
   pressure:
     'Sets pressure of gas phases. Can specify a constant pressure,<br> the ambient partial pressures or a custom dictionary.'
 };
