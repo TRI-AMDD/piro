@@ -1,3 +1,15 @@
+.app {
+    background-color: rgb(246, 246, 248);
+    min-height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.appBody {
+    background-color: rgb(246, 246, 248);
+    padding: 16px;
+}
+
 .AppLink {
     color: #61dafb;
 }

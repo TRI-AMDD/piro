@@ -1,4 +1,4 @@
-import { TRIAppConfig } from '@toyotaresearchinstitute/rse-react-library';
+import { TRIAppConfig } from '@toyota-research-institute/rse-react-library';
 
 export default {
   name: 'Piro Synthesis Analyzer',
@@ -56,7 +56,7 @@ export default {
   // base url prepend for all api calls
   apiBaseUrl: window.location.origin,
   // boolean flag to set amplify on/off for user authentication support
-  amplifyEnabled: true,
+  amplifyEnabled: false,
   // OPTIONAL: URL to post feedback to JIRA
   issueCollectorUrl:
     'https://toyotaresearchinstitute.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/tod1zk/b/5/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=784fa038'

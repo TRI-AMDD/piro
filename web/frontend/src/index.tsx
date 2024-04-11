@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import { ThemeProvider } from '@material-tailwind/react';
+import 'tailwindcss/tailwind.css';
 
 import App from './App';
 

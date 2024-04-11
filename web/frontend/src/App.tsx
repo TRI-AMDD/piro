@@ -1,5 +1,5 @@
-import { TRIApp } from '@toyotaresearchinstitute/rse-react-library';
-import '@toyotaresearchinstitute/rse-react-library/css';
+import { TRIApp } from '@toyota-research-institute/rse-react-library';
+import '@toyota-research-institute/rse-react-library/style.css';
 import config from './tri.app.config';
 import Prelogin from '@/pages/pre-login/pre-login';
 
