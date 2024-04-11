@@ -35,7 +35,6 @@ export const Highlighter = ({ children, highlightDuration, transitionDuration }:
 
   useEffect(() => {
     setHighlighted(hash.substring(1));
-    console.log(hash)
   }, [hash]);
 
   useEffect(() => {
