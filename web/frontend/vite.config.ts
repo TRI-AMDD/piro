@@ -14,7 +14,7 @@ export default defineConfig({
     include: ['**/test.{ts,tsx}']
   },
   define: {
-    'process.env.MODE': JSON.stringify(process.env.MODE || 'development'),
+    'process.env.MODE': JSON.stringify(process.env.MODE || 'development')
   },
   resolve: {
     alias: [

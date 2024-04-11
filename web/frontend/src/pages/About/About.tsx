@@ -35,7 +35,7 @@ function About() {
             to arrive at the target from practical/purchasable reagents/starting materials).
           </p>
 
-          <Highlight>
+          <Highlight id="contact">
             <section id="contact">
               <h4>The Team</h4>
               <p>
@@ -52,7 +52,7 @@ function About() {
             </section>
           </Highlight>
 
-          <Highlight>
+          <Highlight id="contact">
             <section id="code">
               <h4>Code</h4>
               <p>
@@ -80,7 +80,7 @@ function About() {
             </section>
           </Highlight>
 
-          <Highlight>
+          <Highlight id="contact">
             <section id="manuscript">
               <h4>Manuscript</h4>
               <p>
