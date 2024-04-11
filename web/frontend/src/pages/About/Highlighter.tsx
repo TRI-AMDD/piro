@@ -1,15 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useState,
-  useEffect,
-  useMemo,
-  useContext,
-  ReactElement,
-  useRef,
-  cloneElement,
-  forwardRef
-} from 'react';
+import { createContext, ReactNode, useState, useEffect, useMemo, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const defaultHighlightDuration = 1000;
@@ -46,6 +35,7 @@ export const Highlighter = ({ children, highlightDuration, transitionDuration }:
 
   useEffect(() => {
     setHighlighted(hash.substring(1));
+    console.log(hash)
   }, [hash]);
 
   useEffect(() => {
@@ -73,25 +63,6 @@ interface HighlightProps {
 
 export const Highlight = ({ id, children: child }: HighlightProps) => {
   const { highlighted, transitionDuration } = useContext(HighlighterContext);
-  const ref = useRef<HTMLElement | null>(null);
-
-  /*
-  const { Child, id, children } = useMemo(() => {
-    const { id, children } = (child as ReactElement).props;
-    const Child = forwardRef<HTMLElement, HighlightProps>(({ children }, ref) =>
-      cloneElement(child as ReactElement, { ref, children })
-    );
-    return { Child, id, children };
-  }, [child]);
-  */
-
-  useEffect(() => {
-    if (ref.current) {
-      if (getComputedStyle(ref.current).position === 'static') {
-        ref.current.style.position = 'relative';
-      }
-    }
-  }, []);
 
   if (!child) {
     return null;
@@ -106,7 +77,7 @@ export const Highlight = ({ id, children: child }: HighlightProps) => {
   }`;
 
   return (
-    <div>
+    <div className="relative">
       <div
         className={highlightClassName}
         style={{
@@ -117,7 +88,6 @@ export const Highlight = ({ id, children: child }: HighlightProps) => {
       <div className={defaultClassName} style={{ position: 'relative' }}>
         {child}
       </div>
-   </div>
-    
+    </div>
   );
 };

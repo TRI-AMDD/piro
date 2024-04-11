@@ -36,7 +36,7 @@ function About() {
           </p>
 
           <Highlight id="contact">
-            <section id="contact">
+            <section>
               <h4>The Team</h4>
               <p>
                 The Piro platform is developed by a team of researchers and software developers at Toyota Research
@@ -52,8 +52,8 @@ function About() {
             </section>
           </Highlight>
 
-          <Highlight id="contact">
-            <section id="code">
+          <Highlight id="code">
+            <section>
               <h4>Code</h4>
               <p>
                 If you’d like to use the Python interface to Piro, or to access the code for this site, please visit our
@@ -80,8 +80,8 @@ function About() {
             </section>
           </Highlight>
 
-          <Highlight id="contact">
-            <section id="manuscript">
+          <Highlight id="manuscript">
+            <section>
               <h4>Manuscript</h4>
               <p>
                 For more information about the physical theory behind Piro, please read our paper, “Rational Solid-State
