@@ -27,8 +27,8 @@ dependencies:
     specifier: ^5.4.1
     version: 5.4.1(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.43)(d3-selection@3.0.0)(d3-shape@3.2.0)(d3-zoom@3.0.0)(dagre-d3@0.6.4)(ramda@0.28.0)(react-dom@18.2.0)(react@18.2.0)
   '@toyota-research-institute/rse-react-library':
-    specifier: ^0.0.13
-    version: 0.0.13(@material-tailwind/react@2.1.9)(aws-amplify@5.3.13)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0)
+    specifier: ^0.0.14
+    version: 0.0.14(@material-tailwind/react@2.1.9)(aws-amplify@5.3.13)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0)
   aws-amplify:
     specifier: ^5.3.12
     version: 5.3.13(react-native@0.73.0)
@@ -5516,8 +5516,8 @@ packages:
       - rollup
     dev: false
 
-  /@toyota-research-institute/rse-react-library@0.0.13(@material-tailwind/react@2.1.9)(aws-amplify@5.3.13)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0):
-    resolution: {integrity: sha512-9oU8x2tctAAUIczPi58D/ulZdoHJm2cfmR/sdKrP3GxOdFmeAw+5gMaFU6czk+/e+yM0XmE4ddcDT6tER5evEA==}
+  /@toyota-research-institute/rse-react-library@0.0.14(@material-tailwind/react@2.1.9)(aws-amplify@5.3.13)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0):
+    resolution: {integrity: sha512-aeCy0Zy1nqCVYMk9OSnpQOjR2YERMGXmcdpqrr/iqONarMBtFLFr+/tAqw7EZ8kPf2dTugQZxv0YQ20Ufmlv8A==}
     peerDependencies:
       '@material-tailwind/react': 2.1.9
       aws-amplify: ^5.3.12

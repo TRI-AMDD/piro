@@ -51,6 +51,7 @@ export default function MultiSelectVerification(props: Props) {
     <div className={styles.Multi}>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <CreatableSelect
+        id="additional-elements"
         isValidNewOption={(inputValue) => (options.find((option) => option.value === inputValue) ? true : false)}
         onInputChange={handleInputChange}
         formatCreateLabel={formatCreateLabel}
