@@ -56,8 +56,9 @@
   line-height: 42px; /* 123.529% */
   padding-top: 40px;
   padding-bottom: 40px;
+  margin: 0;
 }
-.Content {
+.PageContent article p {
   align-self: stretch;
   color: var(--grey-900, #212121);
   font-feature-settings:

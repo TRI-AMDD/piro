@@ -84,14 +84,14 @@ Cypress.Commands.add('validateAdditionalElementsField', () => {
     cy.enterValidElements("na","Na")
     cy.enterValidElements("PB","Pb")
     cy.enterValidElements("Mn","Mn")
-    cy.get("[id='react-select-2-input']").type("Mn")
+    cy.get("[id='react-select-3-input']").type("Mn")
     cy.xpath("//div[@class=' css-nhbbvo-NoOptionsMessage2']").invoke('text').should('eq','No options')
-    cy.get("[id='react-select-2-input']").clear().type("SS")
+    cy.get("[id='react-select-3-input']").clear().type("SS")
     cy.xpath("//p[@style='color: red;']").invoke('text').should('eq','Not an element')
 })
 
 Cypress.Commands.add('enterValidElements', (elementName,message) => {
-    cy.get("[id='react-select-2-input']").clear().type(elementName)
-    cy.xpath("//div[@id='react-select-2-listbox']/div").click()
+    cy.get("[id='react-select-3-input']").clear().type(elementName)
+    cy.xpath("//div[@id='react-select-3-listbox']/div").click()
     cy.xpath("//div[@class=' css-1y7rh0y-MultiValueGeneric2']").invoke('text').should('eq',message)
 })
