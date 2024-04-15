@@ -28,21 +28,20 @@ interface HighlighterProps {
 export const Highlighter = ({ children, highlightDuration, transitionDuration }: HighlighterProps) => {
   const { hash } = useLocation();
   const [highlighted, setHighlighted] = useState<string | null>(null);
-  const [timer, setTimer] = useState<number | null>(null);
 
   const timerDuration =
     (highlightDuration ?? defaultHighlightDuration) + (transitionDuration ?? defaultTransitionDuration);
 
   useEffect(() => {
     setHighlighted(hash.substring(1));
-  }, [hash]);
 
-  useEffect(() => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    setTimer(highlighted ? (setTimeout(() => setHighlighted(null), timerDuration) as unknown as number) : null);
-  }, [highlighted]);
+    const timeoutId = setTimeout(() => {
+      setHighlighted(null);
+    }, timerDuration);
+
+    // Cleanup function to clear the timeout if the component unmounts
+    return () => clearTimeout(timeoutId);
+  }, [hash, timerDuration]);
 
   const value = useMemo<HighlighterContextProps>(
     () => ({
